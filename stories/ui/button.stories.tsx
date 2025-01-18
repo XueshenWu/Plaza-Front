@@ -1,8 +1,8 @@
 
-import {Button} from '../components/ui/button'
+import {Button} from '../../components/ui/button'
 import { Meta, StoryObj } from '@storybook/react'
 import { SearchIcon } from 'lucide-react'
-import type { ButtonProps } from '../components/ui/button'
+import type { ButtonProps } from '../../components/ui/button'
 
 
 

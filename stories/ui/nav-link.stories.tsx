@@ -2,6 +2,7 @@
 
 
 import { NavLink } from '@/components/ui/nav-link'
+import { HomeIcon } from '@radix-ui/react-icons'
 import { Meta, StoryObj } from '@storybook/react'
 import { HouseIcon } from 'lucide-react'
 

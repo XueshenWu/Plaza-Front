@@ -86,3 +86,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .entry-default {
+    @apply bg-white hover:bg-[#f6f8f9] transition-colors duration-100 rounded-lg
+  }
+}
+
+@layer utilities {
+  
+}
