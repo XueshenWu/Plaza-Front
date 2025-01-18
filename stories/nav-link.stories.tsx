@@ -9,7 +9,15 @@ const meta: Meta<typeof NavLink> = {
     component: NavLink,
     title: 'UI/NavLink',
     excludeStories: /.*Data$/,
-    tags: ['autodocs']
+    tags: ['autodocs'],
+    argTypes:{
+        active:{
+            control:{
+                type:"boolean"
+            }
+        }
+    }
+
 }
 
 export default meta

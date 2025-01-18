@@ -26,7 +26,7 @@ const buttonVariants = cva(
         icon: "h-10 w-10",
       },
       v_disabled: {
-        true: "bg-gray-400 text-gray-800 cursor-not-allowed",
+        true: "bg-gray-400 text-gray-800 cursor-not-allowed hover:bg-gray-400",
         false: "",
       },
       

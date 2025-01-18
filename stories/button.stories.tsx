@@ -12,7 +12,11 @@ const meta:Meta<typeof Button> =  {
     excludeStories: /.*Data$/,
     tags:['autodocs'],
     argTypes:{
-        
+        v_disabled:{
+            control:{
+                type:'boolean'
+            }
+        }
     }
    
 
