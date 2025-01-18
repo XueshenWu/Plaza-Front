@@ -1,0 +1,33 @@
+import type { StorybookConfig } from "@storybook/nextjs";
+
+const config: StorybookConfig = {
+  stories: [
+    "../stories/**/*.mdx",
+    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+  ],
+  features:{
+    experimentalRSC:true
+  },
+
+  addons: [
+    "@storybook/addon-onboarding",
+    "@storybook/addon-essentials",
+    "@chromatic-com/storybook",
+    "@storybook/addon-interactions",
+    '@storybook/addon-themes',
+  ],
+
+  framework: {
+    name: "@storybook/nextjs",
+    options: {},
+  },
+
+  staticDirs: ["../public"],
+
+  docs: {},
+
+  typescript: {
+    reactDocgen: "react-docgen-typescript"
+  }
+};
+export default config;
