@@ -2,8 +2,9 @@ import type { Preview } from "@storybook/react";
 import "../app/globals.css"
 import React from "react";
 import { ThemeProvider } from "../components/theme-provider";
+import {initialize, mswLoader} from 'msw-storybook-addon';
 
-
+initialize();
 
 const preview: Preview = {
   parameters: {
@@ -32,7 +33,8 @@ const preview: Preview = {
 
   ],
 
-  tags: ["autodocs"]
+  tags: ["autodocs"],
+  loaders: [mswLoader],
 };
 
 export default preview;

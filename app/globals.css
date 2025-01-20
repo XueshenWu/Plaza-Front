@@ -41,6 +41,7 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
   }
 
   .dark {
@@ -93,6 +94,12 @@ body {
   .entry-default {
     @apply bg-white hover:bg-[#f6f8f9] transition-colors duration-100 rounded-lg
   }
+
+  .entry-default:active {
+    @apply bg-[#c9d7de] hover:bg-[#c9d7de] focus:bg-[#c9d7de]
+  }
+
+  
 }
 
 @layer utilities {
@@ -108,5 +115,13 @@ body {
     /* IE and Edge */
     scrollbar-width: none;
     /* Firefox */
+  }
+
+  .bg-button-active{
+    @apply bg-[#d93900]
+  } 
+
+  .bg-button-active-alt{
+    @apply bg-[#6a5cff]
   }
 }

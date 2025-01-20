@@ -1,7 +1,11 @@
+import { FeedPreviewContainer } from "@/components/segment/feed-preview-container"
+import { sample } from "./data"
+
 export default async function Page() {
+
+   
+
     return (
-        <div>
-            <h1>Feed</h1>
-        </div>
+        <FeedPreviewContainer initialFeeds={sample(5)} />
     )
 }

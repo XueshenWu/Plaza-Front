@@ -22,7 +22,7 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  staticDirs: ["../public"],
+  staticDirs: ["../public", "../msw"],
 
   docs: {},
 

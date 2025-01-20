@@ -12,13 +12,13 @@ const NavLinkVariants = cva(
     variants: {
         variant: {
             default: "",
-            sub: " rounded-l-none border-l hover:border-l-[#b8b8b8] border-l-[#e6e6e6]"
+            sub: " rounded-l-none border-l hover:border-l-[#b8b8b8] border-l-[#e6e6e6]",
         },
         active: {
             true: 'bg-[#e5ebee] hover:bg-[#e5ebee]',
             false: ''
         },
-      
+
     },
     defaultVariants: {
         variant: "default",
@@ -33,18 +33,28 @@ type NavLinkProps =
     & {
         icon?: React.ReactNode,
         label?: string,
+        plain?: boolean
     }
 
 
 
 
-export async function NavLink({ icon, href, label, variant, className, active, ...props }: NavLinkProps) {
+export async function NavLink({ icon, href, label, variant, className, active, plain, ...props }: NavLinkProps) {
 
-    return (
+    if (!!plain) {
+        return (
+            <Link href={href ?? "/"} className={className}>
+                {label}
+            </Link>
+        )
+    } else {
 
-        <Link href={href ?? "/"} className={cn(NavLinkVariants({ variant, active, className}))}>
-            <span>{icon}</span>  {label}
-        </Link>
+        return (
 
-    )
+            <Link href={href ?? "/"} className={cn(NavLinkVariants({ variant, active, className }))}>
+                <span>{icon}</span>  {label}
+            </Link>
+
+        )
+    }
 }
