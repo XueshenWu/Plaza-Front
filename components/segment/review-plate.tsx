@@ -51,7 +51,7 @@ const Comment = ({ previewType, postId, comments }: {
 
 export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...reviewButtonDataSync }: ReviewPlateProps) => {
     const [copiedText, copy] = useCopyToClipboard()
-    const reviewButtonData = Promise.resolve(reviewButtonDataSync)
+    const reviewButtonData = reviewButtonDataSync
 
     const updateReview = async (action: ReviewUpdateAction) => {
 

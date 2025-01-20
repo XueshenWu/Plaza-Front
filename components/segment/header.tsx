@@ -15,7 +15,7 @@ import {
 
 export async function Header() {
     return (
-        <div className=" min-w-[380px] h-16 px-4 py-3 w-full flex justify-between items-center sticky   bg-white shadow-md">
+        <div className=" min-w-[380px] h-16 px-4 py-3 w-full flex justify-between items-center sticky top-0 z-50  bg-white shadow-md">
             <div className="flex items-center gap-x-4 ">
                 <Sheet  >
                     <SheetTrigger className="h-full p-2  entry-default" >  <Menu className="" /></SheetTrigger>

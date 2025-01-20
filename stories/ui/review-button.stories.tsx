@@ -20,10 +20,7 @@ const waitTime = 200
 const WithState = (props: ReviewButtonData) => {
     const [state, setState] = useState<ReviewButtonData>(props)
 
-    const data = useMemo<Promise<ReviewButtonData>>(() => new Promise(async (resolve, reject) => {
-
-        resolve(state)
-    }), [state])
+    const data = useMemo<ReviewButtonData>(() => state, [state])
 
 
 

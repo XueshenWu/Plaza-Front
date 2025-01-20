@@ -16,7 +16,7 @@ export type ReviewButtonData = {
 }
 
 type ReviewButtonProps = {
-    data: Promise<ReviewButtonData>,
+    data: ReviewButtonData,
     update: (action: ReviewUpdateAction) => Promise<void>
 }
 
@@ -25,7 +25,8 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
 
 
 
-    const { upvotes, downvotes, userReviewed } = use(data)
+    const { upvotes, downvotes, userReviewed } = data
+  
 
 
 
