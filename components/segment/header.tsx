@@ -15,7 +15,7 @@ import {
 
 export async function Header() {
     return (
-        <div className=" min-w-[380px] h-16 px-4 py-3 w-full flex justify-between items-center sticky top-0 z-50  bg-white shadow-md">
+        <div className=" min-w-[380px] h-12 px-4 py-3 w-full flex justify-between items-center sticky top-0 z-50  bg-white shadow-md">
             <div className="flex items-center gap-x-4 ">
                 <Sheet  >
                     <SheetTrigger className="h-full p-2  entry-default" >  <Menu className="" /></SheetTrigger>
@@ -33,8 +33,8 @@ export async function Header() {
 
                 <Code2 className="cursor-pointer" size={40} stroke="rgb(76, 82, 84)" strokeWidth={2} />
             </div>
-            <div className="flex items-center gap-x-2">
-                <Button variant={'primary'}>Log in</Button>
+            <div className="flex items-center gap-x-2 ">
+                <Button className="text-[11px] " variant={'primary'} size={"mobile"}>Log in</Button>
                 <Button variant={'ghost'} size={'icon'}><Search /></Button>
                 <Drawer>
                     <DrawerTrigger className="h-full p-2  entry-default"><Ellipsis /></DrawerTrigger>

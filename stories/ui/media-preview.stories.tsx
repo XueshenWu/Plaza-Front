@@ -26,8 +26,7 @@ export const Image: Story = {
         type: 'image',
         preview: a1,
         amount: 10,
-        width: 96,
-        height: 96
+        
     }
 }
 
@@ -36,8 +35,7 @@ export const Video: Story = {
         type: 'video',
         preview: a2,
         duration: 5039,
-        width: 96,
-        height: 96
+   
     }
 }
 
@@ -46,7 +44,5 @@ export const ExternalLink: Story = {
         type: 'external',
         preview: a3,
         url: "https://example.com",
-        width: 96,
-        height: 96
     }
 }

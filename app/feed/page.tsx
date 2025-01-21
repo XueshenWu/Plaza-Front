@@ -1,11 +1,63 @@
 import { FeedPreviewContainer } from "@/components/segment/feed-preview-container"
-import { sample } from "./data"
+import { sampleCard, sampleCompact } from "./data"
+import { FeedCard } from "@/components/segment/feed-card"
+import { Fragment } from "react"
+import { FeedFilter, PreviewType } from "@/components/segment/feed-filter"
+import { FeedCardContainer } from "@/components/segment/feed-card-container"
 
-export default async function Page() {
+const primaryFilterOptions = ['Best', 'Hot', 'New', 'Top', 'Rising']
+const secondaryFilterOptions = new Map<string, string[]>()
+secondaryFilterOptions.set('Best', ["Everywhere", "US", "CA", "CN", "Local"])
+secondaryFilterOptions.set('Hot', ["Today", "This-Week", "This-Month", "This-Year", "All-Time"])
 
-   
+//TODO: 1. Implement CardView
+// 2. Acquire argument for feedContainer
+// 3. Implement DetailView
+// 4. Implement Login/Signup
+
+
+
+export default async function Page({ searchParams }: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+
+    const params = (await searchParams)
+    // alert(JSON.stringify(params))
+    let primary = params.primary || "Best"
+
+    if (typeof primary !== 'string') {
+        primary = 'Best'
+    }
+
+    let secondary = params.secondary
+    if (typeof secondary !== 'string' || !secondaryFilterOptions.get(primary)?.includes(secondary)) {
+        secondary = secondaryFilterOptions.get(primary)?.[0]
+    }
+
+    const primaryArg = {
+        options: primaryFilterOptions,
+        selected: primary
+    }
+
+    const secondaryArg = secondary ? {
+        options: secondaryFilterOptions.get(primary) ?? [],
+        selected: secondary
+    } : undefined
+
+
+    let view = params.viewType
+    if (view !== 'compact' && view !== 'card') {
+        view = 'compact'
+    }
+
+ 
 
     return (
-        <FeedPreviewContainer initialFeeds={sample(5)} />
+        <Fragment>
+            <FeedFilter primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
+            {view === 'compact' ? <FeedPreviewContainer initialFeeds={sampleCompact(5)} /> : <FeedCardContainer initialFeeds={sampleCard(5)} />}
+        </Fragment>
+
     )
+
 }

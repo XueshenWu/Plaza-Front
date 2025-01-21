@@ -34,7 +34,7 @@ const Comment = ({ previewType, postId, comments }: {
 
 
     if (previewType === 'card') {
-        return <Link href={`posts/${postId}`} className="bg-slate-200 hover:bg-slate-300  transition-colors rounded-3xl px-3 py-1 flex flex-row items-center justify-center gap-x-1">
+        return <Link href={`posts/${postId}`} className="bg-slate-200 hover:bg-slate-300 py-2 transition-colors rounded-3xl px-3  flex flex-row items-center justify-center gap-x-1">
             <img src="comment.svg" />
             <div className="text-[10px] text-gray-700">
                 {parsedComments}

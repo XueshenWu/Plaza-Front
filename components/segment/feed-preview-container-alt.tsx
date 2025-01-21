@@ -41,7 +41,7 @@ export const FeedPreviewContainer = ({ initialFeeds = [] }: FeedPreviewContainer
         >
             <div className="flex flex-col w-full">
                 {feeds.map((feed, i) => (
-                    <FeedPreview key={i} {...feed} />
+                    <FeedPreview  key={i} {...feed} />
                   
                 ))}
             </div>

@@ -1,67 +1,18 @@
-import { FeedCardProps } from "@/components/segment/feed-card"
-import type { FeedPreviewProps } from "@/components/segment/feed-preview"
-import { a2 } from "@/public/preview/base64image"
+import { StoryObj, Meta } from "@storybook/react";
+import { FeedCard } from "@/components/segment/feed-card";
 
-const testDataCompact: FeedPreviewProps[] = [
-    {
-        meta: {
-            post: {
-                updatedAt: "1737339998",
-                publishedAt: "1737335996",
-                isUserSubscribed: true,
-                postId: "1232"
-            },
-            community: {
-                communityId: "1231",
-                communityName: "Cake Republic",
-                communityIcon: "neon_abyss.webp"
-            },
-            review: {
-                comments: 120,
-                upvotes: 5928,
-                downvotes: 7,
-                userReviewed: "up",
-                previewType: 'compact'
-            }
-        },
-        content: {
-            title: "Sensational Hearthstone mini-set card reveal: Meet His majesty Grunter, the ALL-MIGHTY Space Murloc!!!",
-        }
-    },
-    {
-        meta: {
-            post: {
-                updatedAt: "1737335996",
-                publishedAt: "1737335996",
-                isUserSubscribed: false,
-                postId: "123"
-            },
-            community: {
-                communityId: "123",
-                communityName: "Cake Republic",
-                communityIcon: "citrus.svg"
-            },
-            review: {
-                comments: 10,
-                upvotes: 180,
-                downvotes: 7,
-                userReviewed: "up",
-                previewType: 'compact'
-            }
-        },
-        content: {
-            title: "How to make a CHEESE cake, Here's a thorough guide to making a cake that's perfect for any occasion. Whether you're a beginner or experienced baker, these steps will help you create a delicious, moist, and beautiful cake.",
-            media: {
-                type: "image",
-                preview: a2,
-                amount: 5,
-            }
-        }
-    }
-]
 
-const testDataCard: FeedCardProps[] = [
-    {
+const meta: Meta<typeof FeedCard> = {
+    title: 'Segment/FeedCard',
+    component: FeedCard
+}
+
+export default meta
+
+type Story = StoryObj<typeof FeedCard>
+
+export const Preview: Story = {
+    args: {
         mode: 'preview',
         meta: {
 
@@ -104,9 +55,12 @@ const testDataCard: FeedCardProps[] = [
                 ]
             }
         }
-    },
-    {
-        mode: 'preview',
+    }
+}
+
+export const Full: Story = {
+    args: {
+        mode: 'full',
         meta: {
 
             post: {
@@ -146,23 +100,4 @@ const testDataCard: FeedCardProps[] = [
             }
         }
     }
-]
-
-
-
-export const sampleCompact = (n: number) => {
-
-    const res: FeedPreviewProps[] = []
-    for (let i = 0; i < n; i++) {
-        res.push(testDataCompact[Math.floor(Math.random() * testDataCompact.length)])
-    }
-    return res
-}
-
-export const sampleCard = (n: number) => { 
-    const res: FeedCardProps[] = []
-    for (let i = 0; i < n; i++) {
-        res.push(testDataCard[Math.floor(Math.random() * testDataCard.length)])
-    }
-    return res
 }

@@ -29,15 +29,11 @@ export type { MediaPreview, VideoPreview, ImagePreview, ExternalLinkPreview }
 
 type MediaPreviewProps = MediaPreview & {
     className?: string,
-    size?: {
-        width: number,
-        height: number
-    }
 }
 
 const snapshotIconSize = 8
 
-export  function MediaPreviewImage({ type, className, size, ...props }: MediaPreviewProps) {
+export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewProps) {
     let content = null
     if (type === 'image') {
         content = (

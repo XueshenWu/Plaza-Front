@@ -32,6 +32,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.6
         version: 1.1.6(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@storybook/addon-queryparams':
+        specifier: ^7.0.1
+        version: 7.0.1(@storybook/manager-api@8.6.0-alpha.0(storybook@8.6.0-alpha.0))(@storybook/preview-api@8.6.0-alpha.0(storybook@8.6.0-alpha.0))
       '@types/lodash':
         specifier: ^4.17.14
         version: 4.17.14
@@ -44,6 +47,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      embla-carousel-react:
+        specifier: ^8.5.2
+        version: 8.5.2(react@19.0.0)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1725,6 +1731,12 @@ packages:
     peerDependencies:
       storybook: ^8.6.0-alpha.0
 
+  '@storybook/addon-queryparams@7.0.1':
+    resolution: {integrity: sha512-hlOrjCbUdkg/f/7HaIBMvEp2oyNkBYaxifDdGNyUhdBzfuWUeWDTUwYDxUubbhuqNcSMbw5Cje34dE+hJaGR9A==}
+    peerDependencies:
+      '@storybook/manager-api': ^7.0.0 || ^8.0.0 || ^8.0.0-rc.0
+      '@storybook/preview-api': ^7.0.0 || ^8.0.0 || ^8.0.0-rc.0
+
   '@storybook/addon-themes@8.6.0-alpha.0':
     resolution: {integrity: sha512-4ikOVjditKYgAqxaOTF9BUNkJRi8/N0HRu6KfjoPC3lf471fW54L+8zBkxtv9k+GGzZGds/ow78wZHxvBy6Lhg==}
     peerDependencies:
@@ -2740,6 +2752,19 @@ packages:
 
   elliptic@6.6.1:
     resolution: {integrity: sha512-RaddvvMatK2LJHqFJ+YA4WysVN5Ita9E35botqIYspQ4TkRAlCicdzKOjlyv/1Za5RyTNn7di//eEV0uTAfe3g==}
+
+  embla-carousel-react@8.5.2:
+    resolution: {integrity: sha512-Tmx+uY3MqseIGdwp0ScyUuxpBgx5jX1f7od4Cm5mDwg/dptEiTKf9xp6tw0lZN2VA9JbnVMl/aikmbc53c6QFA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
+  embla-carousel-reactive-utils@8.5.2:
+    resolution: {integrity: sha512-QC8/hYSK/pEmqEdU1IO5O+XNc/Ptmmq7uCB44vKplgLKhB/l0+yvYx0+Cv0sF6Ena8Srld5vUErZkT+yTahtDg==}
+    peerDependencies:
+      embla-carousel: 8.5.2
+
+  embla-carousel@8.5.2:
+    resolution: {integrity: sha512-xQ9oVLrun/eCG/7ru3R+I5bJ7shsD8fFwLEY7yPe27/+fDHCNj0OT5EoG5ZbFyOxOcG6yTwW8oTz/dWyFnyGpg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -6659,6 +6684,11 @@ snapshots:
       storybook: 8.6.0-alpha.0
       ts-dedent: 2.2.0
 
+  '@storybook/addon-queryparams@7.0.1(@storybook/manager-api@8.6.0-alpha.0(storybook@8.6.0-alpha.0))(@storybook/preview-api@8.6.0-alpha.0(storybook@8.6.0-alpha.0))':
+    dependencies:
+      '@storybook/manager-api': 8.6.0-alpha.0(storybook@8.6.0-alpha.0)
+      '@storybook/preview-api': 8.6.0-alpha.0(storybook@8.6.0-alpha.0)
+
   '@storybook/addon-themes@8.6.0-alpha.0(storybook@8.6.0-alpha.0)':
     dependencies:
       storybook: 8.6.0-alpha.0
@@ -7957,6 +7987,18 @@ snapshots:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+
+  embla-carousel-react@8.5.2(react@19.0.0):
+    dependencies:
+      embla-carousel: 8.5.2
+      embla-carousel-reactive-utils: 8.5.2(embla-carousel@8.5.2)
+      react: 19.0.0
+
+  embla-carousel-reactive-utils@8.5.2(embla-carousel@8.5.2):
+    dependencies:
+      embla-carousel: 8.5.2
+
+  embla-carousel@8.5.2: {}
 
   emoji-regex@8.0.0: {}
 

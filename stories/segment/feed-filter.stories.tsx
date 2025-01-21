@@ -12,9 +12,28 @@ export default meta;
 
 type Story = StoryObj<typeof FeedFilter>;
 
-export const Default: Story = {
+export const Best: Story = {
     args:{
-        selectedRegion:"Everywhere",
-        selectedTrending:"Top"
+        primary:{
+            options:['Best','Hot','New','Top'],
+            selected:'Best'
+        },
+        secondary:{
+            options:['Everywhere','US','CA','CN','Local'],
+            selected:'Everywhere'
+        }
+    }
+}
+
+export const Top: Story = {
+    args:{
+        primary:{
+            options:['Best','Hot','New','Top'],
+            selected:'Top'
+        },
+        secondary:{
+            options:['Today','This-Week','This-Month','This-Year','All-Time'],
+            selected:'This-Week'
+        }
     }
 }
