@@ -20,8 +20,10 @@ secondaryFilterOptions.set('Hot', ["Today", "This-Week", "This-Month", "This-Yea
 export default async function Page({ searchParams }: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-
+    
     const params = (await searchParams)
+
+
     // alert(JSON.stringify(params))
     let primary = params.primary || "Best"
 

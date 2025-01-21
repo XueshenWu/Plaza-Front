@@ -31,7 +31,8 @@ export type FeedPreviewProps = {
 
 }
 
-
+//FIXME: adjust the size of the image(ImagePreview Component)
+//FIXME: adjust the size of the updated time to make everything in straight line
 
 export function FeedPreview({ meta, content }: FeedPreviewProps) {
     return (

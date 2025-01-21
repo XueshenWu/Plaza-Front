@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { a2 } from "@/public/preview/base64image";
 import { http, HttpResponse, delay } from 'msw';
-import { FeedPreviewContainer } from "@/components/segment/feed-preview-container-alt";
+import { FeedPreviewContainer } from "@/components/segment/feed-preview-container";
 import type { FeedPreviewProps } from "@/components/segment/feed-preview";
 
 const meta: Meta = {
@@ -69,6 +69,8 @@ const testData: FeedPreviewProps[] = [
     }
 ]
 
+// FIXME: replace sample function with sampleCompact and sampleCard from data file(search the function name to find them)
+
 const sample = (n: number) => {
 
     const res: FeedPreviewProps[] = []
@@ -78,6 +80,7 @@ const sample = (n: number) => {
     return res
 }
 
+// FIXME: Write 2 stories for FeedPreviewContainer to test CardView and CompactView
 type Story = StoryObj<typeof FeedPreviewContainer>;
 
 export const Default: Story = {
