@@ -5,7 +5,6 @@ import Feed from "@/app/feed/page"
 const meta: Meta<typeof Feed> = {
     component: Feed,
     title: "Page/Feed",
-    excludeStories: /.*Data$/,
     tags: ['autodocs'],
 
 }
