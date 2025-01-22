@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import Message from '@/schemas/message'
-import { insertMessage } from '@/storage/database/message'
+import { insertMessage } from '@/storage/server/database/message'
 
 export async function submitMessageForm({ name, text }: z.infer<typeof Message>): Promise<boolean> {
     console.log('submitting message form', { name, text })

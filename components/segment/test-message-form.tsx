@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { submitMessageForm } from "@/actions/form/test-submit-message"
-import { getMessages } from "@/storage/database/message"
+import { getMessages } from "@/storage/server/database/message"
 
 type Message = z.infer<typeof formSchema>
 
