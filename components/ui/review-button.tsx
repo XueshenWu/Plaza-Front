@@ -161,11 +161,11 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
                 <ArrowBigUp className={`${style.upvote} icon transition-all cursor-pointer stroke-1 `} onClick={handleUpvote} />
 
             </div>
-            <span className=" select-none text-[9px]">
+            <span className=" select-none text-[11px]">
                 {parsedRatings}
             </span>
             <div className={`rounded-full p-1 group ${style.iconContainer}`}>
-                <ArrowBigDown className={`${style.downvote} icon transition-all cursor-pointer stroke-1`} onClick={handleDownvote} />
+                <ArrowBigDown className={`${style.downvote} icon 0transition-all cursor-pointer stroke-1`} onClick={handleDownvote} />
 
             </div>
         </div>
