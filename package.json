@@ -30,8 +30,12 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@storybook/addon-queryparams": "^7.0.1",
+
+    "@storybook/addon-viewport": "^8.5.0",
+
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.0",
+
     "@types/lodash": "^4.17.14",
     "@types/react-infinite-scroller": "^1.2.5",
     "class-variance-authority": "^0.7.1",
@@ -66,7 +70,7 @@
     "@storybook/addon-essentials": "^8.6.0-alpha.0",
     "@storybook/addon-interactions": "^8.6.0-alpha.0",
     "@storybook/addon-onboarding": "^8.6.0-alpha.0",
-    "@storybook/addon-themes": "^8.6.0-alpha.0",
+    "@storybook/addon-themes": "8.6.0-alpha.0",
     "@storybook/blocks": "^8.6.0-alpha.0",
     "@storybook/manager-api": "^8.6.0-alpha.0",
     "@storybook/nextjs": "^8.6.0-alpha.0",
