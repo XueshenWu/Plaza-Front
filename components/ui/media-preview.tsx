@@ -62,7 +62,7 @@ export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewP
     }
 
     return (
-        <div className={className + " rounded-xl relative cursor-pointer min-w-14  "}>
+        <div className={className + " rounded-xl relative cursor-pointer min-w-14 w-[84px] mobile-sm:w-[112px] mobile-lg:w-[148px]"}>
             {/* <Image width={size?.width} height={size?.height} fill={size === undefined ? true : undefined} src={props.preview} alt="" className="rounded-xl " /> */}
 
             <Image src={props.preview} alt="" className="rounded-xl object-cover "
