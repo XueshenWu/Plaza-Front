@@ -38,18 +38,23 @@ export function FeedPreview({ meta, content }: FeedPreviewProps) {
     return (
         <div className="py-2  flex flex-col items-start  border-b border-slate-300 text-xs w-full">
             <div className="flex flex-row items-center justify-between w-full">
-                <div className="flex items-center justtiy-start  gap-x-1">
+                <div className="flex items-center gap-x-1 flex-col mobile-sm:flex-row">
+                  <div className="flex flex-row gap-2 items-center mobile-sm:gap-1">
                     <Link href={`localhost:xxxx/community/${meta.community.communityId}`} >
                         <img className="w-8 h-8 rounded-full" src={meta.community.communityIcon} />
                     </Link>
-
+                    <div className="flex flex-col mobile-sm:flex-row mobile-sm:gap-1">
                     <Link href={`localhost:xxxx/community/${meta.community.communityId}`} className="text-gray-700 font-semibold">
                         r/{meta.community.communityName}
                     </Link>
-                    &#x2022;
-                    <div className="text-[10px]">
+                    
+                    <span className="mobile-sm:block hidden">&#x2022;</span>
+                    
+                    <div className="text-[12px]">
                         {/* {meta.post.updatedAt} */}
                         {fromNow(meta.post.updatedAt)}
+                    </div>
+                    </div>
                     </div>
                 </div>
                 <div>
@@ -58,13 +63,13 @@ export function FeedPreview({ meta, content }: FeedPreviewProps) {
                     </Button>
                 </div>
             </div>
-            <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex flex-row gap-2 items-center justify-between w-full p-1">
                 <div className="flex-grow w-full cursor-pointer py-4">
                     {content.title}
                 </div>
-
-                {content.media && <MediaPreviewImage  {...content.media} />}
-
+                <div>
+                    {content.media && <MediaPreviewImage  {...content.media} />}
+                </div>
             </div>
             <ReviewPlate {...meta.review} previewType="compact" postId={meta.post.postId} />
         </div>

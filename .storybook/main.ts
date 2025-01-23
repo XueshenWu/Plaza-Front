@@ -15,7 +15,8 @@ const config: StorybookConfig = {
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
     '@storybook/addon-themes',
-    '@storybook/addon-queryparams'
+    '@storybook/addon-queryparams',
+    '@storybook/addon-viewport'
   ],
 
   framework: {
