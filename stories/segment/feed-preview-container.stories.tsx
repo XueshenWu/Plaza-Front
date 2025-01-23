@@ -6,7 +6,7 @@ import type { FeedPreviewProps } from "@/components/segment/feed-preview";
 
 const meta: Meta = {
     component: FeedPreviewContainer,
-    title: 'Segment/FeedPreviewContainer'
+    title: 'Segment/FeedPreviewContainer',
 }
 
 export default meta;
@@ -99,5 +99,6 @@ export const Default: Story = {
     },
     args: {
         initialFeeds: sample(5)
-    }
+    },
+    globals: { theme: 'dark' },
 }

@@ -82,7 +82,7 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
         upvote: string,
         downvote: string,
         container: string,
-        iconComtainer: string,
+        iconContainer: string,
 
     }>(() => {
         switch (optReviewData.userReviewed) {
@@ -91,7 +91,7 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
                     upvote: "stroke-white fill-white",
                     downvote: "stroke-white fill-none ",
                     container: "  bg-[#d93900] text-white",
-                    iconComtainer: "hover:bg-[#ae2c00]",
+                    iconContainer: "hover:bg-[#ae2c00]",
 
                 }
             }
@@ -100,7 +100,7 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
                     upvote: "stroke-white fill-none",
                     downvote: "stroke-white fill-white",
                     container: "bg-[#6a5cff] text-white",
-                    iconComtainer: "hover:bg-[#523dff]",
+                    iconContainer: "hover:bg-[#523dff]",
 
                 }
             }
@@ -109,7 +109,7 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
                     upvote: "fill-none stroke-black fill-none group-hover:stroke-[#d93900]",
                     downvote: "fill-none stroke-black fill-none group-hover:stroke-[#6a5cff]",
                     container: " bg-slate-200 text-black",
-                    iconComtainer: "hover:bg-slate-300"
+                    iconContainer: "hover:bg-slate-300"
                 }
             }
         }
@@ -157,15 +157,15 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
 
     return (
         <div className={`flex flex-row items-center justify-center  gap-x-1  rounded-3xl *:transition-all transition-all duration-100 ${style.container}`}>
-            <div className={`rounded-full p-1 group ${style.iconComtainer}`}>
-                <ArrowBigUp className={`${style.upvote} w-5 h-5  transition-all cursor-pointer stroke-1`} onClick={handleUpvote} />
+            <div className={`rounded-full p-1 group ${style.iconContainer}`}>
+                <ArrowBigUp className={`${style.upvote} icon transition-all cursor-pointer stroke-1 `} onClick={handleUpvote} />
 
             </div>
-            <span className=" select-none text-xs">
+            <span className=" select-none text-[9px]">
                 {parsedRatings}
             </span>
-            <div className={`rounded-full p-1 group ${style.iconComtainer}`}>
-                <ArrowBigDown className={`${style.downvote} w-5 h-5 transition-all cursor-pointer stroke-1`} onClick={handleDownvote} />
+            <div className={`rounded-full p-1 group ${style.iconContainer}`}>
+                <ArrowBigDown className={`${style.downvote} icon transition-all cursor-pointer stroke-1`} onClick={handleDownvote} />
 
             </div>
         </div>
