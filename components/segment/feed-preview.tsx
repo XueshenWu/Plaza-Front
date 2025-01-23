@@ -63,13 +63,13 @@ export function FeedPreview({ meta, content }: FeedPreviewProps) {
                     </Button>
                 </div>
             </div>
-            <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex flex-row gap-2 items-center justify-between w-full p-1">
                 <div className="flex-grow w-full cursor-pointer py-4">
                     {content.title}
                 </div>
-
-                {content.media && <MediaPreviewImage  {...content.media} />}
-
+                <div>
+                    {content.media && <MediaPreviewImage  {...content.media} />}
+                </div>
             </div>
             <ReviewPlate {...meta.review} previewType="compact" postId={meta.post.postId} />
         </div>
