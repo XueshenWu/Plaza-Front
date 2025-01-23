@@ -33,15 +33,18 @@ export function usePasswordLoginForm() {
         control={form.control}
         name="email"
         render={({ field }) => (
-            <FormItem>
-                <FormControl>
+            <FormItem className=''>
+                <FormDescription className=''>Enter your email address</FormDescription>
+
+                <FormControl   >
                     <Input
                         type="email"
                         id="email"
                         {...field}
+
                     />
                 </FormControl>
-                <FormDescription>Enter your email address</FormDescription>
+
                 <FormMessage />
             </FormItem>
         )}
@@ -53,6 +56,7 @@ export function usePasswordLoginForm() {
         name="password"
         render={({ field }) => (
             <FormItem>
+                <FormDescription>Enter your password</FormDescription>
                 <FormControl>
                     <Input
                         type="password"
@@ -60,7 +64,7 @@ export function usePasswordLoginForm() {
                         {...field}
                     />
                 </FormControl>
-                <FormDescription>Enter your password</FormDescription>
+
                 <FormMessage />
             </FormItem>
         )}

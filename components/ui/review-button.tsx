@@ -161,7 +161,7 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
                 <ArrowBigUp className={`${style.upvote} icon transition-all cursor-pointer stroke-1 `} onClick={handleUpvote} />
 
             </div>
-            <span className=" select-none text-[11px]">
+            <span className=" none text-[11px]">
                 {parsedRatings}
             </span>
             <div className={`rounded-full p-1 group ${style.iconContainer}`}>
