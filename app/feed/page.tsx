@@ -24,7 +24,6 @@ export default async function Page({ searchParams }: {
     const params = (await searchParams)
 
 
-    // alert(JSON.stringify(params))
     let primary = params.primary || "Best"
 
     if (typeof primary !== 'string') {

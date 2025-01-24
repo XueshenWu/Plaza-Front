@@ -7,7 +7,7 @@ import { useFormState } from 'react-hook-form';
 import { useResetPasswordConfirmForm } from '@/hooks/form/reset-password';
 import { Button } from '../ui/button';
 import { Form } from '../ui/form';
-import { resetPasswordConfirm } from '@/actions/form/resetpassword-confirm';
+import { resetPasswordConfirm } from '@/actions/server/form/resetpassword-confirm';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { EmailOtpType } from '@supabase/supabase-js';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';

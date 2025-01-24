@@ -1,1 +1,0 @@
-import { createClient } from "@/storage/supabase/supabase-svr";

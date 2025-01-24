@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "./button";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import useSWR from "swr";
 
 type SigninButtonProps = Pick<ButtonProps, 'variant' | 'size' | "className"> & {
     toAuthenticateLabel?: React.ReactNode,
@@ -16,9 +17,12 @@ type SigninButtonProps = Pick<ButtonProps, 'variant' | 'size' | "className"> & {
 }
 
 
+
 export function SigninButton({ className, variant, size, toAuthenticateLabel, toDeauthenticatedLabel }: SigninButtonProps
 ) {
-    const { authenticated, deauthenticate } = useUIAuthStore();
+    const {authenticated} = useUIAuthStore();
+ 
+
     const supabase = createClient();
     const router = useRouter();
     return (
@@ -34,7 +38,7 @@ export function SigninButton({ className, variant, size, toAuthenticateLabel, to
                     if (error) {
                         console.log(error);
                     }
-                    deauthenticate();
+
                     router.push('/');
                 } else {
                     router.push('/auth/signin');

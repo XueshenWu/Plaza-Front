@@ -1,15 +1,14 @@
-'use server';
-import { createClient } from "@/storage/supabase/supabase-svr";
+'use client';
+import { createClient } from "@/storage/supabase/supabase-cli";
 import schema from "@/schemas/passwordSigninSchema";
 import { z } from "zod";
-import { redirect } from 'next/navigation'
-import { revalidatePath } from "next/cache";
+
 
 type PasswordSigninDto = z.infer<typeof schema>
 
 
 export async function passwordSignin(formData: PasswordSigninDto, captchaToken: string) {
-    const supabase = await createClient();
+    const supabase =  createClient();
     try {
         const data = schema.parse(formData);
      

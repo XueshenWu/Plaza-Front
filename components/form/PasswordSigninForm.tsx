@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { usePasswordSigninForm } from '@/hooks/form/password-signin';
-import { passwordSignin } from "@/actions/form/password-signin";
+import { passwordSignin } from "@/actions/client/form/password-signin";
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ import { revalidateTag } from "next/cache";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { useUIAuthStore } from "@/storage/client/zustand/authStore";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 // import { useAuthStore } from "@/storage/client/zustand/authStore";
 
 
@@ -35,12 +36,12 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
     const router = useRouter()
     const { isValid } = useFormState(formObj)
 
-    const {authenticate} = useUIAuthStore()
+    const { authenticate } = useUIAuthStore()
 
 
     return (
-        <div className="flex flex-col items-center justify-start py-2">
-            <div className="w-full">
+        <div className="flex flex-col items-center justify-start py-2 space-y-2">
+            <div className="w-full space-y-2">
                 <h1 className="font-bold text-2xl w-full text-left">
                     Signin
                 </h1>
@@ -48,12 +49,12 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
                 <Agreement />
             </div>
 
-            <div>
-                {useOauth && <div className="*:w-full flex flex-col items-center justify-center">
-                    <OauthButton provider="github" />
-                    <OauthButton provider="google" />
-                </div>}
-            </div>
+
+            {useOauth && <div className="w-full space-y-2 flex flex-col items-center justify-center">
+                <OauthButton icon={<GitHubLogoIcon className="icon" />} provider="github" />
+                <OauthButton  provider="google" />
+            </div>}
+
 
             {useOauth && <Hr text="Or" />}
             <Form {...formObj}>
@@ -72,8 +73,10 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
                     const res = await passwordSignin(data, token)
                     if (res) {
                         alert('Signin Success')
-                        authenticate()
+                        
                         router.replace("/auth/whoami")
+                        
+                      
                     } else {
                         alert('Signin Failed')
                         formObj.reset()
