@@ -4,8 +4,6 @@
 import { z } from 'zod'
 import schema from '@/schemas/registerSchema'
 import { createClient } from '@/storage/supabase/supabase-svr'
-import { redirect } from 'next/navigation'
-import { revalidatePath } from 'next/cache'
 
 type RegisterDto = z.infer<typeof schema>
 

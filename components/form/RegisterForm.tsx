@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { useRegisterForm } from '@/hooks/form/register';
-import { register } from "@/actions/form/register";
+import { register } from "@/actions/server/form/register";
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
 import { useRouter } from "next/navigation";
 import { useRef } from "react";

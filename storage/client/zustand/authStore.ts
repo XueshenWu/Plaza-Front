@@ -8,7 +8,7 @@ interface UIAuthState {
 }
 
 export const useUIAuthStore = create<UIAuthState>()((set) => ({
-    authenticated: Cookies.get('sb-umyivohnmwgdwsfwtfzz-auth-token') ? true : false,
+    authenticated: false,
     authenticate: () => set({ authenticated: true }),
     deauthenticate: () => set({ authenticated: false })
 }))
