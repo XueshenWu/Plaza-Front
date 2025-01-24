@@ -86,7 +86,9 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
 
                 })} className="w-full space-y-3">
                     {emailField}
+                    
                     {passwordField}
+                    <span className="text-sm">&nbsp;</span>
                     <div className="flex justify-center">
                         <Turnstile className=""
                             ref={captchaRef}
