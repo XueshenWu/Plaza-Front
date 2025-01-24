@@ -1,23 +1,25 @@
 
 'use client';
-import formSchema from '@/schemas/registerSchema';
+import formSchema from '@/schemas/passwordSigninSchema';
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
 import {
+    Form,
     FormControl,
     FormDescription,
     FormField,
     FormItem,
+    FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input';
 
-type RegisterDto = z.infer<typeof formSchema>
+type PasswordSigninDto = z.infer<typeof formSchema>
 
-export function useRegisterForm() {
-    const form = useForm<RegisterDto>({
+export function usePasswordSigninForm() {
+    const form = useForm<PasswordSigninDto>({
         resolver: zodResolver(formSchema),
         mode: 'onChange',
         defaultValues: {
@@ -31,16 +33,18 @@ export function useRegisterForm() {
         control={form.control}
         name="email"
         render={({ field }) => (
-            <FormItem>
-                 <FormDescription>Enter your email address</FormDescription>
-                <FormControl>
+            <FormItem className=''>
+                <FormDescription className=''>Enter your email address</FormDescription>
+
+                <FormControl   >
                     <Input
                         type="email"
                         id="email"
                         {...field}
+
                     />
                 </FormControl>
-               
+
                 <FormMessage />
             </FormItem>
         )}
@@ -52,7 +56,6 @@ export function useRegisterForm() {
         name="password"
         render={({ field }) => (
             <FormItem>
-               
                 <FormDescription>Enter your password</FormDescription>
                 <FormControl>
                     <Input
@@ -61,6 +64,7 @@ export function useRegisterForm() {
                         {...field}
                     />
                 </FormControl>
+
                 <FormMessage />
             </FormItem>
         )}

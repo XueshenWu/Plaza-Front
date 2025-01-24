@@ -13,6 +13,7 @@ const NavLinkVariants = cva(
         variant: {
             default: "",
             sub: " rounded-l-none border-l hover:border-l-[#b8b8b8] border-l-[#e6e6e6]",
+            
         },
         active: {
             true: 'bg-[#e5ebee] hover:bg-[#e5ebee]',
@@ -43,7 +44,7 @@ export async function NavLink({ icon, href, label, variant, className, active, p
 
     if (!!plain) {
         return (
-            <Link href={href ?? "/"} className={className}>
+            <Link href={href ?? "/"} className={cn(className, 'hover:text-blue-400 text-blue-500 cursor-pointer')}>
                 {label}
             </Link>
         )

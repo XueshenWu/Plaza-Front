@@ -55,7 +55,7 @@ const config: SideNavigationConfig = {
                 active: <CircleArrowOutUpRight />,
                 inactive: <CircleArrowOutUpRight />
             },
-            href: "/"
+            href: "/feed"
         }
     ],
     topics: {

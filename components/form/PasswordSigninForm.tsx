@@ -1,41 +1,53 @@
 'use client';
+
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
-import { useRegisterForm } from '@/hooks/form/register';
-import { register } from "@/actions/form/register";
+import { usePasswordSigninForm } from '@/hooks/form/password-signin';
+import { passwordSignin } from "@/actions/form/password-signin";
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
-import { useFormState } from "react-hook-form";
 import { Hr } from "../ui/hr";
-import { Agreement } from "../segment/agreement";
+import { useFormState } from "react-hook-form";
+import Link from "next/link";
 import { OauthButton } from "../ui/oauth-button";
+import { Agreement } from "../segment/agreement";
+import { revalidateTag } from "next/cache";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import { useUIAuthStore } from "@/storage/client/zustand/authStore";
+// import { useAuthStore } from "@/storage/client/zustand/authStore";
 
 
-type RegisterFormProps = {
-    useOauth?: boolean
-    onSigninClick?: () => void,
-    signinLink?: string
+
+type PasswordSigninFormProps = {
+    useOauth?: boolean,
+    onSignupClick?: () => void
+    signupLink?: string
+    resetPasswordClick?: () => void
+    resetPasswordLink?: string
 }
 
 
-
-export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFormProps) {
-    const { emailField, passwordField, formObj } = useRegisterForm();
-
+export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetPasswordClick, resetPasswordLink }: PasswordSigninFormProps) {
+    const { emailField, passwordField, formObj } = usePasswordSigninForm();
     const captchaRef = useRef<TurnstileInstance>(null);
     const router = useRouter()
     const { isValid } = useFormState(formObj)
+
+    const {authenticate} = useUIAuthStore()
+
 
     return (
         <div className="flex flex-col items-center justify-start py-2">
             <div className="w-full">
                 <h1 className="font-bold text-2xl w-full text-left">
-                    Sign up
+                    Signin
                 </h1>
 
-                <Agreement/>
+                <Agreement />
             </div>
+
             <div>
                 {useOauth && <div className="*:w-full flex flex-col items-center justify-center">
                     <OauthButton provider="github" />
@@ -45,57 +57,66 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
 
             {useOauth && <Hr text="Or" />}
             <Form {...formObj}>
-
                 <form onSubmit={formObj.handleSubmit(async (data) => {
 
                     if (!captchaRef.current) {
                         return
                     }
-
-
                     const token = await captchaRef.current.getResponsePromise();
                     if (!token) {
                         alert('Please complete the captcha')
                         captchaRef.current.reset()
                         return
                     }
-                    const res = await register(data, token)
+
+                    const res = await passwordSignin(data, token)
                     if (res) {
-                        alert('Register Success, please check your email to activate your account')
-                        router.replace("/auth/signin")
+                        alert('Signin Success')
+                        authenticate()
+                        router.replace("/auth/whoami")
                     } else {
-                        alert('Register Failed')
+                        alert('Signin Failed')
                         formObj.reset()
                         captchaRef.current.reset()
                     }
 
 
-
-
-
                 })} className="space-y-3">
                     {emailField}
                     {passwordField}
+
                     <Turnstile
                         ref={captchaRef}
                         siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
                         onExpire={() => captchaRef.current?.reset()}
-
-
                     />
                     <div className="text-blue-500 text-xs space-y-2">
-                        {(onSigninClick||signinLink) && <div className="space-x-1"><span className="text-black">Already a ORer?</span> <span className="cursor-pointer" onClick={()=>{
-                            if(onSigninClick){
-                                onSigninClick()
-                            }else{
-                                router.replace(signinLink!)
+                        {(resetPasswordLink || resetPasswordClick) && <div className="cursor-pointer text-blue-500 hover:text-blue-400 transition-colors duration-100" onClick={() => {
+                            if (resetPasswordClick) {
+                                resetPasswordClick()
+                            } else {
+                                router.push(resetPasswordLink!)
+                            }
+                        }}>Forgot Password?</div>}
+
+                        {(signupLink || onSignupClick) && <div className="space-x-1"><span className="text-black">New to OR?</span> <span className="cursor-pointer" onClick={() => {
+                            if (onSignupClick) {
+                                onSignupClick()
+                            } else {
+                                router.push(signupLink!)
                             }
                         }}>Sign Up</span></div>}
                     </div>
+
                     <Button type="submit" variant={isValid ? 'primary' : "disabled"} size={'full'} >Submit</Button>
                 </form>
-
             </Form>
+
+            <div>
+
+
+            </div>
+
         </div>
     )
 }

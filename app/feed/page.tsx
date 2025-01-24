@@ -13,7 +13,7 @@ secondaryFilterOptions.set('Hot', ["Today", "This-Week", "This-Month", "This-Yea
 //TODO: 1. Implement CardView
 // 2. Acquire argument for feedContainer
 // 3. Implement DetailView
-// 4. Implement Login/Signup
+// 4. Implement Signin/Signup
 
 
 

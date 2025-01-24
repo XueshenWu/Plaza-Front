@@ -1,7 +1,10 @@
-'use server';
+'use client';
 
-export async function Agreement() {
+export function Agreement() {
     // Agreement
     // User Agreement and Privacy Policy are links not buttons
+    return(<div>
+        {`<Agreement/>`}
+    </div>)
 }
 

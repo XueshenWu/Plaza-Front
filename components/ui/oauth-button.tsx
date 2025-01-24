@@ -1,17 +1,17 @@
 'use client'
 
-type OAuthButtonProps = {
+type OauthButtonProps = {
     provider: string // github, google
-    icon: string
+    icon?: string
     className?: string
 }
 
 
 
-export function OAuthButton({provider, icon, className}:OAuthButtonProps) {
+export function OauthButton({provider, icon, className}:OauthButtonProps) {
     return (
         <div>
-            <button>OAuth</button>
+           {`<OauthButton provider=${provider} />`}
         </div>
     )
 }
