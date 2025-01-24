@@ -31,9 +31,6 @@ export type FeedPreviewProps = {
 
 }
 
-//FIXME: adjust the size of the image(ImagePreview Component)
-//FIXME: adjust the size of the updated time to make everything in straight line
-
 export function FeedPreview({ meta, content }: FeedPreviewProps) {
     return (
         <div className="py-2  flex flex-col items-start  border-b border-slate-300 text-xs w-full">

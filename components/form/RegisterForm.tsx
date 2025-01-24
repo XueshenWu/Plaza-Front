@@ -34,7 +34,7 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
                     Sign up
                 </h1>
 
-                <Agreement/>
+                <Agreement />
             </div>
             <div>
                 {useOauth && <div className="*:w-full flex flex-col items-center justify-center">
@@ -43,7 +43,7 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
                 </div>}
             </div>
 
-            {useOauth && <Hr text="Or" />}
+            {useOauth && <Hr text="OR" />}
             <Form {...formObj}>
 
                 <form onSubmit={formObj.handleSubmit(async (data) => {
@@ -73,21 +73,23 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
 
 
 
-                })} className="space-y-3">
+                })} className="space-y-3 w-full">
                     {emailField}
                     {passwordField}
-                    <Turnstile
-                        ref={captchaRef}
-                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
-                        onExpire={() => captchaRef.current?.reset()}
+                    <div className="grid place-content-center">
+                        <Turnstile
+                            ref={captchaRef}
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
+                            onExpire={() => captchaRef.current?.reset()}
 
 
-                    />
+                        />
+                    </div>
                     <div className="text-blue-500 text-xs space-y-2">
-                        {(onSigninClick||signinLink) && <div className="space-x-1"><span className="text-black">Already a ORer?</span> <span className="cursor-pointer" onClick={()=>{
-                            if(onSigninClick){
+                        {(onSigninClick || signinLink) && <div className="space-x-1"><span className="text-black">Already a ORer?</span> <span className="cursor-pointer" onClick={() => {
+                            if (onSigninClick) {
                                 onSigninClick()
-                            }else{
+                            } else {
                                 router.replace(signinLink!)
                             }
                         }}>Sign Up</span></div>}
