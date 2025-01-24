@@ -1,8 +1,6 @@
 'use client'
 import Image from "next/image"
-import SVG_image from "@/public/preview/image.svg"
-import SVG_video from "@/public/preview/video.svg"
-import SVG_external from "@/public/preview/external-link.svg"
+
 import { Fragment } from "react"
 
 type VideoPreview = {
@@ -38,7 +36,7 @@ export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewP
     if (type === 'image') {
         content = (
             <Fragment>
-                <Image height={snapshotIconSize} width={snapshotIconSize} src={SVG_image} alt="" className=" invert" />
+                <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/image.svg" alt="" className=" invert" />
                 <div> {(props as ImagePreview).amount}</div>
             </Fragment>
 
@@ -47,7 +45,7 @@ export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewP
     } else if (type === 'video') {
         content = (
             <Fragment>
-                <Image height={snapshotIconSize} width={snapshotIconSize} src={SVG_video} alt="" className=" invert" />
+                <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/video.svg" alt="" className=" invert" />
                 <div>{new Date((props as VideoPreview).duration * 1000).toISOString().substr(11, 8)}</div>
             </Fragment>
 
@@ -55,7 +53,7 @@ export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewP
     } else {
         content = (
             <Fragment>
-                <Image height={snapshotIconSize} width={snapshotIconSize} src={SVG_external} alt="" className=" invert" />
+                <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/external-link.svg" alt="" className=" invert" />
                 <div> {(props as ExternalLinkPreview).url}</div>
             </Fragment>
         )

@@ -3,6 +3,7 @@ import { a2 } from "@/public/preview/base64image";
 import { http, HttpResponse, delay } from 'msw';
 import { FeedPreviewContainer } from "@/components/segment/feed-preview-container";
 import type { FeedPreviewProps } from "@/components/segment/feed-preview";
+import { sampleCompact } from "@/app/feed/data"
 
 const meta: Meta = {
     component: FeedPreviewContainer,
@@ -69,36 +70,23 @@ const testData: FeedPreviewProps[] = [
     }
 ]
 
-// FIXME: replace sample function with sampleCompact and sampleCard from data file(search the function name to find them)
-
-const sample = (n: number) => {
-
-    const res: FeedPreviewProps[] = []
-    for (let i = 0; i < n; i++) {
-        res.push(testData[Math.floor(Math.random() * testData.length)])
-    }
-    return res
-}
-
-// FIXME: Write 2 stories for FeedPreviewContainer to test CardView and CompactView
 type Story = StoryObj<typeof FeedPreviewContainer>;
 
-export const Default: Story = {
+export const Preview: Story = {
     parameters: {
         msw: {
             handlers: [
                 http.get('/api/feeds', async (req) => {
-                   
-                   
+
                     return HttpResponse.json({
-                        data: sample(5)
+                        data: sampleCompact(5)
                     })
                 })
             ]
         }
     },
     args: {
-        initialFeeds: sample(5)
+        initialFeeds: sampleCompact(5)
     },
-    globals: { theme: 'dark' },
 }
+

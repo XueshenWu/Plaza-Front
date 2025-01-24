@@ -35,14 +35,14 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
     const router = useRouter()
     const { isValid } = useFormState(formObj)
 
-    const {authenticate} = useUIAuthStore()
+    const { authenticate } = useUIAuthStore()
 
 
     return (
         <div className="flex flex-col items-center justify-start py-2">
             <div className="w-full">
                 <h1 className="font-bold text-2xl w-full text-left">
-                    Signin
+                    Sign in
                 </h1>
 
                 <Agreement />
@@ -55,7 +55,7 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
                 </div>}
             </div>
 
-            {useOauth && <Hr text="Or" />}
+            {useOauth && <Hr text="OR" />}
             <Form {...formObj}>
                 <form onSubmit={formObj.handleSubmit(async (data) => {
 
@@ -81,15 +81,16 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
                     }
 
 
-                })} className="space-y-3">
+                })} className="w-full space-y-3">
                     {emailField}
                     {passwordField}
-
-                    <Turnstile
-                        ref={captchaRef}
-                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
-                        onExpire={() => captchaRef.current?.reset()}
-                    />
+                    <div className="flex justify-center">
+                        <Turnstile className=""
+                            ref={captchaRef}
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
+                            onExpire={() => captchaRef.current?.reset()}
+                        />
+                    </div>
                     <div className="text-blue-500 text-xs space-y-2">
                         {(resetPasswordLink || resetPasswordClick) && <div className="cursor-pointer text-blue-500 hover:text-blue-400 transition-colors duration-100" onClick={() => {
                             if (resetPasswordClick) {
@@ -105,7 +106,7 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
                             } else {
                                 router.push(signupLink!)
                             }
-                        }}>Sign Up</span></div>}
+                        }}>Sign up</span></div>}
                     </div>
 
                     <Button type="submit" variant={isValid ? 'primary' : "disabled"} size={'full'} >Submit</Button>
