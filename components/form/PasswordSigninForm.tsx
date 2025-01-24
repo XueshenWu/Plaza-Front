@@ -51,8 +51,8 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
 
 
             {useOauth && <div className="w-full space-y-2 flex flex-col items-center justify-center">
-                <OauthButton icon={<GitHubLogoIcon className="icon" />} provider="github" />
-                <OauthButton  provider="google" />
+                <OauthButton icon={<img src='/github-mark.svg' className="icon" />} provider="github" />
+                <OauthButton icon={<img  src='/google-icon.svg' className="icon" />} provider="google" />
             </div>}
 
 
@@ -116,10 +116,7 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, resetP
                 </form>
             </Form>
 
-            <div>
-
-
-            </div>
+           
 
         </div>
     )

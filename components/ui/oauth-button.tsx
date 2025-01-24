@@ -27,6 +27,13 @@ export function OauthButton({ provider, icon, className }: OauthButtonProps) {
                     })
                     break
                 }
+                case 'google': {
+                    const res = supabase.auth.signInWithOAuth({
+                        provider: 'google',
+                        
+                    })
+                    break
+                }
                 default: {
                     alert('Not implemented')
                 }

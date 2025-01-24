@@ -9,7 +9,7 @@ export async function updateSession(request: NextRequest) {
     })
 
     const supabase = await createClient()
-    
+
     const {
         data: { user },
     } = await supabase.auth.getUser()
@@ -20,11 +20,19 @@ export async function updateSession(request: NextRequest) {
         !user &&
         !request.nextUrl.pathname.startsWith("/auth") &&
         request.nextUrl.pathname !== "/" &&
-        !request.nextUrl.pathname.startsWith('/error')&&
+        !request.nextUrl.pathname.startsWith('/error') &&
         !request.nextUrl.pathname.startsWith('/api/auth')
     ) {
         const url = request.nextUrl.clone()
         url.pathname = '/auth/signin'
+        return NextResponse.redirect(url)
+    }else if(
+        user &&
+        request.nextUrl.pathname.startsWith("/auth") &&
+        request.nextUrl.pathname !== "/auth/whoami"
+    ){
+        const url = request.nextUrl.clone()
+        url.pathname = '/feed'
         return NextResponse.redirect(url)
     }
 
