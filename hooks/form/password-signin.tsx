@@ -45,7 +45,7 @@ export function usePasswordSigninForm() {
                     />
                 </FormControl>
 
-                <FormMessage />
+                <FormMessage children={ <span className="text-sm">&nbsp;</span>}/> 
             </FormItem>
         )}
     />
