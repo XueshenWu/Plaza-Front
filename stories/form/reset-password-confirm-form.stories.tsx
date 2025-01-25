@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import { ResetPasswordConfirmForm } from "@/components/segment/reset-password-confirm-form";
+import { ResetPasswordConfirmForm } from "@/components/form/reset-password-confirm-form";
 
 const meta: Meta<typeof ResetPasswordConfirmForm> = {
     component: ResetPasswordConfirmForm,
-    title: 'Segment/ResetPasswordConfirmForm',
+    title: 'Form/ResetPasswordConfirmForm',
     parameters: {
         nextjs: {
             appDirectory: true,

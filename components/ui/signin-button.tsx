@@ -13,15 +13,31 @@ import useSWR from "swr";
 
 type SigninButtonProps = Pick<ButtonProps, 'variant' | 'size' | "className"> & {
     toAuthenticateLabel?: React.ReactNode,
-    toDeauthenticatedLabel?: React.ReactNode
+    toDeauthenticatedLabel?: React.ReactNode,
+    signinMode: 'route' | 'modal' | 'state',
+    signinCallback?: (useDefault: () => void) => void
+
 }
 
 
 
-export function SigninButton({ className, variant, size, toAuthenticateLabel, toDeauthenticatedLabel }: SigninButtonProps
+export function SigninButton({ className, variant, size, toAuthenticateLabel, toDeauthenticatedLabel, signinMode, signinCallback }: SigninButtonProps
 ) {
-    const {authenticated} = useUIAuthStore();
- 
+    const { authenticated } = useUIAuthStore();
+
+
+
+    const handleRouteSignin = async () => {
+        router.push('/auth/signin');
+    }
+
+    const handleModalSignin = async () => {
+        
+    }
+
+    const handleStateSignin = async () => {
+
+    }
 
     const supabase = createClient();
     const router = useRouter();
@@ -41,7 +57,17 @@ export function SigninButton({ className, variant, size, toAuthenticateLabel, to
 
                     router.push('/');
                 } else {
-                    router.push('/auth/signin');
+                    switch (signinMode) {
+                        case 'route':
+                            signinCallback?.(handleRouteSignin) || handleRouteSignin();
+                            break;
+                        case 'modal':
+                            signinCallback?.(handleModalSignin) || handleModalSignin();
+                            break;
+                        case 'state':
+                            signinCallback?.(handleStateSignin) || handleStateSignin();
+                            break;
+                    }
                 }
             }}>
             {authenticated ? toDeauthenticatedLabel ?? "Sign out" : toAuthenticateLabel ?? "Sign in"}

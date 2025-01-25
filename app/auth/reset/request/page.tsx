@@ -1,4 +1,4 @@
-import { ResetPasswordRequestForm } from "@/components/segment/reset-password-request-form";
+import { ResetPasswordRequestForm } from "@/components/form/reset-password-request-form";
 
 export default async function Page() {
     return (

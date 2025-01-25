@@ -10,8 +10,7 @@ import { Form } from '../ui/form';
 import { resetPasswordConfirm } from '@/actions/server/form/resetpassword-confirm';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { EmailOtpType } from '@supabase/supabase-js';
-import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
-import { useRef } from 'react';
+
 
 type ResetPasswordConfirmFormProps = {
 

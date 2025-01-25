@@ -1,37 +1,41 @@
+import { RegisterForm } from "@/components/form/RegisterForm";
 import { Meta, StoryObj } from "@storybook/react";
 
-import { PasswordSigninForm } from "@/components/form/PasswordSigninForm";
 
-export default {
-    title: "Segment/PasswordSigninForm",
-    component: PasswordSigninForm,
+const meta: Meta<typeof RegisterForm> = {
+    component: RegisterForm,
+    title: 'Form/RegisterForm',
     parameters: {
         nextjs: {
             appDirectory: true,
             navigation: {
                 pathname: '/',
+               
             },
             router: {
-                asPath: '/auth/signin',
+                asPath: '/auth/register',
                 basepath: '/'
             }
         }
     }
-} as Meta;
+}
 
-type Story = StoryObj<typeof PasswordSigninForm>;
+export default meta;
+
+
+type Story = StoryObj<typeof RegisterForm>;
 
 export const Default: Story = {
-    args: {
-        useOauth: false,
+    args:{
+
     }
 }
 
 export const WithOauth: Story = {
     args: {
         useOauth: true,
-        onSignupClick() {
-            alert('Signup Clicked')
+        onSigninClick() {
+            alert('Signin Clicked')
         },
     }
 }

@@ -28,7 +28,7 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
     const { isValid } = useFormState(formObj)
 
     return (
-        <div className="flex flex-col items-center justify-start py-2">
+        <div className="flex flex-col items-center justify-start py-2 space-y-1">
             <div className="w-full">
                 <h1 className="font-bold text-2xl w-full text-left">
                     Sign up
@@ -36,12 +36,12 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
 
                 <Agreement />
             </div>
-            <div>
-                {useOauth && <div className="*:w-full flex flex-col items-center justify-center">
-                    <OauthButton provider="github" />
-                    <OauthButton provider="google" />
-                </div>}
-            </div>
+
+            {useOauth && <div className="w-full space-y-2 flex flex-col items-center justify-center">
+                <OauthButton icon={<img src='/github-mark.svg' className="icon" />} provider="github" />
+                <OauthButton icon={<img src='/google-icon.svg' className="icon" />} provider="google" />
+            </div>}
+
 
             {useOauth && <Hr text="OR" />}
             <Form {...formObj}>
@@ -73,26 +73,28 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
 
 
 
-                })} className="space-y-3 w-full">
-                    {emailField}
-                    {passwordField}
-                    <div className="grid place-content-center">
-                        <Turnstile
-                            ref={captchaRef}
-                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
-                            onExpire={() => captchaRef.current?.reset()}
+                })} className="space-y-3 w-full h-full flex-grow flex flex-col items-center justify-between">
+                    <div>
+                        {emailField}
+                        {passwordField}
+                        <div className="grid place-content-center">
+                            <Turnstile
+                                ref={captchaRef}
+                                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
+                                onExpire={() => captchaRef.current?.reset()}
 
 
-                        />
-                    </div>
-                    <div className="text-blue-500 text-xs space-y-2">
-                        {(onSigninClick || signinLink) && <div className="space-x-1"><span className="text-black">Already a ORer?</span> <span className="cursor-pointer" onClick={() => {
-                            if (onSigninClick) {
-                                onSigninClick()
-                            } else {
-                                router.replace(signinLink!)
-                            }
-                        }}>Sign Up</span></div>}
+                            />
+                        </div>
+                        <div className="text-blue-500 text-xs space-y-2">
+                            {(onSigninClick || signinLink) && <div className="space-x-1"><span className="text-black">Already a ORer?</span> <span className="cursor-pointer" onClick={() => {
+                                if (onSigninClick) {
+                                    onSigninClick()
+                                } else {
+                                    router.replace(signinLink!)
+                                }
+                            }}>Sign in</span></div>}
+                        </div>
                     </div>
                     <Button type="submit" variant={isValid ? 'primary' : "disabled"} size={'full'} >Submit</Button>
                 </form>
