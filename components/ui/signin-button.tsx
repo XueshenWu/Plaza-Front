@@ -3,6 +3,7 @@
 
 import { createClient } from "@/storage/supabase/supabase-cli"
 import type { ButtonProps } from "./button";
+import { useState } from "react";
 
 import { useUIAuthStore } from "@/storage/client/zustand/authStore"
 import { useRouter } from "next/navigation";
@@ -10,11 +11,14 @@ import { Button } from "./button";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
+import { Dialog } from "./dialog";
+import { DialogContent } from "@radix-ui/react-dialog";
+import { SignSwith } from "../segment/sign-switch";
 
 type SigninButtonProps = Pick<ButtonProps, 'variant' | 'size' | "className"> & {
     toAuthenticateLabel?: React.ReactNode,
     toDeauthenticatedLabel?: React.ReactNode,
-    signinMode: 'route' | 'modal' | 'state',
+    signinMode: 'route' | 'dialog' | 'external',
     signinCallback?: (useDefault: () => void) => void
 
 }
@@ -25,17 +29,17 @@ export function SigninButton({ className, variant, size, toAuthenticateLabel, to
 ) {
     const { authenticated } = useUIAuthStore();
 
-
+    const [showDialog, setShowDialog] = useState(false);
 
     const handleRouteSignin = async () => {
         router.push('/auth/signin');
     }
 
-    const handleModalSignin = async () => {
-        
+    const handleDialogSignin = async () => {
+        setShowDialog(true);
     }
 
-    const handleStateSignin = async () => {
+    const handleExternalSignin = async () => {
 
     }
 
@@ -61,16 +65,21 @@ export function SigninButton({ className, variant, size, toAuthenticateLabel, to
                         case 'route':
                             signinCallback?.(handleRouteSignin) || handleRouteSignin();
                             break;
-                        case 'modal':
-                            signinCallback?.(handleModalSignin) || handleModalSignin();
+                        case 'dialog':
+                            signinCallback?.(handleDialogSignin) || handleDialogSignin();
                             break;
-                        case 'state':
-                            signinCallback?.(handleStateSignin) || handleStateSignin();
+                        case 'external':
+                            signinCallback?.(handleExternalSignin) || handleExternalSignin();
                             break;
                     }
                 }
             }}>
             {authenticated ? toDeauthenticatedLabel ?? "Sign out" : toAuthenticateLabel ?? "Sign in"}
+            {signinMode === 'dialog' && <Dialog open={showDialog} onOpenChange={setShowDialog}>
+                <DialogContent >
+                    <SignSwith onClose={() => { }} />
+                </DialogContent>
+            </Dialog>}
         </Button>
     )
 }

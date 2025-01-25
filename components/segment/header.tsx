@@ -37,10 +37,10 @@ export function Header({ children }: {
         [640, 'sm'] as const,
     ])
 
-    const { signinMode, signinCallback } = useMemo<{ signinMode: 'modal' | 'state' |'route', signinCallback: (useDefault: () => void) => void }>(() => {
+    const { signinMode, signinCallback } = useMemo<{ signinMode: 'dialog' | 'external' |'route', signinCallback: (useDefault: () => void) => void }>(() => {
         if (screen === 'mobile-sm') {
             return {
-                signinMode: 'state',
+                signinMode: 'external',
                 signinCallback: (useDefault) => {
                     setShowSignForm(true)
                 }
