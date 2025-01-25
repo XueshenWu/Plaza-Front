@@ -45,7 +45,7 @@ export function usePasswordSigninForm() {
                     />
                 </FormControl>
 
-                <FormMessage children={ <span className="text-sm">&nbsp;</span>}/> 
+                <FormMessage className="h-2 text-xs" children={ <span>&nbsp;</span>}/> 
             </FormItem>
         )}
     />
@@ -65,7 +65,7 @@ export function usePasswordSigninForm() {
                     />
                 </FormControl>
 
-                <FormMessage />
+                <FormMessage className="h-2 text-xs" children={ <span>&nbsp;</span>} />
             </FormItem>
         )}
     />)
