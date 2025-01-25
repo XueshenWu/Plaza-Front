@@ -41,7 +41,7 @@ export function useRegisterForm() {
                     />
                 </FormControl>
                
-                <FormMessage />
+                <FormMessage className="h-2 text-xs" children={ <span>&nbsp;</span>} />
             </FormItem>
         )}
     />
@@ -61,7 +61,7 @@ export function useRegisterForm() {
                         {...field}
                     />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="h-2 text-xs" children={ <span>&nbsp;</span>} />
             </FormItem>
         )}
     />)
