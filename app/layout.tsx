@@ -5,7 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { Header } from "@/components/segment/header";
 import { SideNavigation } from "@/components/segment/side-navigation";
-import { ZustandStateListner } from "@/components/segment/zustand-state-listner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

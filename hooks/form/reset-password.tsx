@@ -92,7 +92,7 @@ export function useResetPasswordRequestForm() {
                         {...field}
                     />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs py-1 h-5" style={{ margin: 0 }} children={ <span>&nbsp;</span>} />
             </FormItem>
         )} />
     )

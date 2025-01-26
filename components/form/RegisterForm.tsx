@@ -74,7 +74,7 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
 
 
                 })} className="space-y-3 w-full h-full flex-grow flex flex-col items-center justify-between">
-                    <div>
+                    <div className="w-full">
                         {emailField}
                         {passwordField}
                         <div className="grid place-content-center">
