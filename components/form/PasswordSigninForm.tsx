@@ -34,7 +34,7 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, onRese
 
 
     return (
-        <div className="flex flex-col items-center justify-start py-2 space-y-1 ">
+        <div className="flex flex-col items-center justify-start py-2 space-y-1">
             <div className="w-full space-y-1">
                 <h1 className="font-bold text-2xl w-full text-left">
                     Sign in
@@ -79,13 +79,11 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, onRese
 
 
                 })} className="w-full space-y-2 h-full flex-grow flex flex-col items-center justify-between">
-                    <div>
+                    <div className="w-full">
                         {emailField}
-
                         {passwordField}
-                        <span className="text-sm">&nbsp;</span>
                         <div className="flex justify-center">
-                            <Turnstile className=""
+                            <Turnstile
                                 ref={captchaRef}
                                 siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
                                 onExpire={() => captchaRef.current?.reset()}
