@@ -25,8 +25,8 @@ export function ResetPasswordRequestForm() {
     const router = useRouter()
 
     return (
-        <div>
-            <div className='space-y-3 '>
+        <div className="px-8">
+            <div className='space-y-3'>
                 <h1 className='text-2xl'>Reset your password</h1>
                 <p className='text-xs text-gray-500'>Enter your email address or username and we’ll send you a link to reset your password</p>
             </div>
@@ -53,12 +53,13 @@ export function ResetPasswordRequestForm() {
                     }
 
                 })} className='space-y-3 py-4 h-full flex-grow flex flex-col items-center justify-between'>
-                    <div className='space-y-2'>
+                    <div className='space-y-2 w-full'>
                         {emailField}
                         <Turnstile
                             ref={captchaRef}
                             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_Site_Key!}
                             onExpire={() => captchaRef.current?.reset()}
+                            className='flex justify-center'
                         />
                         <div>
                             <a target='_blank' className='text-blue-500 text-sm hover:text-blue-400 transition-colors cursor-pointer duration-150'>Need Help?</a>

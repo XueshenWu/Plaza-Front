@@ -45,7 +45,7 @@ export function usePasswordSigninForm() {
                     />
                 </FormControl>
 
-                <FormMessage className="h-2 text-xs" children={ <span>&nbsp;</span>}/> 
+                <FormMessage className="text-xs py-1 h-5" style={{ margin: 0 }} children={ <span>&nbsp;</span>} />
             </FormItem>
         )}
     />
@@ -65,7 +65,7 @@ export function usePasswordSigninForm() {
                     />
                 </FormControl>
 
-                <FormMessage className="h-2 text-xs" children={ <span>&nbsp;</span>} />
+                <FormMessage className="text-xs py-1" style={{ margin: 0 }} children={ <span>&nbsp;</span>} />
             </FormItem>
         )}
     />)

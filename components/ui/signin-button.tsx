@@ -81,7 +81,7 @@ export function SigninButton({ className, variant, size, toAuthenticateLabel, to
                 <DialogPortal >
                     <DialogContent className="[&>button]:hidden px-6 py-4">
                         <DialogTitle className="hidden">Sign in</DialogTitle>
-                        <div className="rounded-xl">
+                        <div className="rounded-xl px-8">
                             <SignSwith onClose={() => { setShowDialog(false) }} />
                         </div>
 
