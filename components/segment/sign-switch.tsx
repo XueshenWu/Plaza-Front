@@ -38,7 +38,7 @@ export function SignSwith({
         }
     }, [formType])
     return (
-        <div className="flex flex-col items-center justify-start w-full space-y-4 h-full">
+        <div className="flex flex-col items-center justify-start w-full h-full">
             <div className='flex flex-row-reverse justify-between w-full'>
 
                 <Button onClick={onClose} variant={'ghost'} className='bg-slate-100 hover:bg-slate-200' ><X className='icon' /></Button>

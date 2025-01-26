@@ -47,7 +47,7 @@ export function Header({ children }: {
             }
         } else {
             return {
-                signinMode: 'route',
+                signinMode: 'dialog',
                 signinCallback: (useDefault) => {
                     useDefault()
                 }
