@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./postgres-client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_POSTGRES")
+  directUrl = env("DIRECT_URL_POSTGRES")
+}
+
+model User {
+  id             String           @id @default(uuid())
+  Community_User Community_User[]
+  Comments       Comment[]
+}
+
+model Community {
+  id             String           @id @default(uuid())
+  Community_User Community_User[]
+}
+
+enum Role {
+  OWNER
+  MODERATOR
+  MEMBER
+}
+
+enum NotificationPreference {
+  OFF
+  LOW
+  FREQUENT
+}
+
+model Community_User {
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  role Role
+
+  notificationPreference NotificationPreference
+
+  @@id([communityId, userId])
+}
+
+model Comment {
+  id            String    @id
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  upvotes       Int
+  downvotes     Int
+  content       String
+  parent        Comment?  @relation("ChildComments", fields: [parentId], references: [id])
+  parentId      String?
+  ChildComments Comment[] @relation("ChildComments")
+}

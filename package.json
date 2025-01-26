@@ -24,7 +24,8 @@
     "dbpush:mongo": "dotenv -e .env.local -- npx prisma db push --schema=./prisma/mongo/schema.prisma",
     "generate:prisma:mongo": "dotenv -e .env.local -- npx prisma generate --schema=./prisma/mongo/schema.prisma",
     "generate:prisma:mongo:watch": "dotenv -e .env.local -- npx prisma generate --schema=./prisma/mongo/schema.prisma --watch",
-    "generate": "dotenv -e .env.local -- npx prisma generate --schema=./prisma/postgres/schema.prisma && dotenv -e .env.local -- npx prisma generate --schema=./prisma/mongo/schema.prisma"
+    "generate:all": "dotenv -e .env.local -- npx prisma generate --schema=./prisma/postgres/schema.prisma && dotenv -e .env.local -- npx prisma generate --schema=./prisma/mongo/schema.prisma",
+    "dbpush:all": "dotenv -e .env.local -- npx prisma db push --schema=./prisma/postgres/schema.prisma && dotenv -e .env.local -- npx prisma db push --schema=./prisma/mongo/schema.prisma"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.11.1",
