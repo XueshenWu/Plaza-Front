@@ -1,19 +1,32 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Ubuntu_Sans, Ubuntu_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+
 
 import "./globals.css";
 import { Header } from "@/components/segment/header";
 import { SideNavigation } from "@/components/segment/side-navigation";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
+
+const ubuntu = Ubuntu_Sans({
+weight: '400',
+variable: "--font-ubuntu-sans",
+subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const ubuntuMono = Ubuntu_Mono({
+weight: '400',
+variable: "--font-ubuntu-mono",
+subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +44,7 @@ export default function RootLayout({
     >
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${ubuntu.variable} ${ubuntuMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
