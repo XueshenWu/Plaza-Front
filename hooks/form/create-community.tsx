@@ -28,6 +28,10 @@ import { Label } from "@/components/ui/label";
 import _topicOptions from "@/public/topicOptions";
 import { X } from "lucide-react";
 
+// const labelAddClass = ' bg-slate-100 hover:bg-slate-200'
+const labelAddClass = ' bg-slate-100 hover:bg-slate-200'
+const labelChangeClass = ' bg-slate-100 hover:bg-slate-200'
+
 
 export function useCreateCommunityForm() {
 
@@ -46,6 +50,16 @@ export function useCreateCommunityForm() {
     const filterTopics = (str: string) => {
         setFilterString(str)
     }
+
+    const cancelBanner = () => {
+        form.setValue('banner', undefined)
+    }
+    const cancelIcon = () => {
+        form.setValue('icon', undefined)
+    }
+
+
+
 
     const topicOptions = useMemo(() => {
         if (!filterString) {
@@ -81,8 +95,9 @@ export function useCreateCommunityForm() {
             visibility: "PUBLIC",
         },
     });
+    const visibility = form.watch('visibility')
 
-
+    const [banner, icon] = form.watch(['banner', 'icon'])
     const bannerRef = form.register("banner");
     const iconRef = form.register("icon");
 
@@ -97,12 +112,12 @@ export function useCreateCommunityForm() {
             name="name"
             render={({ field }) => (
                 <FormItem>
-                    <FormDescription>Enter the community name</FormDescription>
+                    <FormDescription>Community name</FormDescription>
                     <FormControl>
-                        <Input type="text" id="name" {...field} />
+                        <Input type="text" id="name" {...field} autoComplete={'off'} />
                     </FormControl>
                     <FormMessage
-                        className="text-xs py-1 h-5"
+                        className="text-xs  py-1 h-5"
                         style={{ margin: 0 }}
                         children={<span>&nbsp;</span>}
                     />
@@ -117,12 +132,15 @@ export function useCreateCommunityForm() {
             name="description"
             render={({ field }) => (
                 <FormItem>
-                    <FormDescription>Enter the community description</FormDescription>
+                    <FormDescription>Description</FormDescription>
                     <FormControl>
                         <Textarea
+                           autoHeight
+                            maxLength={255}
                             {...field}
                             placeholder="Community Name"
-                            className="w-full"
+
+                            autoComplete="off"
                         />
                     </FormControl>
                     <FormMessage
@@ -141,15 +159,21 @@ export function useCreateCommunityForm() {
             name="banner"
             render={({ field }) => (
                 <FormItem>
-                    <FormDescription>Enter the community banner</FormDescription>
-                    <FormControl>
-                        <Input type="file" id="banner" {...bannerRef} />
+                    {/* <FormDescription>Banner</FormDescription> */}
+                    <FormControl className="">
+                        <div className="flex items-center justify-between  ">
+                            <div >Banner</div>
+                            <Label htmlFor="banner" className={`flex items-center gap-x-2 justify-between cursor-pointer ${banner?.length === 1 ? labelChangeClass : labelAddClass} rounded-3xl py-3 px-3`}>
+                                <Input className="hidden" type="file" accept="image/*" id="banner" {...bannerRef} />
+                                <img src="image.svg" alt="upload" className="w-4 h-4" />
+                                <div>
+                                    {banner?.length === 1 ? 'Change' : 'Add'}
+                                </div>
+                            </Label>
+                        </div>
+
                     </FormControl>
-                    <FormMessage
-                        className="text-xs py-1 h-5"
-                        style={{ margin: 0 }}
-                        children={<span>&nbsp;</span>}
-                    />
+
                 </FormItem>
             )}
         />
@@ -161,15 +185,19 @@ export function useCreateCommunityForm() {
             name="icon"
             render={({ field }) => (
                 <FormItem>
-                    <FormDescription>Enter the community icon</FormDescription>
                     <FormControl>
-                        <Input type="file" id="icon" {...iconRef} />
+                        <div className="flex items-center justify-between  ">
+                            <div >Icon</div>
+                            <Label htmlFor="icon" className={`flex  items-center justify-between gap-x-2 cursor-pointer ${icon?.length === 1 ? labelChangeClass : labelAddClass} rounded-3xl py-3 px-3`}>
+                                <Input className="hidden" type="file" accept="image/*" id="icon" {...iconRef} />
+                                <img src="image.svg" alt="upload" className="w-4 h-4" />
+                                <div>
+                                    {icon?.length === 1 ? 'Change' : 'Add'}
+                                </div>
+                            </Label>
+                        </div>
                     </FormControl>
-                    <FormMessage
-                        className="text-xs py-1 h-5"
-                        style={{ margin: 0 }}
-                        children={<span>&nbsp;</span>}
-                    />
+
                 </FormItem>
             )}
         />
@@ -214,28 +242,59 @@ export function useCreateCommunityForm() {
     )
 
 
-    const visibilityField = (<FormField
-        control={form.control}
-        name="visibility"
-        render={({ field }) => (
-            <FormItem>
-                <FormDescription>Select the community visibility</FormDescription>
-                <FormControl>
-                    <RadioGroup {...field}>
-                        <RadioGroupItem value="PUBLIC">Public</RadioGroupItem>
-                        <RadioGroupItem value="RESTRICTED">Restricted</RadioGroupItem>
-                        <RadioGroupItem value="PRIVATE">Private</RadioGroupItem>
-                    </RadioGroup>
-                </FormControl>
-                <FormMessage
-                    className="text-xs py-1 h-5"
-                    style={{ margin: 0 }}
-                    children={<span>&nbsp;</span>}
-                />
-            </FormItem>
-        )}
+    const visibilityField = (<RadioGroup
+        defaultValue="PUBLIC"
+        value={visibility}
+        onValueChange={(value) => {
 
-    />)
+            if (value !== 'RESTRICTED' && value !== 'PRIVATE' && value !== 'PUBLIC') {
+                return
+            }
+
+            form.setValue('visibility', value)
+        }}
+        className="w-full flex flex-col">
+
+
+        {
+            [{
+                image: 'world.svg',
+                label: 'Public',
+                description: 'Anyone can view, post, and comment to this community',
+                value: 'PUBLIC',
+            }, {
+                image: 'eyes.svg',
+                label: "Restricted",
+                description: 'Anyone can view, but only approved users can contribute',
+                value: 'RESTRICTED',
+            }, {
+                image: 'lock.svg',
+                label: 'Private',
+                description: 'Only approved members can view and contribute',
+                value: 'PRIVATE',
+            }
+            ].map(({ image, label, description, value }) => (
+                <Label
+                    key={value}
+                    htmlFor={value}
+
+                    className={`rounded-sm transition-colors duration-100 select-none cursor-pointer flex items-center justify-between gap-x-2 px-4 py-3 ${visibility === value && 'bg-slate-200'}`} >
+                    <div className="flex items-center justify-start gap-x-4">
+                        <img src={image} alt={label} className={`w-6 h-6 ${visibility === value && ' stroke-white'}`} />
+                        <div>
+                            <div>{label}</div>
+                            <p className="text-xs text-gray-500">
+                                {description}
+                            </p>
+                        </div>
+                    </div>
+                    <RadioGroupItem value={value} id={value} />
+                </Label>
+            ))
+        }
+
+
+    </RadioGroup>)
 
     return {
         formObj: form,
@@ -248,7 +307,9 @@ export function useCreateCommunityForm() {
             visibilityField,
         },
         cancleSelectedTopics,
-        filterTopics
+        filterTopics,
+        cancelBanner,
+        cancelIcon
     }
 
 }

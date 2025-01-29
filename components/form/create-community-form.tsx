@@ -4,15 +4,17 @@ import { useCreateCommunityForm } from "@/hooks/form/create-community"
 import { useEffect, useState } from "react"
 import { Form } from "../ui/form"
 import { Button } from "../ui/button"
-import { useWatch } from "react-hook-form"
+
 import { Input } from "../ui/input"
+import { DProgress } from "../ui/dprogress"
+import { CommunityPreviewer } from "../ui/community-previewer"
 
 
 export function CreateCommunityForm() {
 
     const { formObj,
         fields: { nameField, descriptionField, iconField, bannerField, topicsField, visibilityField },
-        cancleSelectedTopics, filterTopics
+        cancleSelectedTopics, filterTopics, cancelBanner, cancelIcon
     } = useCreateCommunityForm()
     const [step, setStep] = useState(0)
 
@@ -25,25 +27,113 @@ export function CreateCommunityForm() {
     }, [filterString])
 
 
-    const nextStep = () => {
+
+
+    const validateStep = async (step: number) => {
+
+        switch (step) {
+            case 0:
+                {
+                    return await formObj.trigger('name') && await formObj.trigger('description')
+                }
+            case 1:
+                {
+                    return await formObj.trigger('icon') && await formObj.trigger('banner')
+                }
+            case 2:
+                {
+                    return await formObj.trigger('topics')
+                }
+            case 3:
+                {
+                    return await formObj.trigger('visibility')
+                }
+            default:
+                {
+                    return false
+                }
+        }
+    }
+
+    const nextStep = async () => {
+
+        const isValid = await validateStep(step)
+        if (!isValid) {
+            return
+        }
+
         setStep(prev => prev === 3 ? 3 : prev + 1)
     }
     const prevStep = () => setStep(prev => prev === 0 ? 0 : prev - 1)
 
     const topics = formObj.watch('topics')
+    const [name, description] = formObj.watch(['name', 'description'])
+    const [banner, icon] = formObj.watch(['banner', 'icon'])
 
     return (
-        <div className="flex flex-col items-center justify-start w-full  ">
+        <div className="flex flex-col items-center justify-start w-full   ">
 
             <Form {...formObj}>
-                <form onSubmit={formObj.handleSubmit((data) => console.log(data))} >
-                    <div className={`${step === 0 ? ' block' : 'hidden'} `}>
+                <form onSubmit={() => { }} className="w-full" >
+                    <div className={`${step === 0 ? ' block' : 'hidden'} w-full`}>
+                        <div className="space-y-6">
+                            <div className="text-2xl font-semibold">
+                                Tell us about your community
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                A name and description will help people understand what your community is all about.
+                            </div>
+                        </div>
+                        <div className="my-6 w-full px-4 ">
+                            <CommunityPreviewer plain name={name} description={description} />
+                        </div>
+
+
+
                         {nameField}
                         {descriptionField}
                     </div>
                     <div className={`${step === 1 ? ' block' : 'hidden'}`}>
-                        {iconField}
-                        {bannerField}
+
+                        <div className="space-y-6">
+                            <div className="text-2xl font-semibold">
+                                Style your community
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                Adding visual flair will catch new members attention and help establish your community’s culture! You can update this at any time.
+                            </div>
+                        </div>
+                        <div className="my-6 w-full px-4 ">
+                            <CommunityPreviewer name={name} description={description} icon={icon} banner={banner} />
+                        </div>
+                        <div className="hover:bg-slate-50 cursor-pointer  px-4 py-2 rounded-md w-full ">
+                            {iconField}
+                        </div>
+                        {icon?.length === 1 && <div
+                            onClick={cancelIcon}
+                            className="hover:bg-slate-50 cursor-pointer  px-4 py-2 rounded-md w-full border flex items-center justify-between ">
+                            <div className="text-xs text-gray-400">
+                                {icon[0].name}
+                            </div>
+                            <div className="p-2 hover:bg-slate-200 rounded-full">
+                                <img src="trash.svg" alt="delete" className="w-4 h-4  " />
+                            </div>
+
+                        </div>}
+                        <div className="hover:bg-slate-50 cursor-pointer  px-4 py-2 rounded-md w-full ">
+                            {bannerField}
+                        </div>
+                        {banner?.length === 1 && <div
+                            onClick={cancelBanner}
+                            className="hover:bg-slate-50 cursor-pointer  px-4 py-2 rounded-md w-full border flex items-center justify-between ">
+                            <div className="text-xs text-gray-400">
+                                {banner[0].name}
+                            </div>
+                            <div className="p-2 hover:bg-slate-200 rounded-full">
+                                <img src="trash.svg" alt="delete" className="w-4 h-4  " />
+                            </div>
+                        </div>}
+
                     </div>
                     <div className={`${step === 2 ? ' block ' : 'hidden'}`}>
                         <div className="">
@@ -51,7 +141,7 @@ export function CreateCommunityForm() {
                                 <div className="text-2xl font-bold">
                                     Add Topics
                                 </div>
-                                <div className="text-sm text-gray-500"> 
+                                <div className="text-sm text-gray-500">
                                     Add up to 3 topics to help interested redditors find your community.
                                 </div>
                             </div>
@@ -78,17 +168,34 @@ export function CreateCommunityForm() {
                         </div>
 
                     </div>
-                    <div className={`${step === 3 ? 'block' : 'hidden'}`}>
+                    <div className={`${step === 3 ? 'block' : 'hidden'} space-y-6`}>
+                        <div className="">
+                            <div className="text-2xl font-semibold">
+                                What kind of community is this?
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                Decide who can view and contribute in your community. Only public communities show up in search. Important: Once set, you will need to submit a request to change your community type.
+                            </div>
+                        </div>
+
                         {visibilityField}
                     </div>
 
                 </form>
             </Form>
-            <div className="flex justify-end gap-x-4 w-full py-4">
-                <Button onClick={prevStep} variant={step === 0 ? 'disabled' : "outline"}>Back</Button>
 
-                <Button className="bg-[#0a449b] hover:bg-[#0a2f6c] text-white hover:text-white" onClick={nextStep} variant={step === 3 ? 'disabled' : "outline"}>Next</Button>
+            <div className="flex items-center justify-between w-full">
+                <DProgress total={4} current={step + 1} />
+                <div className="flex justify-end gap-x-4 w-full py-4">
+                    <Button className={`${step === 0 ? 'block' : 'hidden'}`} onClick={console.log} variant={"outline"}>Cancel</Button>
+
+                    <Button onClick={prevStep} variant={"outline"} className={`${step === 0 ? 'hidden' : 'block'}`}>Back</Button>
+                    <Button className={`${step === 3 ? 'block' : 'hidden'}   bg-[#0a449b] hover:bg-[#0a2f6c] text-white hover:text-white`} onClick={formObj.handleSubmit((data) => console.log(data))} variant={"outline"}>Create</Button>
+
+                    <Button className={`${step === 3 ? 'hidden' : 'block'}   bg-[#0a449b] hover:bg-[#0a2f6c] text-white hover:text-white`} onClick={nextStep} variant={step === 3 ? 'disabled' : "outline"}>Next</Button>
+                </div>
             </div>
+
         </div>
     )
 }

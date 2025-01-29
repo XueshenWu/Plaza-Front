@@ -139,9 +139,9 @@ const config: SideNavigationConfig = {
         ],
         [
             {
-                icon:<Scale/>,
-                title:"Privacy",
-                href:"/"
+                icon: <Scale />,
+                title: "Privacy",
+                href: "/"
 
             }
         ]
