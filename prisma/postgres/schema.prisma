@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "./postgres-client"
+  output   = "./postgres-client"
 }
 
 datasource db {
@@ -9,18 +9,76 @@ datasource db {
   directUrl = env("DIRECT_URL_POSTGRES")
 }
 
-model User {
-  id             String           @id @default(uuid())
-  Community_User Community_User[]
-  Comments       Comment[]
-
+enum Permission {
+  DEFAULT
+  READONLY
+  SUSPENDED
 }
 
+model profiles {
+  id                  String     @id @db.Uuid
+  blocked_users       String[]   @default([]) @db.Uuid
+  blocked_communities String[]   @default([]) @db.Uuid
+  avatar              String?
+  bio                 String?
+  display_name        String?
+  gender              String?
+  location            String?
+  permission          Permission @default(DEFAULT)
+  saved_posts         String[]   @default([]) @db.Uuid
+  upvoted_posts       String[]   @default([]) @db.Uuid
+  downvoted_posts     String[]   @default([]) @db.Uuid
+}
 
+enum MediaType {
+  IMAGE
+  VIDEO
+  EXTERNAL_LINK
+}
 
-model Community {
-  id             String           @id @default(uuid())
-  Community_User Community_User[]
+model posts {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  hashtags    String[]
+  content     String
+  mediaType   MediaType
+  mediaUrls   String[]
+  upvotes     Int
+  downvotes   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments_id String[] @db.Uuid
+}
+
+enum Visibility {
+  PUBLIC
+  RESTRICTED
+  PRIVATE
+  CACHED
+}
+
+model communities {
+  id           String     @id @default(uuid()) @db.Uuid
+  name         String
+  description  String
+  icon         String?
+  banner       String?
+  visibility   Visibility @default(PUBLIC)
+  rules        Json
+  pinned_posts String[] @db.Uuid
+}
+
+model comments {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId      String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  upvotes     Int
+  downvotes   Int
+  content     String
+  parentId    String?
+  comments_id String[] @db.Uuid
 }
 
 enum Role {
@@ -35,30 +93,13 @@ enum NotificationPreference {
   FREQUENT
 }
 
-model Community_User {
-  community   Community @relation(fields: [communityId], references: [id])
-  communityId String
+model community_user {
+  communityId String @db.Uuid
+  userId      String @db.Uuid
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  role Role @default(MEMBER)
 
-  role Role
-
-  notificationPreference NotificationPreference
+  notificationPreference NotificationPreference @default(OFF)
 
   @@id([communityId, userId])
-}
-
-model Comment {
-  id        String   @id
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  upvotes   Int
-  downvotes Int
-  content   String
-  parent        Comment?  @relation("ChildComments", fields: [parentId], references: [id])
-  parentId      String?
-  ChildComments Comment[] @relation("ChildComments")
 }

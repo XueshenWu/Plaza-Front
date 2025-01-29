@@ -14,9 +14,8 @@ enum Permission {
   SUSPENDED
 }
 
-model User {
-  id String @id @default(uuid()) @map("_id")
-
+model Profile {
+  id                  String     @id @map("_id")
   blocked_users       String[]
   blocked_communities String[]
   avatar              String?
@@ -25,7 +24,6 @@ model User {
   gender              String?
   location            String?
   permission          Permission @default(DEFAULT)
-  posts               Post[]
   saved_posts         String[]
   upvoted_posts       String[]
   downvoted_posts     String[]
@@ -45,7 +43,6 @@ type Media {
 model Post {
   id        String   @id @default(uuid()) @map("_id")
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   hashtags  String[]
   content   String
   media     Media?
@@ -53,11 +50,11 @@ model Post {
   downvotes Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  comments  String[]
+  comments_id  String[]
 }
 
-type Description{
-  title String
+type Description {
+  title   String
   content String
 }
 
@@ -69,18 +66,30 @@ enum Visibility {
 }
 
 type Rule {
-  title String
+  title   String
   content String
 }
 
 model Community {
-  id String @id @default(uuid()) @map("_id")
-  name String
-  description Description?
-  icon String?
-  banner String?
-  visibility Visibility @default(PUBLIC)
-  rules Rule[]
+  id           String     @id @default(uuid()) @map("_id")
+  name         String
+  description  String
+  icon         String?
+  banner       String?
+  visibility   Visibility @default(PUBLIC)
+  rules        Rule[]
   pinned_posts String[]
+}
 
+model Comment {
+  id String @id @map("_id") @default(uuid())
+
+  userId        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  upvotes       Int
+  downvotes     Int
+  content       String
+  parentId      String?
+  comments_id String[]
 }

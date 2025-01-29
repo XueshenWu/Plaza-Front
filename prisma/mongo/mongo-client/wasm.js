@@ -140,6 +140,7 @@ exports.Prisma.PostScalarFieldEnum = {
 exports.Prisma.CommunityScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
   icon: 'icon',
   banner: 'banner',
   visibility: 'visibility',

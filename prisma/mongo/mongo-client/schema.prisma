@@ -74,12 +74,12 @@ type Rule {
 }
 
 model Community {
-  id           String       @id @default(uuid()) @map("_id")
+  id           String     @id @default(uuid()) @map("_id")
   name         String
-  description  Description?
+  description  String
   icon         String?
   banner       String?
-  visibility   Visibility   @default(PUBLIC)
+  visibility   Visibility @default(PUBLIC)
   rules        Rule[]
   pinned_posts String[]
 }

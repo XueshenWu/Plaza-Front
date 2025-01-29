@@ -19,11 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Media = $Result.DefaultSelection<Prisma.$MediaPayload>
 /**
- * Model Description
- * 
- */
-export type Description = $Result.DefaultSelection<Prisma.$DescriptionPayload>
-/**
  * Model Rule
  * 
  */
@@ -1152,69 +1147,6 @@ export namespace Prisma {
      * Omit specific fields from the Media
      */
     omit?: MediaOmit<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Description
-   */
-
-
-
-
-
-  export type DescriptionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    title?: boolean
-    content?: boolean
-  }, ExtArgs["result"]["description"]>
-
-
-
-  export type DescriptionSelectScalar = {
-    title?: boolean
-    content?: boolean
-  }
-
-  export type DescriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"title" | "content", ExtArgs["result"]["description"]>
-
-  export type $DescriptionPayload = {
-    name: "Description"
-    objects: {}
-    scalars: {
-      title: string
-      content: string
-    }
-    composites: {}
-  }
-
-  type DescriptionGetPayload<S extends boolean | null | undefined | DescriptionDefaultArgs> = $Result.GetResult<Prisma.$DescriptionPayload, S>
-
-
-
-
-
-  /**
-   * Fields of the Description model
-   */ 
-  interface DescriptionFieldRefs {
-    readonly title: FieldRef<"Description", 'String'>
-    readonly content: FieldRef<"Description", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Description without action
-   */
-  export type DescriptionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Description
-     */
-    select?: DescriptionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Description
-     */
-    omit?: DescriptionOmit<ExtArgs> | null
   }
 
 
@@ -3396,6 +3328,7 @@ export namespace Prisma {
   export type CommunityMinAggregateOutputType = {
     id: string | null
     name: string | null
+    description: string | null
     icon: string | null
     banner: string | null
     visibility: $Enums.Visibility | null
@@ -3404,6 +3337,7 @@ export namespace Prisma {
   export type CommunityMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    description: string | null
     icon: string | null
     banner: string | null
     visibility: $Enums.Visibility | null
@@ -3412,6 +3346,7 @@ export namespace Prisma {
   export type CommunityCountAggregateOutputType = {
     id: number
     name: number
+    description: number
     icon: number
     banner: number
     visibility: number
@@ -3423,6 +3358,7 @@ export namespace Prisma {
   export type CommunityMinAggregateInputType = {
     id?: true
     name?: true
+    description?: true
     icon?: true
     banner?: true
     visibility?: true
@@ -3431,6 +3367,7 @@ export namespace Prisma {
   export type CommunityMaxAggregateInputType = {
     id?: true
     name?: true
+    description?: true
     icon?: true
     banner?: true
     visibility?: true
@@ -3439,6 +3376,7 @@ export namespace Prisma {
   export type CommunityCountAggregateInputType = {
     id?: true
     name?: true
+    description?: true
     icon?: true
     banner?: true
     visibility?: true
@@ -3521,6 +3459,7 @@ export namespace Prisma {
   export type CommunityGroupByOutputType = {
     id: string
     name: string
+    description: string
     icon: string | null
     banner: string | null
     visibility: $Enums.Visibility
@@ -3547,7 +3486,7 @@ export namespace Prisma {
   export type CommunitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    description?: boolean | DescriptionDefaultArgs<ExtArgs>
+    description?: boolean
     icon?: boolean
     banner?: boolean
     visibility?: boolean
@@ -3560,6 +3499,7 @@ export namespace Prisma {
   export type CommunitySelectScalar = {
     id?: boolean
     name?: boolean
+    description?: boolean
     icon?: boolean
     banner?: boolean
     visibility?: boolean
@@ -3575,13 +3515,13 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      description: string
       icon: string | null
       banner: string | null
       visibility: $Enums.Visibility
       pinned_posts: string[]
     }, ExtArgs["result"]["community"]>
     composites: {
-      description: Prisma.$DescriptionPayload | null
       rules: Prisma.$RulePayload[]
     }
   }
@@ -3976,6 +3916,7 @@ export namespace Prisma {
   interface CommunityFieldRefs {
     readonly id: FieldRef<"Community", 'String'>
     readonly name: FieldRef<"Community", 'String'>
+    readonly description: FieldRef<"Community", 'String'>
     readonly icon: FieldRef<"Community", 'String'>
     readonly banner: FieldRef<"Community", 'String'>
     readonly visibility: FieldRef<"Community", 'Visibility'>
@@ -4400,6 +4341,7 @@ export namespace Prisma {
   export const CommunityScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    description: 'description',
     icon: 'icon',
     banner: 'banner',
     visibility: 'visibility',
@@ -4707,7 +4649,7 @@ export namespace Prisma {
     NOT?: CommunityWhereInput | CommunityWhereInput[]
     id?: StringFilter<"Community"> | string
     name?: StringFilter<"Community"> | string
-    description?: XOR<DescriptionNullableCompositeFilter, DescriptionObjectEqualityInput> | null
+    description?: StringFilter<"Community"> | string
     icon?: StringNullableFilter<"Community"> | string | null
     banner?: StringNullableFilter<"Community"> | string | null
     visibility?: EnumVisibilityFilter<"Community"> | $Enums.Visibility
@@ -4718,7 +4660,7 @@ export namespace Prisma {
   export type CommunityOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: DescriptionOrderByInput
+    description?: SortOrder
     icon?: SortOrder
     banner?: SortOrder
     visibility?: SortOrder
@@ -4732,7 +4674,7 @@ export namespace Prisma {
     OR?: CommunityWhereInput[]
     NOT?: CommunityWhereInput | CommunityWhereInput[]
     name?: StringFilter<"Community"> | string
-    description?: XOR<DescriptionNullableCompositeFilter, DescriptionObjectEqualityInput> | null
+    description?: StringFilter<"Community"> | string
     icon?: StringNullableFilter<"Community"> | string | null
     banner?: StringNullableFilter<"Community"> | string | null
     visibility?: EnumVisibilityFilter<"Community"> | $Enums.Visibility
@@ -4743,6 +4685,7 @@ export namespace Prisma {
   export type CommunityOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     icon?: SortOrder
     banner?: SortOrder
     visibility?: SortOrder
@@ -4758,6 +4701,7 @@ export namespace Prisma {
     NOT?: CommunityScalarWhereWithAggregatesInput | CommunityScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Community"> | string
     name?: StringWithAggregatesFilter<"Community"> | string
+    description?: StringWithAggregatesFilter<"Community"> | string
     icon?: StringNullableWithAggregatesFilter<"Community"> | string | null
     banner?: StringNullableWithAggregatesFilter<"Community"> | string | null
     visibility?: EnumVisibilityWithAggregatesFilter<"Community"> | $Enums.Visibility
@@ -4958,7 +4902,7 @@ export namespace Prisma {
   export type CommunityCreateInput = {
     id?: string
     name: string
-    description?: XOR<DescriptionNullableCreateEnvelopeInput, DescriptionCreateInput> | null
+    description: string
     icon?: string | null
     banner?: string | null
     visibility?: $Enums.Visibility
@@ -4969,7 +4913,7 @@ export namespace Prisma {
   export type CommunityUncheckedCreateInput = {
     id?: string
     name: string
-    description?: XOR<DescriptionNullableCreateEnvelopeInput, DescriptionCreateInput> | null
+    description: string
     icon?: string | null
     banner?: string | null
     visibility?: $Enums.Visibility
@@ -4979,7 +4923,7 @@ export namespace Prisma {
 
   export type CommunityUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    description?: XOR<DescriptionNullableUpdateEnvelopeInput, DescriptionCreateInput> | null
+    description?: StringFieldUpdateOperationsInput | string
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     banner?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
@@ -4989,7 +4933,7 @@ export namespace Prisma {
 
   export type CommunityUncheckedUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    description?: XOR<DescriptionNullableUpdateEnvelopeInput, DescriptionCreateInput> | null
+    description?: StringFieldUpdateOperationsInput | string
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     banner?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
@@ -5000,7 +4944,7 @@ export namespace Prisma {
   export type CommunityCreateManyInput = {
     id?: string
     name: string
-    description?: XOR<DescriptionNullableCreateEnvelopeInput, DescriptionCreateInput> | null
+    description: string
     icon?: string | null
     banner?: string | null
     visibility?: $Enums.Visibility
@@ -5010,7 +4954,7 @@ export namespace Prisma {
 
   export type CommunityUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    description?: XOR<DescriptionNullableUpdateEnvelopeInput, DescriptionCreateInput> | null
+    description?: StringFieldUpdateOperationsInput | string
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     banner?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
@@ -5020,7 +4964,7 @@ export namespace Prisma {
 
   export type CommunityUncheckedUpdateManyInput = {
     name?: StringFieldUpdateOperationsInput | string
-    description?: XOR<DescriptionNullableUpdateEnvelopeInput, DescriptionCreateInput> | null
+    description?: StringFieldUpdateOperationsInput | string
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     banner?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
@@ -5282,18 +5226,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type DescriptionNullableCompositeFilter = {
-    equals?: DescriptionObjectEqualityInput | null
-    is?: DescriptionWhereInput | null
-    isNot?: DescriptionWhereInput | null
-    isSet?: boolean
-  }
-
-  export type DescriptionObjectEqualityInput = {
-    title: string
-    content: string
-  }
-
   export type EnumVisibilityFilter<$PrismaModel = never> = {
     equals?: $Enums.Visibility | EnumVisibilityFieldRefInput<$PrismaModel>
     in?: $Enums.Visibility[] | ListEnumVisibilityFieldRefInput<$PrismaModel>
@@ -5315,11 +5247,6 @@ export namespace Prisma {
     content: string
   }
 
-  export type DescriptionOrderByInput = {
-    title?: SortOrder
-    content?: SortOrder
-  }
-
   export type RuleOrderByCompositeAggregateInput = {
     _count?: SortOrder
   }
@@ -5327,6 +5254,7 @@ export namespace Prisma {
   export type CommunityCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     icon?: SortOrder
     banner?: SortOrder
     visibility?: SortOrder
@@ -5336,6 +5264,7 @@ export namespace Prisma {
   export type CommunityMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     icon?: SortOrder
     banner?: SortOrder
     visibility?: SortOrder
@@ -5344,6 +5273,7 @@ export namespace Prisma {
   export type CommunityMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     icon?: SortOrder
     banner?: SortOrder
     visibility?: SortOrder
@@ -5518,15 +5448,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostsInput, UserUpdateWithoutPostsInput>, UserUncheckedUpdateWithoutPostsInput>
   }
 
-  export type DescriptionNullableCreateEnvelopeInput = {
-    set?: DescriptionCreateInput | null
-  }
-
-  export type DescriptionCreateInput = {
-    title: string
-    content: string
-  }
-
   export type RuleListCreateEnvelopeInput = {
     set?: RuleCreateInput | RuleCreateInput[]
   }
@@ -5538,12 +5459,6 @@ export namespace Prisma {
 
   export type CommunityCreatepinned_postsInput = {
     set: string[]
-  }
-
-  export type DescriptionNullableUpdateEnvelopeInput = {
-    set?: DescriptionCreateInput | null
-    upsert?: DescriptionUpsertInput
-    unset?: boolean
   }
 
   export type EnumVisibilityFieldUpdateOperationsInput = {
@@ -5726,14 +5641,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type DescriptionWhereInput = {
-    AND?: DescriptionWhereInput | DescriptionWhereInput[]
-    OR?: DescriptionWhereInput[]
-    NOT?: DescriptionWhereInput | DescriptionWhereInput[]
-    title?: StringFilter<"Description"> | string
-    content?: StringFilter<"Description"> | string
-  }
-
   export type NestedEnumVisibilityFilter<$PrismaModel = never> = {
     equals?: $Enums.Visibility | EnumVisibilityFieldRefInput<$PrismaModel>
     in?: $Enums.Visibility[] | ListEnumVisibilityFieldRefInput<$PrismaModel>
@@ -5906,11 +5813,6 @@ export namespace Prisma {
     downvoted_posts?: UserUpdatedownvoted_postsInput | string[]
   }
 
-  export type DescriptionUpsertInput = {
-    set: DescriptionCreateInput | null
-    update: DescriptionUpdateInput
-  }
-
   export type RuleUpdateManyInput = {
     where: RuleWhereInput
     data: RuleUpdateInput
@@ -5975,11 +5877,6 @@ export namespace Prisma {
   export type MediaUpdateInput = {
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
     urls?: MediaUpdateurlsInput | string[]
-  }
-
-  export type DescriptionUpdateInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
   }
 
   export type RuleUpdateInput = {
