@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family:  var(--font-ubuntu-sans)
+  font-family:  var(--font-robost-sans)
 }
 
 @layer base {
