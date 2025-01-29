@@ -8,7 +8,7 @@ import { Fragment } from "react"
 export async function SideNavigation() {
     return (
 
-        <nav>
+        <nav className="font-[family-name:var(--font-ubuntu-sans)]">
             {/* Quick Entries */}
             <ul className="*:*:w-full">
 
