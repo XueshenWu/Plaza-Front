@@ -175,7 +175,8 @@ exports.Prisma.Community_userScalarFieldEnum = {
   user_id: 'user_id',
   role: 'role',
   favorite: 'favorite',
-  notificationPreference: 'notificationPreference'
+  notificationPreference: 'notificationPreference',
+  creadit: 'creadit'
 };
 
 exports.Prisma.SortOrder = {

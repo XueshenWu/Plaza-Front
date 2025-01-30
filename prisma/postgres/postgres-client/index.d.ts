@@ -5540,8 +5540,18 @@ export namespace Prisma {
 
   export type AggregateCommunity_user = {
     _count: Community_userCountAggregateOutputType | null
+    _avg: Community_userAvgAggregateOutputType | null
+    _sum: Community_userSumAggregateOutputType | null
     _min: Community_userMinAggregateOutputType | null
     _max: Community_userMaxAggregateOutputType | null
+  }
+
+  export type Community_userAvgAggregateOutputType = {
+    creadit: number | null
+  }
+
+  export type Community_userSumAggregateOutputType = {
+    creadit: number | null
   }
 
   export type Community_userMinAggregateOutputType = {
@@ -5550,6 +5560,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     favorite: boolean | null
     notificationPreference: $Enums.NotificationPreference | null
+    creadit: number | null
   }
 
   export type Community_userMaxAggregateOutputType = {
@@ -5558,6 +5569,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     favorite: boolean | null
     notificationPreference: $Enums.NotificationPreference | null
+    creadit: number | null
   }
 
   export type Community_userCountAggregateOutputType = {
@@ -5566,9 +5578,18 @@ export namespace Prisma {
     role: number
     favorite: number
     notificationPreference: number
+    creadit: number
     _all: number
   }
 
+
+  export type Community_userAvgAggregateInputType = {
+    creadit?: true
+  }
+
+  export type Community_userSumAggregateInputType = {
+    creadit?: true
+  }
 
   export type Community_userMinAggregateInputType = {
     community_id?: true
@@ -5576,6 +5597,7 @@ export namespace Prisma {
     role?: true
     favorite?: true
     notificationPreference?: true
+    creadit?: true
   }
 
   export type Community_userMaxAggregateInputType = {
@@ -5584,6 +5606,7 @@ export namespace Prisma {
     role?: true
     favorite?: true
     notificationPreference?: true
+    creadit?: true
   }
 
   export type Community_userCountAggregateInputType = {
@@ -5592,6 +5615,7 @@ export namespace Prisma {
     role?: true
     favorite?: true
     notificationPreference?: true
+    creadit?: true
     _all?: true
   }
 
@@ -5633,6 +5657,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: Community_userAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Community_userSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: Community_userMinAggregateInputType
@@ -5663,6 +5699,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: Community_userCountAggregateInputType | true
+    _avg?: Community_userAvgAggregateInputType
+    _sum?: Community_userSumAggregateInputType
     _min?: Community_userMinAggregateInputType
     _max?: Community_userMaxAggregateInputType
   }
@@ -5673,7 +5711,10 @@ export namespace Prisma {
     role: $Enums.Role
     favorite: boolean
     notificationPreference: $Enums.NotificationPreference
+    creadit: number
     _count: Community_userCountAggregateOutputType | null
+    _avg: Community_userAvgAggregateOutputType | null
+    _sum: Community_userSumAggregateOutputType | null
     _min: Community_userMinAggregateOutputType | null
     _max: Community_userMaxAggregateOutputType | null
   }
@@ -5698,6 +5739,7 @@ export namespace Prisma {
     role?: boolean
     favorite?: boolean
     notificationPreference?: boolean
+    creadit?: boolean
   }, ExtArgs["result"]["community_user"]>
 
   export type community_userSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5706,6 +5748,7 @@ export namespace Prisma {
     role?: boolean
     favorite?: boolean
     notificationPreference?: boolean
+    creadit?: boolean
   }, ExtArgs["result"]["community_user"]>
 
   export type community_userSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5714,6 +5757,7 @@ export namespace Prisma {
     role?: boolean
     favorite?: boolean
     notificationPreference?: boolean
+    creadit?: boolean
   }, ExtArgs["result"]["community_user"]>
 
   export type community_userSelectScalar = {
@@ -5722,9 +5766,10 @@ export namespace Prisma {
     role?: boolean
     favorite?: boolean
     notificationPreference?: boolean
+    creadit?: boolean
   }
 
-  export type community_userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"community_id" | "user_id" | "role" | "favorite" | "notificationPreference", ExtArgs["result"]["community_user"]>
+  export type community_userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"community_id" | "user_id" | "role" | "favorite" | "notificationPreference" | "creadit", ExtArgs["result"]["community_user"]>
 
   export type $community_userPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "community_user"
@@ -5735,6 +5780,7 @@ export namespace Prisma {
       role: $Enums.Role
       favorite: boolean
       notificationPreference: $Enums.NotificationPreference
+      creadit: number
     }, ExtArgs["result"]["community_user"]>
     composites: {}
   }
@@ -6163,6 +6209,7 @@ export namespace Prisma {
     readonly role: FieldRef<"community_user", 'Role'>
     readonly favorite: FieldRef<"community_user", 'Boolean'>
     readonly notificationPreference: FieldRef<"community_user", 'NotificationPreference'>
+    readonly creadit: FieldRef<"community_user", 'Int'>
   }
     
 
@@ -6601,7 +6648,8 @@ export namespace Prisma {
     user_id: 'user_id',
     role: 'role',
     favorite: 'favorite',
-    notificationPreference: 'notificationPreference'
+    notificationPreference: 'notificationPreference',
+    creadit: 'creadit'
   };
 
   export type Community_userScalarFieldEnum = (typeof Community_userScalarFieldEnum)[keyof typeof Community_userScalarFieldEnum]
@@ -7121,6 +7169,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"community_user"> | $Enums.Role
     favorite?: BoolFilter<"community_user"> | boolean
     notificationPreference?: EnumNotificationPreferenceFilter<"community_user"> | $Enums.NotificationPreference
+    creadit?: IntFilter<"community_user"> | number
   }
 
   export type community_userOrderByWithRelationInput = {
@@ -7129,6 +7178,7 @@ export namespace Prisma {
     role?: SortOrder
     favorite?: SortOrder
     notificationPreference?: SortOrder
+    creadit?: SortOrder
   }
 
   export type community_userWhereUniqueInput = Prisma.AtLeast<{
@@ -7141,6 +7191,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"community_user"> | $Enums.Role
     favorite?: BoolFilter<"community_user"> | boolean
     notificationPreference?: EnumNotificationPreferenceFilter<"community_user"> | $Enums.NotificationPreference
+    creadit?: IntFilter<"community_user"> | number
   }, "community_id_user_id">
 
   export type community_userOrderByWithAggregationInput = {
@@ -7149,9 +7200,12 @@ export namespace Prisma {
     role?: SortOrder
     favorite?: SortOrder
     notificationPreference?: SortOrder
+    creadit?: SortOrder
     _count?: community_userCountOrderByAggregateInput
+    _avg?: community_userAvgOrderByAggregateInput
     _max?: community_userMaxOrderByAggregateInput
     _min?: community_userMinOrderByAggregateInput
+    _sum?: community_userSumOrderByAggregateInput
   }
 
   export type community_userScalarWhereWithAggregatesInput = {
@@ -7163,6 +7217,7 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter<"community_user"> | $Enums.Role
     favorite?: BoolWithAggregatesFilter<"community_user"> | boolean
     notificationPreference?: EnumNotificationPreferenceWithAggregatesFilter<"community_user"> | $Enums.NotificationPreference
+    creadit?: IntWithAggregatesFilter<"community_user"> | number
   }
 
   export type profilesCreateInput = {
@@ -7542,6 +7597,7 @@ export namespace Prisma {
     role?: $Enums.Role
     favorite?: boolean
     notificationPreference?: $Enums.NotificationPreference
+    creadit?: number
   }
 
   export type community_userUncheckedCreateInput = {
@@ -7550,6 +7606,7 @@ export namespace Prisma {
     role?: $Enums.Role
     favorite?: boolean
     notificationPreference?: $Enums.NotificationPreference
+    creadit?: number
   }
 
   export type community_userUpdateInput = {
@@ -7558,6 +7615,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
+    creadit?: IntFieldUpdateOperationsInput | number
   }
 
   export type community_userUncheckedUpdateInput = {
@@ -7566,6 +7624,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
+    creadit?: IntFieldUpdateOperationsInput | number
   }
 
   export type community_userCreateManyInput = {
@@ -7574,6 +7633,7 @@ export namespace Prisma {
     role?: $Enums.Role
     favorite?: boolean
     notificationPreference?: $Enums.NotificationPreference
+    creadit?: number
   }
 
   export type community_userUpdateManyMutationInput = {
@@ -7582,6 +7642,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
+    creadit?: IntFieldUpdateOperationsInput | number
   }
 
   export type community_userUncheckedUpdateManyInput = {
@@ -7590,6 +7651,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
+    creadit?: IntFieldUpdateOperationsInput | number
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -8033,6 +8095,11 @@ export namespace Prisma {
     role?: SortOrder
     favorite?: SortOrder
     notificationPreference?: SortOrder
+    creadit?: SortOrder
+  }
+
+  export type community_userAvgOrderByAggregateInput = {
+    creadit?: SortOrder
   }
 
   export type community_userMaxOrderByAggregateInput = {
@@ -8041,6 +8108,7 @@ export namespace Prisma {
     role?: SortOrder
     favorite?: SortOrder
     notificationPreference?: SortOrder
+    creadit?: SortOrder
   }
 
   export type community_userMinOrderByAggregateInput = {
@@ -8049,6 +8117,11 @@ export namespace Prisma {
     role?: SortOrder
     favorite?: SortOrder
     notificationPreference?: SortOrder
+    creadit?: SortOrder
+  }
+
+  export type community_userSumOrderByAggregateInput = {
+    creadit?: SortOrder
   }
 
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {

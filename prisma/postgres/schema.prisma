@@ -104,5 +104,7 @@ model community_user {
 
   notificationPreference NotificationPreference @default(OFF)
 
+  creadit  Int @default(0)
+
   @@id([community_id, user_id])
 }
