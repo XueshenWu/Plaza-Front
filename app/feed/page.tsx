@@ -50,7 +50,7 @@ export default async function Page({ searchParams }: {
 
     return (
         <Fragment>
-            <FeedFilter primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
+            <FeedFilter base="/feed" primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
             {view === 'compact' ? <FeedPreviewContainer initialFeeds={sampleCompact(5)} /> : <FeedCardContainer initialFeeds={sampleCard(5)} />}
         </Fragment>
 

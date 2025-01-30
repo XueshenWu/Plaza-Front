@@ -19,7 +19,7 @@ export type FeedCardProps = {
 
         post: {
             updatedAt: string,
-            publishedAt: string,
+            createdAt: string,
             postId: string,
         },
         source: {
@@ -41,7 +41,7 @@ export type FeedCardProps = {
     },
     content: {
         title: string,
-        content?: string,
+        body?: string[],
         media?: MediaDisplayProps
     },
     mode: 'preview' | 'full'

@@ -1,6 +1,8 @@
 import { CommunityHeader } from "@/components/segment/community-header";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { FeedFilter } from "@/components/segment/feed-filter";
+import { FeedPreviewContainer } from "@/components/segment/feed-preview-container";
+import { FeedCardContainer } from "@/components/segment/feed-card-container";
 
 
 const primaryFilterOptions = ['Best', 'Hot', 'New', 'Top', 'Rising']
@@ -53,13 +55,12 @@ export default async function Page({ params, searchParams }: {
 
     return <div className="w-full">
         <CommunityHeader communityId={communityId} />
-        <div className="flex flex-row items-center justify-between w-full px-2">
-            <div className=" flex flex-row items-center justify-center gap-x-4">
-                <div className="entry-default">Feed</div>
-                <div className="entry-default">About</div>
-            </div>
-            <FeedFilter primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
+
+        <div className="px-4">
+            <FeedFilter base={`/community/${communityId}`} primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
+              {view === 'compact' ? <FeedPreviewContainer initialFeeds={sampleCompact(5)} /> : <FeedCardContainer initialFeeds={sampleCard(5)} />}
         </div>
+
 
 
     </div>

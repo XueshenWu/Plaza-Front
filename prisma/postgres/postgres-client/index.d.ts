@@ -2380,36 +2380,43 @@ export namespace Prisma {
   export type PostsMinAggregateOutputType = {
     id: string | null
     user_id: string | null
-    content: string | null
+    community_id: string | null
+    title: string | null
     mediaType: $Enums.MediaType | null
+    mediaPreviews: string | null
     upvotes: number | null
     downvotes: number | null
-    createdAt: Date | null
     updatedAt: Date | null
+    createdAt: Date | null
   }
 
   export type PostsMaxAggregateOutputType = {
     id: string | null
     user_id: string | null
-    content: string | null
+    community_id: string | null
+    title: string | null
     mediaType: $Enums.MediaType | null
+    mediaPreviews: string | null
     upvotes: number | null
     downvotes: number | null
-    createdAt: Date | null
     updatedAt: Date | null
+    createdAt: Date | null
   }
 
   export type PostsCountAggregateOutputType = {
     id: number
     user_id: number
+    community_id: number
     hashtags: number
+    title: number
     content: number
     mediaType: number
     mediaUrls: number
+    mediaPreviews: number
     upvotes: number
     downvotes: number
-    createdAt: number
     updatedAt: number
+    createdAt: number
     comments_id: number
     _all: number
   }
@@ -2428,36 +2435,43 @@ export namespace Prisma {
   export type PostsMinAggregateInputType = {
     id?: true
     user_id?: true
-    content?: true
+    community_id?: true
+    title?: true
     mediaType?: true
+    mediaPreviews?: true
     upvotes?: true
     downvotes?: true
-    createdAt?: true
     updatedAt?: true
+    createdAt?: true
   }
 
   export type PostsMaxAggregateInputType = {
     id?: true
     user_id?: true
-    content?: true
+    community_id?: true
+    title?: true
     mediaType?: true
+    mediaPreviews?: true
     upvotes?: true
     downvotes?: true
-    createdAt?: true
     updatedAt?: true
+    createdAt?: true
   }
 
   export type PostsCountAggregateInputType = {
     id?: true
     user_id?: true
+    community_id?: true
     hashtags?: true
+    title?: true
     content?: true
     mediaType?: true
     mediaUrls?: true
+    mediaPreviews?: true
     upvotes?: true
     downvotes?: true
-    createdAt?: true
     updatedAt?: true
+    createdAt?: true
     comments_id?: true
     _all?: true
   }
@@ -2551,14 +2565,17 @@ export namespace Prisma {
   export type PostsGroupByOutputType = {
     id: string
     user_id: string
+    community_id: string
     hashtags: string[]
-    content: string
+    title: string
+    content: string[]
     mediaType: $Enums.MediaType
     mediaUrls: string[]
+    mediaPreviews: string
     upvotes: number
     downvotes: number
-    createdAt: Date
     updatedAt: Date
+    createdAt: Date
     comments_id: string[]
     _count: PostsCountAggregateOutputType | null
     _avg: PostsAvgAggregateOutputType | null
@@ -2584,60 +2601,72 @@ export namespace Prisma {
   export type postsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     user_id?: boolean
+    community_id?: boolean
     hashtags?: boolean
+    title?: boolean
     content?: boolean
     mediaType?: boolean
     mediaUrls?: boolean
+    mediaPreviews?: boolean
     upvotes?: boolean
     downvotes?: boolean
-    createdAt?: boolean
     updatedAt?: boolean
+    createdAt?: boolean
     comments_id?: boolean
   }, ExtArgs["result"]["posts"]>
 
   export type postsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     user_id?: boolean
+    community_id?: boolean
     hashtags?: boolean
+    title?: boolean
     content?: boolean
     mediaType?: boolean
     mediaUrls?: boolean
+    mediaPreviews?: boolean
     upvotes?: boolean
     downvotes?: boolean
-    createdAt?: boolean
     updatedAt?: boolean
+    createdAt?: boolean
     comments_id?: boolean
   }, ExtArgs["result"]["posts"]>
 
   export type postsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     user_id?: boolean
+    community_id?: boolean
     hashtags?: boolean
+    title?: boolean
     content?: boolean
     mediaType?: boolean
     mediaUrls?: boolean
+    mediaPreviews?: boolean
     upvotes?: boolean
     downvotes?: boolean
-    createdAt?: boolean
     updatedAt?: boolean
+    createdAt?: boolean
     comments_id?: boolean
   }, ExtArgs["result"]["posts"]>
 
   export type postsSelectScalar = {
     id?: boolean
     user_id?: boolean
+    community_id?: boolean
     hashtags?: boolean
+    title?: boolean
     content?: boolean
     mediaType?: boolean
     mediaUrls?: boolean
+    mediaPreviews?: boolean
     upvotes?: boolean
     downvotes?: boolean
-    createdAt?: boolean
     updatedAt?: boolean
+    createdAt?: boolean
     comments_id?: boolean
   }
 
-  export type postsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "hashtags" | "content" | "mediaType" | "mediaUrls" | "upvotes" | "downvotes" | "createdAt" | "updatedAt" | "comments_id", ExtArgs["result"]["posts"]>
+  export type postsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "community_id" | "hashtags" | "title" | "content" | "mediaType" | "mediaUrls" | "mediaPreviews" | "upvotes" | "downvotes" | "updatedAt" | "createdAt" | "comments_id", ExtArgs["result"]["posts"]>
 
   export type $postsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "posts"
@@ -2645,14 +2674,17 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       user_id: string
+      community_id: string
       hashtags: string[]
-      content: string
+      title: string
+      content: string[]
       mediaType: $Enums.MediaType
       mediaUrls: string[]
+      mediaPreviews: string
       upvotes: number
       downvotes: number
-      createdAt: Date
       updatedAt: Date
+      createdAt: Date
       comments_id: string[]
     }, ExtArgs["result"]["posts"]>
     composites: {}
@@ -3079,14 +3111,17 @@ export namespace Prisma {
   interface postsFieldRefs {
     readonly id: FieldRef<"posts", 'String'>
     readonly user_id: FieldRef<"posts", 'String'>
+    readonly community_id: FieldRef<"posts", 'String'>
     readonly hashtags: FieldRef<"posts", 'String[]'>
-    readonly content: FieldRef<"posts", 'String'>
+    readonly title: FieldRef<"posts", 'String'>
+    readonly content: FieldRef<"posts", 'String[]'>
     readonly mediaType: FieldRef<"posts", 'MediaType'>
     readonly mediaUrls: FieldRef<"posts", 'String[]'>
+    readonly mediaPreviews: FieldRef<"posts", 'String'>
     readonly upvotes: FieldRef<"posts", 'Int'>
     readonly downvotes: FieldRef<"posts", 'Int'>
-    readonly createdAt: FieldRef<"posts", 'DateTime'>
     readonly updatedAt: FieldRef<"posts", 'DateTime'>
+    readonly createdAt: FieldRef<"posts", 'DateTime'>
     readonly comments_id: FieldRef<"posts", 'String[]'>
   }
     
@@ -6599,14 +6634,17 @@ export namespace Prisma {
   export const PostsScalarFieldEnum: {
     id: 'id',
     user_id: 'user_id',
+    community_id: 'community_id',
     hashtags: 'hashtags',
+    title: 'title',
     content: 'content',
     mediaType: 'mediaType',
     mediaUrls: 'mediaUrls',
+    mediaPreviews: 'mediaPreviews',
     upvotes: 'upvotes',
     downvotes: 'downvotes',
-    createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    createdAt: 'createdAt',
     comments_id: 'comments_id'
   };
 
@@ -6936,28 +6974,34 @@ export namespace Prisma {
     NOT?: postsWhereInput | postsWhereInput[]
     id?: UuidFilter<"posts"> | string
     user_id?: UuidFilter<"posts"> | string
+    community_id?: UuidFilter<"posts"> | string
     hashtags?: StringNullableListFilter<"posts">
-    content?: StringFilter<"posts"> | string
+    title?: StringFilter<"posts"> | string
+    content?: StringNullableListFilter<"posts">
     mediaType?: EnumMediaTypeFilter<"posts"> | $Enums.MediaType
     mediaUrls?: StringNullableListFilter<"posts">
+    mediaPreviews?: StringFilter<"posts"> | string
     upvotes?: IntFilter<"posts"> | number
     downvotes?: IntFilter<"posts"> | number
-    createdAt?: DateTimeFilter<"posts"> | Date | string
     updatedAt?: DateTimeFilter<"posts"> | Date | string
+    createdAt?: DateTimeFilter<"posts"> | Date | string
     comments_id?: StringNullableListFilter<"posts">
   }
 
   export type postsOrderByWithRelationInput = {
     id?: SortOrder
     user_id?: SortOrder
+    community_id?: SortOrder
     hashtags?: SortOrder
+    title?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
     mediaUrls?: SortOrder
+    mediaPreviews?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
-    createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdAt?: SortOrder
     comments_id?: SortOrder
   }
 
@@ -6967,28 +7011,34 @@ export namespace Prisma {
     OR?: postsWhereInput[]
     NOT?: postsWhereInput | postsWhereInput[]
     user_id?: UuidFilter<"posts"> | string
+    community_id?: UuidFilter<"posts"> | string
     hashtags?: StringNullableListFilter<"posts">
-    content?: StringFilter<"posts"> | string
+    title?: StringFilter<"posts"> | string
+    content?: StringNullableListFilter<"posts">
     mediaType?: EnumMediaTypeFilter<"posts"> | $Enums.MediaType
     mediaUrls?: StringNullableListFilter<"posts">
+    mediaPreviews?: StringFilter<"posts"> | string
     upvotes?: IntFilter<"posts"> | number
     downvotes?: IntFilter<"posts"> | number
-    createdAt?: DateTimeFilter<"posts"> | Date | string
     updatedAt?: DateTimeFilter<"posts"> | Date | string
+    createdAt?: DateTimeFilter<"posts"> | Date | string
     comments_id?: StringNullableListFilter<"posts">
   }, "id">
 
   export type postsOrderByWithAggregationInput = {
     id?: SortOrder
     user_id?: SortOrder
+    community_id?: SortOrder
     hashtags?: SortOrder
+    title?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
     mediaUrls?: SortOrder
+    mediaPreviews?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
-    createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdAt?: SortOrder
     comments_id?: SortOrder
     _count?: postsCountOrderByAggregateInput
     _avg?: postsAvgOrderByAggregateInput
@@ -7003,14 +7053,17 @@ export namespace Prisma {
     NOT?: postsScalarWhereWithAggregatesInput | postsScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"posts"> | string
     user_id?: UuidWithAggregatesFilter<"posts"> | string
+    community_id?: UuidWithAggregatesFilter<"posts"> | string
     hashtags?: StringNullableListFilter<"posts">
-    content?: StringWithAggregatesFilter<"posts"> | string
+    title?: StringWithAggregatesFilter<"posts"> | string
+    content?: StringNullableListFilter<"posts">
     mediaType?: EnumMediaTypeWithAggregatesFilter<"posts"> | $Enums.MediaType
     mediaUrls?: StringNullableListFilter<"posts">
+    mediaPreviews?: StringWithAggregatesFilter<"posts"> | string
     upvotes?: IntWithAggregatesFilter<"posts"> | number
     downvotes?: IntWithAggregatesFilter<"posts"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"posts"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"posts"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"posts"> | Date | string
     comments_id?: StringNullableListFilter<"posts">
   }
 
@@ -7328,98 +7381,119 @@ export namespace Prisma {
   export type postsCreateInput = {
     id?: string
     user_id: string
+    community_id: string
     hashtags?: postsCreatehashtagsInput | string[]
-    content: string
+    title: string
+    content?: postsCreatecontentInput | string[]
     mediaType: $Enums.MediaType
     mediaUrls?: postsCreatemediaUrlsInput | string[]
+    mediaPreviews: string
     upvotes: number
     downvotes: number
-    createdAt?: Date | string
     updatedAt?: Date | string
+    createdAt: Date | string
     comments_id?: postsCreatecomments_idInput | string[]
   }
 
   export type postsUncheckedCreateInput = {
     id?: string
     user_id: string
+    community_id: string
     hashtags?: postsCreatehashtagsInput | string[]
-    content: string
+    title: string
+    content?: postsCreatecontentInput | string[]
     mediaType: $Enums.MediaType
     mediaUrls?: postsCreatemediaUrlsInput | string[]
+    mediaPreviews: string
     upvotes: number
     downvotes: number
-    createdAt?: Date | string
     updatedAt?: Date | string
+    createdAt: Date | string
     comments_id?: postsCreatecomments_idInput | string[]
   }
 
   export type postsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
-    content?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: postsUpdatecontentInput | string[]
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
     mediaUrls?: postsUpdatemediaUrlsInput | string[]
+    mediaPreviews?: StringFieldUpdateOperationsInput | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments_id?: postsUpdatecomments_idInput | string[]
   }
 
   export type postsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
-    content?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: postsUpdatecontentInput | string[]
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
     mediaUrls?: postsUpdatemediaUrlsInput | string[]
+    mediaPreviews?: StringFieldUpdateOperationsInput | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments_id?: postsUpdatecomments_idInput | string[]
   }
 
   export type postsCreateManyInput = {
     id?: string
     user_id: string
+    community_id: string
     hashtags?: postsCreatehashtagsInput | string[]
-    content: string
+    title: string
+    content?: postsCreatecontentInput | string[]
     mediaType: $Enums.MediaType
     mediaUrls?: postsCreatemediaUrlsInput | string[]
+    mediaPreviews: string
     upvotes: number
     downvotes: number
-    createdAt?: Date | string
     updatedAt?: Date | string
+    createdAt: Date | string
     comments_id?: postsCreatecomments_idInput | string[]
   }
 
   export type postsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
-    content?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: postsUpdatecontentInput | string[]
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
     mediaUrls?: postsUpdatemediaUrlsInput | string[]
+    mediaPreviews?: StringFieldUpdateOperationsInput | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments_id?: postsUpdatecomments_idInput | string[]
   }
 
   export type postsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
-    content?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: postsUpdatecontentInput | string[]
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
     mediaUrls?: postsUpdatemediaUrlsInput | string[]
+    mediaPreviews?: StringFieldUpdateOperationsInput | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments_id?: postsUpdatecomments_idInput | string[]
   }
 
@@ -7826,14 +7900,17 @@ export namespace Prisma {
   export type postsCountOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
+    community_id?: SortOrder
     hashtags?: SortOrder
+    title?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
     mediaUrls?: SortOrder
+    mediaPreviews?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
-    createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdAt?: SortOrder
     comments_id?: SortOrder
   }
 
@@ -7845,23 +7922,27 @@ export namespace Prisma {
   export type postsMaxOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    content?: SortOrder
+    community_id?: SortOrder
+    title?: SortOrder
     mediaType?: SortOrder
+    mediaPreviews?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
-    createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type postsMinOrderByAggregateInput = {
     id?: SortOrder
     user_id?: SortOrder
-    content?: SortOrder
+    community_id?: SortOrder
+    title?: SortOrder
     mediaType?: SortOrder
+    mediaPreviews?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
-    createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type postsSumOrderByAggregateInput = {
@@ -8213,6 +8294,10 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type postsCreatecontentInput = {
+    set: string[]
+  }
+
   export type postsCreatemediaUrlsInput = {
     set: string[]
   }
@@ -8222,6 +8307,11 @@ export namespace Prisma {
   }
 
   export type postsUpdatehashtagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type postsUpdatecontentInput = {
     set?: string[]
     push?: string | string[]
   }

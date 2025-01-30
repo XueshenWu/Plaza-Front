@@ -135,14 +135,17 @@ exports.Prisma.ProfilesScalarFieldEnum = {
 exports.Prisma.PostsScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
+  community_id: 'community_id',
   hashtags: 'hashtags',
+  title: 'title',
   content: 'content',
   mediaType: 'mediaType',
   mediaUrls: 'mediaUrls',
+  mediaPreviews: 'mediaPreviews',
   upvotes: 'upvotes',
   downvotes: 'downvotes',
-  createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  createdAt: 'createdAt',
   comments_id: 'comments_id'
 };
 

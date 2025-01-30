@@ -1,6 +1,6 @@
 'use client'
 import { sampleCard } from "@/app/feed/data"
-import { FeedPreview, type FeedPreviewProps } from "./feed-preview"
+
 import { useEffect, useState, useTransition } from "react"
 import { FeedCard, FeedCardProps } from "./feed-card"
 

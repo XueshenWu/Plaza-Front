@@ -37,17 +37,21 @@ enum MediaType {
 }
 
 model posts {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String    @db.Uuid
-  hashtags    String[]
-  content     String
-  mediaType   MediaType
-  mediaUrls   String[]
-  upvotes     Int
-  downvotes   Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  comments_id String[]  @db.Uuid
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id       String    @db.Uuid
+  community_id  String    @db.Uuid
+  hashtags      String[]
+  title         String
+  content       String[]
+  mediaType     MediaType
+  mediaUrls     String[]
+  mediaPreviews String
+  upvotes       Int
+  downvotes     Int
+
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime
+  comments_id String[] @db.Uuid
 }
 
 enum Visibility {

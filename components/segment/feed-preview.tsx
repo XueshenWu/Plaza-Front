@@ -13,7 +13,7 @@ export type FeedPreviewProps = {
     meta: {
         post: {
             updatedAt: string,
-            publishedAt: string,
+            createddAt: string,
             isUserSubscribed: boolean,
             postId: string
         },

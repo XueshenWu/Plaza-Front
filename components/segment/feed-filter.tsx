@@ -1,14 +1,13 @@
 'use client'
 
 
-import Link from "next/link"
 import { Select, SelectTrigger, SelectItem, SelectLabel, SelectContent, SelectGroup } from "../ui/select"
 import { useRouter } from "next/navigation"
 // import feedFilterConfig, {type PrimaryFilterOption} from "./config/feed-filter-v2.config"
 
 export type PreviewType = 'compact' | 'card'
 
-export function FeedFilter({ primary, secondary, view = 'compact' }: {
+export function FeedFilter({ primary, secondary, view = 'compact', base='' }: {
     primary: {
         selected: string,
         options: string[]
@@ -18,15 +17,16 @@ export function FeedFilter({ primary, secondary, view = 'compact' }: {
         options: string[]
     },
     view?: PreviewType,
+    base?: string
 
 }) {
 
     const router = useRouter()
     return (
-        <div className={`flex flex-row items-center justify-start py-2 `}>
+        <div className={`flex flex-row items-center justify-start py-2  `}>
             {/* trendings */}
             <Select value={primary.selected} onValueChange={(value) => {
-                router.push(`/feed?primary=${value}`)
+                router.push(`${base}?primary=${value}`)
             }} >
                 <SelectTrigger variant={'ghost'} size={'compact'} className=" ">
                     {primary.selected}
@@ -49,7 +49,7 @@ export function FeedFilter({ primary, secondary, view = 'compact' }: {
             {secondary && <Select
 
                 onValueChange={(value) => {
-                    router.push(`/feed?primary=${primary.selected}&secondary=${value.replace(" ", "-")}`)
+                    router.push(`${base}?primary=${primary.selected}&secondary=${value.replace(" ", "-")}`)
                 }}
                 value={secondary.selected.replace("-", " ")}>
                 <SelectTrigger variant={'ghost'} size={'compact'} className=" ">
@@ -69,7 +69,7 @@ export function FeedFilter({ primary, secondary, view = 'compact' }: {
                 </SelectContent>
             </Select>}
             <Select value={view} onValueChange={(value) => {
-                router.push(`/feed?primary=${primary.selected}&secondary=${secondary?.selected}&viewType=${value}`)
+                router.push(`${base}?primary=${primary.selected}&secondary=${secondary?.selected}&viewType=${value}`)
             }}>
                 <SelectTrigger variant={'ghost'} size={'compact'} className="flex flex-row items-center">
 
