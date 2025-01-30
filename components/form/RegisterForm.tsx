@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useFormState } from "react-hook-form";
 import { Hr } from "../ui/hr";
-import { Agreement } from "../segment/agreement";
+import { Policies } from "../segment/policies";
 import { OauthButton } from "../ui/oauth-button";
 
 
@@ -34,7 +34,7 @@ export function RegisterForm({ useOauth, onSigninClick, signinLink }: RegisterFo
                     Sign up
                 </h1>
 
-                <Agreement />
+                <Policies policyType={"signup"}  />
             </div>
 
             {useOauth && <div className="w-full space-y-2 flex flex-col items-center justify-center">

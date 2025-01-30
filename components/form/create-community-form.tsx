@@ -8,6 +8,7 @@ import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { DProgress } from "../ui/dprogress"
 import { CommunityPreviewer } from "../ui/community-previewer"
+import { Policies } from "../segment/policies"
 import { submitCreateCommunity } from "@/actions/server/form/create-community"
 import { readFileB64, readFileAsArrayBuffer } from "@/utils/read-file-promise"
 
@@ -190,6 +191,9 @@ export function CreateCommunityForm({
                         </div>
 
                         {visibilityField}
+                        
+                        <Policies policyType={"createCommunity"} />
+
                     </div>
 
                 </form>
