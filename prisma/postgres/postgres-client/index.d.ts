@@ -2195,7 +2195,7 @@ export namespace Prisma {
     /**
      * The data needed to create a profiles.
      */
-    data: XOR<profilesCreateInput, profilesUncheckedCreateInput>
+    data?: XOR<profilesCreateInput, profilesUncheckedCreateInput>
   }
 
   /**
@@ -2379,7 +2379,7 @@ export namespace Prisma {
 
   export type PostsMinAggregateOutputType = {
     id: string | null
-    userId: string | null
+    user_id: string | null
     content: string | null
     mediaType: $Enums.MediaType | null
     upvotes: number | null
@@ -2390,7 +2390,7 @@ export namespace Prisma {
 
   export type PostsMaxAggregateOutputType = {
     id: string | null
-    userId: string | null
+    user_id: string | null
     content: string | null
     mediaType: $Enums.MediaType | null
     upvotes: number | null
@@ -2401,7 +2401,7 @@ export namespace Prisma {
 
   export type PostsCountAggregateOutputType = {
     id: number
-    userId: number
+    user_id: number
     hashtags: number
     content: number
     mediaType: number
@@ -2427,7 +2427,7 @@ export namespace Prisma {
 
   export type PostsMinAggregateInputType = {
     id?: true
-    userId?: true
+    user_id?: true
     content?: true
     mediaType?: true
     upvotes?: true
@@ -2438,7 +2438,7 @@ export namespace Prisma {
 
   export type PostsMaxAggregateInputType = {
     id?: true
-    userId?: true
+    user_id?: true
     content?: true
     mediaType?: true
     upvotes?: true
@@ -2449,7 +2449,7 @@ export namespace Prisma {
 
   export type PostsCountAggregateInputType = {
     id?: true
-    userId?: true
+    user_id?: true
     hashtags?: true
     content?: true
     mediaType?: true
@@ -2550,7 +2550,7 @@ export namespace Prisma {
 
   export type PostsGroupByOutputType = {
     id: string
-    userId: string
+    user_id: string
     hashtags: string[]
     content: string
     mediaType: $Enums.MediaType
@@ -2583,7 +2583,7 @@ export namespace Prisma {
 
   export type postsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     hashtags?: boolean
     content?: boolean
     mediaType?: boolean
@@ -2597,7 +2597,7 @@ export namespace Prisma {
 
   export type postsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     hashtags?: boolean
     content?: boolean
     mediaType?: boolean
@@ -2611,7 +2611,7 @@ export namespace Prisma {
 
   export type postsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     hashtags?: boolean
     content?: boolean
     mediaType?: boolean
@@ -2625,7 +2625,7 @@ export namespace Prisma {
 
   export type postsSelectScalar = {
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     hashtags?: boolean
     content?: boolean
     mediaType?: boolean
@@ -2637,14 +2637,14 @@ export namespace Prisma {
     comments_id?: boolean
   }
 
-  export type postsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "hashtags" | "content" | "mediaType" | "mediaUrls" | "upvotes" | "downvotes" | "createdAt" | "updatedAt" | "comments_id", ExtArgs["result"]["posts"]>
+  export type postsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "hashtags" | "content" | "mediaType" | "mediaUrls" | "upvotes" | "downvotes" | "createdAt" | "updatedAt" | "comments_id", ExtArgs["result"]["posts"]>
 
   export type $postsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "posts"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      userId: string
+      user_id: string
       hashtags: string[]
       content: string
       mediaType: $Enums.MediaType
@@ -3078,7 +3078,7 @@ export namespace Prisma {
    */ 
   interface postsFieldRefs {
     readonly id: FieldRef<"posts", 'String'>
-    readonly userId: FieldRef<"posts", 'String'>
+    readonly user_id: FieldRef<"posts", 'String'>
     readonly hashtags: FieldRef<"posts", 'String[]'>
     readonly content: FieldRef<"posts", 'String'>
     readonly mediaType: FieldRef<"posts", 'MediaType'>
@@ -3479,6 +3479,7 @@ export namespace Prisma {
     visibility: number
     rules: number
     pinned_posts: number
+    topics: number
     _all: number
   }
 
@@ -3510,6 +3511,7 @@ export namespace Prisma {
     visibility?: true
     rules?: true
     pinned_posts?: true
+    topics?: true
     _all?: true
   }
 
@@ -3594,6 +3596,7 @@ export namespace Prisma {
     visibility: $Enums.Visibility
     rules: JsonValue
     pinned_posts: string[]
+    topics: string[]
     _count: CommunitiesCountAggregateOutputType | null
     _min: CommunitiesMinAggregateOutputType | null
     _max: CommunitiesMaxAggregateOutputType | null
@@ -3622,6 +3625,7 @@ export namespace Prisma {
     visibility?: boolean
     rules?: boolean
     pinned_posts?: boolean
+    topics?: boolean
   }, ExtArgs["result"]["communities"]>
 
   export type communitiesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3633,6 +3637,7 @@ export namespace Prisma {
     visibility?: boolean
     rules?: boolean
     pinned_posts?: boolean
+    topics?: boolean
   }, ExtArgs["result"]["communities"]>
 
   export type communitiesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3644,6 +3649,7 @@ export namespace Prisma {
     visibility?: boolean
     rules?: boolean
     pinned_posts?: boolean
+    topics?: boolean
   }, ExtArgs["result"]["communities"]>
 
   export type communitiesSelectScalar = {
@@ -3655,9 +3661,10 @@ export namespace Prisma {
     visibility?: boolean
     rules?: boolean
     pinned_posts?: boolean
+    topics?: boolean
   }
 
-  export type communitiesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "icon" | "banner" | "visibility" | "rules" | "pinned_posts", ExtArgs["result"]["communities"]>
+  export type communitiesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "icon" | "banner" | "visibility" | "rules" | "pinned_posts" | "topics", ExtArgs["result"]["communities"]>
 
   export type $communitiesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "communities"
@@ -3671,6 +3678,7 @@ export namespace Prisma {
       visibility: $Enums.Visibility
       rules: Prisma.JsonValue
       pinned_posts: string[]
+      topics: string[]
     }, ExtArgs["result"]["communities"]>
     composites: {}
   }
@@ -4102,6 +4110,7 @@ export namespace Prisma {
     readonly visibility: FieldRef<"communities", 'Visibility'>
     readonly rules: FieldRef<"communities", 'Json'>
     readonly pinned_posts: FieldRef<"communities", 'String[]'>
+    readonly topics: FieldRef<"communities", 'String[]'>
   }
     
 
@@ -4480,35 +4489,35 @@ export namespace Prisma {
 
   export type CommentsMinAggregateOutputType = {
     id: string | null
-    userId: string | null
+    user_id: string | null
     createdAt: Date | null
     updatedAt: Date | null
     upvotes: number | null
     downvotes: number | null
     content: string | null
-    parentId: string | null
+    parent_id: string | null
   }
 
   export type CommentsMaxAggregateOutputType = {
     id: string | null
-    userId: string | null
+    user_id: string | null
     createdAt: Date | null
     updatedAt: Date | null
     upvotes: number | null
     downvotes: number | null
     content: string | null
-    parentId: string | null
+    parent_id: string | null
   }
 
   export type CommentsCountAggregateOutputType = {
     id: number
-    userId: number
+    user_id: number
     createdAt: number
     updatedAt: number
     upvotes: number
     downvotes: number
     content: number
-    parentId: number
+    parent_id: number
     comments_id: number
     _all: number
   }
@@ -4526,35 +4535,35 @@ export namespace Prisma {
 
   export type CommentsMinAggregateInputType = {
     id?: true
-    userId?: true
+    user_id?: true
     createdAt?: true
     updatedAt?: true
     upvotes?: true
     downvotes?: true
     content?: true
-    parentId?: true
+    parent_id?: true
   }
 
   export type CommentsMaxAggregateInputType = {
     id?: true
-    userId?: true
+    user_id?: true
     createdAt?: true
     updatedAt?: true
     upvotes?: true
     downvotes?: true
     content?: true
-    parentId?: true
+    parent_id?: true
   }
 
   export type CommentsCountAggregateInputType = {
     id?: true
-    userId?: true
+    user_id?: true
     createdAt?: true
     updatedAt?: true
     upvotes?: true
     downvotes?: true
     content?: true
-    parentId?: true
+    parent_id?: true
     comments_id?: true
     _all?: true
   }
@@ -4647,13 +4656,13 @@ export namespace Prisma {
 
   export type CommentsGroupByOutputType = {
     id: string
-    userId: string
+    user_id: string
     createdAt: Date
     updatedAt: Date
     upvotes: number
     downvotes: number
     content: string
-    parentId: string | null
+    parent_id: string | null
     comments_id: string[]
     _count: CommentsCountAggregateOutputType | null
     _avg: CommentsAvgAggregateOutputType | null
@@ -4678,66 +4687,66 @@ export namespace Prisma {
 
   export type commentsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     upvotes?: boolean
     downvotes?: boolean
     content?: boolean
-    parentId?: boolean
+    parent_id?: boolean
     comments_id?: boolean
   }, ExtArgs["result"]["comments"]>
 
   export type commentsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     upvotes?: boolean
     downvotes?: boolean
     content?: boolean
-    parentId?: boolean
+    parent_id?: boolean
     comments_id?: boolean
   }, ExtArgs["result"]["comments"]>
 
   export type commentsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     upvotes?: boolean
     downvotes?: boolean
     content?: boolean
-    parentId?: boolean
+    parent_id?: boolean
     comments_id?: boolean
   }, ExtArgs["result"]["comments"]>
 
   export type commentsSelectScalar = {
     id?: boolean
-    userId?: boolean
+    user_id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     upvotes?: boolean
     downvotes?: boolean
     content?: boolean
-    parentId?: boolean
+    parent_id?: boolean
     comments_id?: boolean
   }
 
-  export type commentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "upvotes" | "downvotes" | "content" | "parentId" | "comments_id", ExtArgs["result"]["comments"]>
+  export type commentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "createdAt" | "updatedAt" | "upvotes" | "downvotes" | "content" | "parent_id" | "comments_id", ExtArgs["result"]["comments"]>
 
   export type $commentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "comments"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      userId: string
+      user_id: string
       createdAt: Date
       updatedAt: Date
       upvotes: number
       downvotes: number
       content: string
-      parentId: string | null
+      parent_id: string | null
       comments_id: string[]
     }, ExtArgs["result"]["comments"]>
     composites: {}
@@ -5163,13 +5172,13 @@ export namespace Prisma {
    */ 
   interface commentsFieldRefs {
     readonly id: FieldRef<"comments", 'String'>
-    readonly userId: FieldRef<"comments", 'String'>
+    readonly user_id: FieldRef<"comments", 'String'>
     readonly createdAt: FieldRef<"comments", 'DateTime'>
     readonly updatedAt: FieldRef<"comments", 'DateTime'>
     readonly upvotes: FieldRef<"comments", 'Int'>
     readonly downvotes: FieldRef<"comments", 'Int'>
     readonly content: FieldRef<"comments", 'String'>
-    readonly parentId: FieldRef<"comments", 'String'>
+    readonly parent_id: FieldRef<"comments", 'String'>
     readonly comments_id: FieldRef<"comments", 'String[]'>
   }
     
@@ -5536,46 +5545,52 @@ export namespace Prisma {
   }
 
   export type Community_userMinAggregateOutputType = {
-    communityId: string | null
-    userId: string | null
+    community_id: string | null
+    user_id: string | null
     role: $Enums.Role | null
+    favorite: boolean | null
     notificationPreference: $Enums.NotificationPreference | null
   }
 
   export type Community_userMaxAggregateOutputType = {
-    communityId: string | null
-    userId: string | null
+    community_id: string | null
+    user_id: string | null
     role: $Enums.Role | null
+    favorite: boolean | null
     notificationPreference: $Enums.NotificationPreference | null
   }
 
   export type Community_userCountAggregateOutputType = {
-    communityId: number
-    userId: number
+    community_id: number
+    user_id: number
     role: number
+    favorite: number
     notificationPreference: number
     _all: number
   }
 
 
   export type Community_userMinAggregateInputType = {
-    communityId?: true
-    userId?: true
+    community_id?: true
+    user_id?: true
     role?: true
+    favorite?: true
     notificationPreference?: true
   }
 
   export type Community_userMaxAggregateInputType = {
-    communityId?: true
-    userId?: true
+    community_id?: true
+    user_id?: true
     role?: true
+    favorite?: true
     notificationPreference?: true
   }
 
   export type Community_userCountAggregateInputType = {
-    communityId?: true
-    userId?: true
+    community_id?: true
+    user_id?: true
     role?: true
+    favorite?: true
     notificationPreference?: true
     _all?: true
   }
@@ -5653,9 +5668,10 @@ export namespace Prisma {
   }
 
   export type Community_userGroupByOutputType = {
-    communityId: string
-    userId: string
+    community_id: string
+    user_id: string
     role: $Enums.Role
+    favorite: boolean
     notificationPreference: $Enums.NotificationPreference
     _count: Community_userCountAggregateOutputType | null
     _min: Community_userMinAggregateOutputType | null
@@ -5677,42 +5693,47 @@ export namespace Prisma {
 
 
   export type community_userSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    communityId?: boolean
-    userId?: boolean
+    community_id?: boolean
+    user_id?: boolean
     role?: boolean
+    favorite?: boolean
     notificationPreference?: boolean
   }, ExtArgs["result"]["community_user"]>
 
   export type community_userSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    communityId?: boolean
-    userId?: boolean
+    community_id?: boolean
+    user_id?: boolean
     role?: boolean
+    favorite?: boolean
     notificationPreference?: boolean
   }, ExtArgs["result"]["community_user"]>
 
   export type community_userSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    communityId?: boolean
-    userId?: boolean
+    community_id?: boolean
+    user_id?: boolean
     role?: boolean
+    favorite?: boolean
     notificationPreference?: boolean
   }, ExtArgs["result"]["community_user"]>
 
   export type community_userSelectScalar = {
-    communityId?: boolean
-    userId?: boolean
+    community_id?: boolean
+    user_id?: boolean
     role?: boolean
+    favorite?: boolean
     notificationPreference?: boolean
   }
 
-  export type community_userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"communityId" | "userId" | "role" | "notificationPreference", ExtArgs["result"]["community_user"]>
+  export type community_userOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"community_id" | "user_id" | "role" | "favorite" | "notificationPreference", ExtArgs["result"]["community_user"]>
 
   export type $community_userPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "community_user"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      communityId: string
-      userId: string
+      community_id: string
+      user_id: string
       role: $Enums.Role
+      favorite: boolean
       notificationPreference: $Enums.NotificationPreference
     }, ExtArgs["result"]["community_user"]>
     composites: {}
@@ -5797,8 +5818,8 @@ export namespace Prisma {
      * // Get first 10 Community_users
      * const community_users = await prisma.community_user.findMany({ take: 10 })
      * 
-     * // Only select the `communityId`
-     * const community_userWithCommunityIdOnly = await prisma.community_user.findMany({ select: { communityId: true } })
+     * // Only select the `community_id`
+     * const community_userWithCommunity_idOnly = await prisma.community_user.findMany({ select: { community_id: true } })
      * 
      */
     findMany<T extends community_userFindManyArgs>(args?: SelectSubset<T, community_userFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$community_userPayload<ExtArgs>, T, "findMany", ClientOptions>>
@@ -5842,9 +5863,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many Community_users and only return the `communityId`
-     * const community_userWithCommunityIdOnly = await prisma.community_user.createManyAndReturn({
-     *   select: { communityId: true },
+     * // Create many Community_users and only return the `community_id`
+     * const community_userWithCommunity_idOnly = await prisma.community_user.createManyAndReturn({
+     *   select: { community_id: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -5933,9 +5954,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Community_users and only return the `communityId`
-     * const community_userWithCommunityIdOnly = await prisma.community_user.updateManyAndReturn({
-     *   select: { communityId: true },
+     * // Update zero or more Community_users and only return the `community_id`
+     * const community_userWithCommunity_idOnly = await prisma.community_user.updateManyAndReturn({
+     *   select: { community_id: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -6137,9 +6158,10 @@ export namespace Prisma {
    * Fields of the community_user model
    */ 
   interface community_userFieldRefs {
-    readonly communityId: FieldRef<"community_user", 'String'>
-    readonly userId: FieldRef<"community_user", 'String'>
+    readonly community_id: FieldRef<"community_user", 'String'>
+    readonly user_id: FieldRef<"community_user", 'String'>
     readonly role: FieldRef<"community_user", 'Role'>
+    readonly favorite: FieldRef<"community_user", 'Boolean'>
     readonly notificationPreference: FieldRef<"community_user", 'NotificationPreference'>
   }
     
@@ -6529,7 +6551,7 @@ export namespace Prisma {
 
   export const PostsScalarFieldEnum: {
     id: 'id',
-    userId: 'userId',
+    user_id: 'user_id',
     hashtags: 'hashtags',
     content: 'content',
     mediaType: 'mediaType',
@@ -6552,7 +6574,8 @@ export namespace Prisma {
     banner: 'banner',
     visibility: 'visibility',
     rules: 'rules',
-    pinned_posts: 'pinned_posts'
+    pinned_posts: 'pinned_posts',
+    topics: 'topics'
   };
 
   export type CommunitiesScalarFieldEnum = (typeof CommunitiesScalarFieldEnum)[keyof typeof CommunitiesScalarFieldEnum]
@@ -6560,13 +6583,13 @@ export namespace Prisma {
 
   export const CommentsScalarFieldEnum: {
     id: 'id',
-    userId: 'userId',
+    user_id: 'user_id',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     upvotes: 'upvotes',
     downvotes: 'downvotes',
     content: 'content',
-    parentId: 'parentId',
+    parent_id: 'parent_id',
     comments_id: 'comments_id'
   };
 
@@ -6574,9 +6597,10 @@ export namespace Prisma {
 
 
   export const Community_userScalarFieldEnum: {
-    communityId: 'communityId',
-    userId: 'userId',
+    community_id: 'community_id',
+    user_id: 'user_id',
     role: 'role',
+    favorite: 'favorite',
     notificationPreference: 'notificationPreference'
   };
 
@@ -6734,6 +6758,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'NotificationPreference'
    */
   export type EnumNotificationPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationPreference'>
@@ -6856,7 +6887,7 @@ export namespace Prisma {
     OR?: postsWhereInput[]
     NOT?: postsWhereInput | postsWhereInput[]
     id?: UuidFilter<"posts"> | string
-    userId?: UuidFilter<"posts"> | string
+    user_id?: UuidFilter<"posts"> | string
     hashtags?: StringNullableListFilter<"posts">
     content?: StringFilter<"posts"> | string
     mediaType?: EnumMediaTypeFilter<"posts"> | $Enums.MediaType
@@ -6870,7 +6901,7 @@ export namespace Prisma {
 
   export type postsOrderByWithRelationInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     hashtags?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
@@ -6887,7 +6918,7 @@ export namespace Prisma {
     AND?: postsWhereInput | postsWhereInput[]
     OR?: postsWhereInput[]
     NOT?: postsWhereInput | postsWhereInput[]
-    userId?: UuidFilter<"posts"> | string
+    user_id?: UuidFilter<"posts"> | string
     hashtags?: StringNullableListFilter<"posts">
     content?: StringFilter<"posts"> | string
     mediaType?: EnumMediaTypeFilter<"posts"> | $Enums.MediaType
@@ -6901,7 +6932,7 @@ export namespace Prisma {
 
   export type postsOrderByWithAggregationInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     hashtags?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
@@ -6923,7 +6954,7 @@ export namespace Prisma {
     OR?: postsScalarWhereWithAggregatesInput[]
     NOT?: postsScalarWhereWithAggregatesInput | postsScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"posts"> | string
-    userId?: UuidWithAggregatesFilter<"posts"> | string
+    user_id?: UuidWithAggregatesFilter<"posts"> | string
     hashtags?: StringNullableListFilter<"posts">
     content?: StringWithAggregatesFilter<"posts"> | string
     mediaType?: EnumMediaTypeWithAggregatesFilter<"posts"> | $Enums.MediaType
@@ -6947,6 +6978,7 @@ export namespace Prisma {
     visibility?: EnumVisibilityFilter<"communities"> | $Enums.Visibility
     rules?: JsonFilter<"communities">
     pinned_posts?: StringNullableListFilter<"communities">
+    topics?: StringNullableListFilter<"communities">
   }
 
   export type communitiesOrderByWithRelationInput = {
@@ -6958,6 +6990,7 @@ export namespace Prisma {
     visibility?: SortOrder
     rules?: SortOrder
     pinned_posts?: SortOrder
+    topics?: SortOrder
   }
 
   export type communitiesWhereUniqueInput = Prisma.AtLeast<{
@@ -6972,6 +7005,7 @@ export namespace Prisma {
     visibility?: EnumVisibilityFilter<"communities"> | $Enums.Visibility
     rules?: JsonFilter<"communities">
     pinned_posts?: StringNullableListFilter<"communities">
+    topics?: StringNullableListFilter<"communities">
   }, "id">
 
   export type communitiesOrderByWithAggregationInput = {
@@ -6983,6 +7017,7 @@ export namespace Prisma {
     visibility?: SortOrder
     rules?: SortOrder
     pinned_posts?: SortOrder
+    topics?: SortOrder
     _count?: communitiesCountOrderByAggregateInput
     _max?: communitiesMaxOrderByAggregateInput
     _min?: communitiesMinOrderByAggregateInput
@@ -7000,6 +7035,7 @@ export namespace Prisma {
     visibility?: EnumVisibilityWithAggregatesFilter<"communities"> | $Enums.Visibility
     rules?: JsonWithAggregatesFilter<"communities">
     pinned_posts?: StringNullableListFilter<"communities">
+    topics?: StringNullableListFilter<"communities">
   }
 
   export type commentsWhereInput = {
@@ -7007,25 +7043,25 @@ export namespace Prisma {
     OR?: commentsWhereInput[]
     NOT?: commentsWhereInput | commentsWhereInput[]
     id?: UuidFilter<"comments"> | string
-    userId?: UuidFilter<"comments"> | string
+    user_id?: UuidFilter<"comments"> | string
     createdAt?: DateTimeFilter<"comments"> | Date | string
     updatedAt?: DateTimeFilter<"comments"> | Date | string
     upvotes?: IntFilter<"comments"> | number
     downvotes?: IntFilter<"comments"> | number
     content?: StringFilter<"comments"> | string
-    parentId?: StringNullableFilter<"comments"> | string | null
+    parent_id?: StringNullableFilter<"comments"> | string | null
     comments_id?: StringNullableListFilter<"comments">
   }
 
   export type commentsOrderByWithRelationInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
     content?: SortOrder
-    parentId?: SortOrderInput | SortOrder
+    parent_id?: SortOrderInput | SortOrder
     comments_id?: SortOrder
   }
 
@@ -7034,25 +7070,25 @@ export namespace Prisma {
     AND?: commentsWhereInput | commentsWhereInput[]
     OR?: commentsWhereInput[]
     NOT?: commentsWhereInput | commentsWhereInput[]
-    userId?: UuidFilter<"comments"> | string
+    user_id?: UuidFilter<"comments"> | string
     createdAt?: DateTimeFilter<"comments"> | Date | string
     updatedAt?: DateTimeFilter<"comments"> | Date | string
     upvotes?: IntFilter<"comments"> | number
     downvotes?: IntFilter<"comments"> | number
     content?: StringFilter<"comments"> | string
-    parentId?: StringNullableFilter<"comments"> | string | null
+    parent_id?: StringNullableFilter<"comments"> | string | null
     comments_id?: StringNullableListFilter<"comments">
   }, "id">
 
   export type commentsOrderByWithAggregationInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
     content?: SortOrder
-    parentId?: SortOrderInput | SortOrder
+    parent_id?: SortOrderInput | SortOrder
     comments_id?: SortOrder
     _count?: commentsCountOrderByAggregateInput
     _avg?: commentsAvgOrderByAggregateInput
@@ -7066,13 +7102,13 @@ export namespace Prisma {
     OR?: commentsScalarWhereWithAggregatesInput[]
     NOT?: commentsScalarWhereWithAggregatesInput | commentsScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"comments"> | string
-    userId?: UuidWithAggregatesFilter<"comments"> | string
+    user_id?: UuidWithAggregatesFilter<"comments"> | string
     createdAt?: DateTimeWithAggregatesFilter<"comments"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"comments"> | Date | string
     upvotes?: IntWithAggregatesFilter<"comments"> | number
     downvotes?: IntWithAggregatesFilter<"comments"> | number
     content?: StringWithAggregatesFilter<"comments"> | string
-    parentId?: StringNullableWithAggregatesFilter<"comments"> | string | null
+    parent_id?: StringNullableWithAggregatesFilter<"comments"> | string | null
     comments_id?: StringNullableListFilter<"comments">
   }
 
@@ -7080,34 +7116,38 @@ export namespace Prisma {
     AND?: community_userWhereInput | community_userWhereInput[]
     OR?: community_userWhereInput[]
     NOT?: community_userWhereInput | community_userWhereInput[]
-    communityId?: UuidFilter<"community_user"> | string
-    userId?: UuidFilter<"community_user"> | string
+    community_id?: UuidFilter<"community_user"> | string
+    user_id?: UuidFilter<"community_user"> | string
     role?: EnumRoleFilter<"community_user"> | $Enums.Role
+    favorite?: BoolFilter<"community_user"> | boolean
     notificationPreference?: EnumNotificationPreferenceFilter<"community_user"> | $Enums.NotificationPreference
   }
 
   export type community_userOrderByWithRelationInput = {
-    communityId?: SortOrder
-    userId?: SortOrder
+    community_id?: SortOrder
+    user_id?: SortOrder
     role?: SortOrder
+    favorite?: SortOrder
     notificationPreference?: SortOrder
   }
 
   export type community_userWhereUniqueInput = Prisma.AtLeast<{
-    communityId_userId?: community_userCommunityIdUserIdCompoundUniqueInput
+    community_id_user_id?: community_userCommunity_idUser_idCompoundUniqueInput
     AND?: community_userWhereInput | community_userWhereInput[]
     OR?: community_userWhereInput[]
     NOT?: community_userWhereInput | community_userWhereInput[]
-    communityId?: UuidFilter<"community_user"> | string
-    userId?: UuidFilter<"community_user"> | string
+    community_id?: UuidFilter<"community_user"> | string
+    user_id?: UuidFilter<"community_user"> | string
     role?: EnumRoleFilter<"community_user"> | $Enums.Role
+    favorite?: BoolFilter<"community_user"> | boolean
     notificationPreference?: EnumNotificationPreferenceFilter<"community_user"> | $Enums.NotificationPreference
-  }, "communityId_userId">
+  }, "community_id_user_id">
 
   export type community_userOrderByWithAggregationInput = {
-    communityId?: SortOrder
-    userId?: SortOrder
+    community_id?: SortOrder
+    user_id?: SortOrder
     role?: SortOrder
+    favorite?: SortOrder
     notificationPreference?: SortOrder
     _count?: community_userCountOrderByAggregateInput
     _max?: community_userMaxOrderByAggregateInput
@@ -7118,14 +7158,15 @@ export namespace Prisma {
     AND?: community_userScalarWhereWithAggregatesInput | community_userScalarWhereWithAggregatesInput[]
     OR?: community_userScalarWhereWithAggregatesInput[]
     NOT?: community_userScalarWhereWithAggregatesInput | community_userScalarWhereWithAggregatesInput[]
-    communityId?: UuidWithAggregatesFilter<"community_user"> | string
-    userId?: UuidWithAggregatesFilter<"community_user"> | string
+    community_id?: UuidWithAggregatesFilter<"community_user"> | string
+    user_id?: UuidWithAggregatesFilter<"community_user"> | string
     role?: EnumRoleWithAggregatesFilter<"community_user"> | $Enums.Role
+    favorite?: BoolWithAggregatesFilter<"community_user"> | boolean
     notificationPreference?: EnumNotificationPreferenceWithAggregatesFilter<"community_user"> | $Enums.NotificationPreference
   }
 
   export type profilesCreateInput = {
-    id: string
+    id?: string
     blocked_users?: profilesCreateblocked_usersInput | string[]
     blocked_communities?: profilesCreateblocked_communitiesInput | string[]
     avatar?: string | null
@@ -7140,7 +7181,7 @@ export namespace Prisma {
   }
 
   export type profilesUncheckedCreateInput = {
-    id: string
+    id?: string
     blocked_users?: profilesCreateblocked_usersInput | string[]
     blocked_communities?: profilesCreateblocked_communitiesInput | string[]
     avatar?: string | null
@@ -7185,7 +7226,7 @@ export namespace Prisma {
   }
 
   export type profilesCreateManyInput = {
-    id: string
+    id?: string
     blocked_users?: profilesCreateblocked_usersInput | string[]
     blocked_communities?: profilesCreateblocked_communitiesInput | string[]
     avatar?: string | null
@@ -7231,7 +7272,7 @@ export namespace Prisma {
 
   export type postsCreateInput = {
     id?: string
-    userId: string
+    user_id: string
     hashtags?: postsCreatehashtagsInput | string[]
     content: string
     mediaType: $Enums.MediaType
@@ -7245,7 +7286,7 @@ export namespace Prisma {
 
   export type postsUncheckedCreateInput = {
     id?: string
-    userId: string
+    user_id: string
     hashtags?: postsCreatehashtagsInput | string[]
     content: string
     mediaType: $Enums.MediaType
@@ -7259,7 +7300,7 @@ export namespace Prisma {
 
   export type postsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
     content?: StringFieldUpdateOperationsInput | string
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -7273,7 +7314,7 @@ export namespace Prisma {
 
   export type postsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
     content?: StringFieldUpdateOperationsInput | string
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -7287,7 +7328,7 @@ export namespace Prisma {
 
   export type postsCreateManyInput = {
     id?: string
-    userId: string
+    user_id: string
     hashtags?: postsCreatehashtagsInput | string[]
     content: string
     mediaType: $Enums.MediaType
@@ -7301,7 +7342,7 @@ export namespace Prisma {
 
   export type postsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
     content?: StringFieldUpdateOperationsInput | string
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -7315,7 +7356,7 @@ export namespace Prisma {
 
   export type postsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     hashtags?: postsUpdatehashtagsInput | string[]
     content?: StringFieldUpdateOperationsInput | string
     mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
@@ -7334,8 +7375,9 @@ export namespace Prisma {
     icon?: string | null
     banner?: string | null
     visibility?: $Enums.Visibility
-    rules: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesCreatepinned_postsInput | string[]
+    topics?: communitiesCreatetopicsInput | string[]
   }
 
   export type communitiesUncheckedCreateInput = {
@@ -7345,8 +7387,9 @@ export namespace Prisma {
     icon?: string | null
     banner?: string | null
     visibility?: $Enums.Visibility
-    rules: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesCreatepinned_postsInput | string[]
+    topics?: communitiesCreatetopicsInput | string[]
   }
 
   export type communitiesUpdateInput = {
@@ -7358,6 +7401,7 @@ export namespace Prisma {
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesUpdatepinned_postsInput | string[]
+    topics?: communitiesUpdatetopicsInput | string[]
   }
 
   export type communitiesUncheckedUpdateInput = {
@@ -7369,6 +7413,7 @@ export namespace Prisma {
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesUpdatepinned_postsInput | string[]
+    topics?: communitiesUpdatetopicsInput | string[]
   }
 
   export type communitiesCreateManyInput = {
@@ -7378,8 +7423,9 @@ export namespace Prisma {
     icon?: string | null
     banner?: string | null
     visibility?: $Enums.Visibility
-    rules: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesCreatepinned_postsInput | string[]
+    topics?: communitiesCreatetopicsInput | string[]
   }
 
   export type communitiesUpdateManyMutationInput = {
@@ -7391,6 +7437,7 @@ export namespace Prisma {
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesUpdatepinned_postsInput | string[]
+    topics?: communitiesUpdatetopicsInput | string[]
   }
 
   export type communitiesUncheckedUpdateManyInput = {
@@ -7402,138 +7449,146 @@ export namespace Prisma {
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     rules?: JsonNullValueInput | InputJsonValue
     pinned_posts?: communitiesUpdatepinned_postsInput | string[]
+    topics?: communitiesUpdatetopicsInput | string[]
   }
 
   export type commentsCreateInput = {
     id?: string
-    userId: string
+    user_id: string
     createdAt?: Date | string
     updatedAt?: Date | string
     upvotes: number
     downvotes: number
     content: string
-    parentId?: string | null
+    parent_id?: string | null
     comments_id?: commentsCreatecomments_idInput | string[]
   }
 
   export type commentsUncheckedCreateInput = {
     id?: string
-    userId: string
+    user_id: string
     createdAt?: Date | string
     updatedAt?: Date | string
     upvotes: number
     downvotes: number
     content: string
-    parentId?: string | null
+    parent_id?: string | null
     comments_id?: commentsCreatecomments_idInput | string[]
   }
 
   export type commentsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
     content?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    parent_id?: NullableStringFieldUpdateOperationsInput | string | null
     comments_id?: commentsUpdatecomments_idInput | string[]
   }
 
   export type commentsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
     content?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    parent_id?: NullableStringFieldUpdateOperationsInput | string | null
     comments_id?: commentsUpdatecomments_idInput | string[]
   }
 
   export type commentsCreateManyInput = {
     id?: string
-    userId: string
+    user_id: string
     createdAt?: Date | string
     updatedAt?: Date | string
     upvotes: number
     downvotes: number
     content: string
-    parentId?: string | null
+    parent_id?: string | null
     comments_id?: commentsCreatecomments_idInput | string[]
   }
 
   export type commentsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
     content?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    parent_id?: NullableStringFieldUpdateOperationsInput | string | null
     comments_id?: commentsUpdatecomments_idInput | string[]
   }
 
   export type commentsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     upvotes?: IntFieldUpdateOperationsInput | number
     downvotes?: IntFieldUpdateOperationsInput | number
     content?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    parent_id?: NullableStringFieldUpdateOperationsInput | string | null
     comments_id?: commentsUpdatecomments_idInput | string[]
   }
 
   export type community_userCreateInput = {
-    communityId: string
-    userId: string
+    community_id: string
+    user_id: string
     role?: $Enums.Role
+    favorite?: boolean
     notificationPreference?: $Enums.NotificationPreference
   }
 
   export type community_userUncheckedCreateInput = {
-    communityId: string
-    userId: string
+    community_id: string
+    user_id: string
     role?: $Enums.Role
+    favorite?: boolean
     notificationPreference?: $Enums.NotificationPreference
   }
 
   export type community_userUpdateInput = {
-    communityId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
   }
 
   export type community_userUncheckedUpdateInput = {
-    communityId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
   }
 
   export type community_userCreateManyInput = {
-    communityId: string
-    userId: string
+    community_id: string
+    user_id: string
     role?: $Enums.Role
+    favorite?: boolean
     notificationPreference?: $Enums.NotificationPreference
   }
 
   export type community_userUpdateManyMutationInput = {
-    communityId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
   }
 
   export type community_userUncheckedUpdateManyInput = {
-    communityId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    community_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    favorite?: BoolFieldUpdateOperationsInput | boolean
     notificationPreference?: EnumNotificationPreferenceFieldUpdateOperationsInput | $Enums.NotificationPreference
   }
 
@@ -7708,7 +7763,7 @@ export namespace Prisma {
 
   export type postsCountOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     hashtags?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
@@ -7727,7 +7782,7 @@ export namespace Prisma {
 
   export type postsMaxOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
     upvotes?: SortOrder
@@ -7738,7 +7793,7 @@ export namespace Prisma {
 
   export type postsMinOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     content?: SortOrder
     mediaType?: SortOrder
     upvotes?: SortOrder
@@ -7848,6 +7903,7 @@ export namespace Prisma {
     visibility?: SortOrder
     rules?: SortOrder
     pinned_posts?: SortOrder
+    topics?: SortOrder
   }
 
   export type communitiesMaxOrderByAggregateInput = {
@@ -7905,13 +7961,13 @@ export namespace Prisma {
 
   export type commentsCountOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
     content?: SortOrder
-    parentId?: SortOrder
+    parent_id?: SortOrder
     comments_id?: SortOrder
   }
 
@@ -7922,24 +7978,24 @@ export namespace Prisma {
 
   export type commentsMaxOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
     content?: SortOrder
-    parentId?: SortOrder
+    parent_id?: SortOrder
   }
 
   export type commentsMinOrderByAggregateInput = {
     id?: SortOrder
-    userId?: SortOrder
+    user_id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     upvotes?: SortOrder
     downvotes?: SortOrder
     content?: SortOrder
-    parentId?: SortOrder
+    parent_id?: SortOrder
   }
 
   export type commentsSumOrderByAggregateInput = {
@@ -7954,6 +8010,11 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type EnumNotificationPreferenceFilter<$PrismaModel = never> = {
     equals?: $Enums.NotificationPreference | EnumNotificationPreferenceFieldRefInput<$PrismaModel>
     in?: $Enums.NotificationPreference[] | ListEnumNotificationPreferenceFieldRefInput<$PrismaModel>
@@ -7961,29 +8022,32 @@ export namespace Prisma {
     not?: NestedEnumNotificationPreferenceFilter<$PrismaModel> | $Enums.NotificationPreference
   }
 
-  export type community_userCommunityIdUserIdCompoundUniqueInput = {
-    communityId: string
-    userId: string
+  export type community_userCommunity_idUser_idCompoundUniqueInput = {
+    community_id: string
+    user_id: string
   }
 
   export type community_userCountOrderByAggregateInput = {
-    communityId?: SortOrder
-    userId?: SortOrder
+    community_id?: SortOrder
+    user_id?: SortOrder
     role?: SortOrder
+    favorite?: SortOrder
     notificationPreference?: SortOrder
   }
 
   export type community_userMaxOrderByAggregateInput = {
-    communityId?: SortOrder
-    userId?: SortOrder
+    community_id?: SortOrder
+    user_id?: SortOrder
     role?: SortOrder
+    favorite?: SortOrder
     notificationPreference?: SortOrder
   }
 
   export type community_userMinOrderByAggregateInput = {
-    communityId?: SortOrder
-    userId?: SortOrder
+    community_id?: SortOrder
+    user_id?: SortOrder
     role?: SortOrder
+    favorite?: SortOrder
     notificationPreference?: SortOrder
   }
 
@@ -7995,6 +8059,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type EnumNotificationPreferenceWithAggregatesFilter<$PrismaModel = never> = {
@@ -8111,11 +8183,20 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type communitiesCreatetopicsInput = {
+    set: string[]
+  }
+
   export type EnumVisibilityFieldUpdateOperationsInput = {
     set?: $Enums.Visibility
   }
 
   export type communitiesUpdatepinned_postsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type communitiesUpdatetopicsInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -8131,6 +8212,10 @@ export namespace Prisma {
 
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: $Enums.Role
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type EnumNotificationPreferenceFieldUpdateOperationsInput = {
@@ -8378,6 +8463,11 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedEnumNotificationPreferenceFilter<$PrismaModel = never> = {
     equals?: $Enums.NotificationPreference | EnumNotificationPreferenceFieldRefInput<$PrismaModel>
     in?: $Enums.NotificationPreference[] | ListEnumNotificationPreferenceFieldRefInput<$PrismaModel>
@@ -8393,6 +8483,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumNotificationPreferenceWithAggregatesFilter<$PrismaModel = never> = {

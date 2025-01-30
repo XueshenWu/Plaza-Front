@@ -16,7 +16,7 @@ enum Permission {
 }
 
 model profiles {
-  id                  String     @id @db.Uuid
+  id                  String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   blocked_users       String[]   @default([]) @db.Uuid
   blocked_communities String[]   @default([]) @db.Uuid
   avatar              String?
@@ -37,8 +37,8 @@ enum MediaType {
 }
 
 model posts {
-  id          String    @id @default(uuid()) @db.Uuid
-  userId      String    @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String    @db.Uuid
   hashtags    String[]
   content     String
   mediaType   MediaType
@@ -58,26 +58,27 @@ enum Visibility {
 }
 
 model communities {
-  id           String     @id @default(uuid()) @db.Uuid
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   description  String
   icon         String?
   banner       String?
   visibility   Visibility @default(PUBLIC)
-  rules        Json
+  rules        Json       @default("{}")
   pinned_posts String[]   @db.Uuid
+  topics       String[]
 }
 
 model comments {
-  id String @id @default(uuid()) @db.Uuid
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  userId      String   @db.Uuid
+  user_id     String   @db.Uuid
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   upvotes     Int
   downvotes   Int
   content     String
-  parentId    String?
+  parent_id   String?
   comments_id String[] @db.Uuid
 }
 
@@ -94,12 +95,14 @@ enum NotificationPreference {
 }
 
 model community_user {
-  communityId String @db.Uuid
-  userId      String @db.Uuid
+  community_id String @db.Uuid
+  user_id      String @db.Uuid
 
   role Role @default(MEMBER)
 
+  favorite Boolean @default(false)
+
   notificationPreference NotificationPreference @default(OFF)
 
-  @@id([communityId, userId])
+  @@id([community_id, user_id])
 }

@@ -1,18 +1,30 @@
 'use server'
 import { NavLink } from "../ui/nav-link"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
-import { HouseIcon, CircleArrowOutUpRight } from 'lucide-react'
+import { HouseIcon, CircleArrowOutUpRight, Plus, Code2 } from 'lucide-react'
 import config from "./config/side-nagivation.config"
-import { Fragment } from "react"
+import { createClient } from "@/storage/supabase/supabase-svr"
+import { notFound } from "next/navigation"
+import { queryUserCommunities } from "@/storage/server/database/communities"
+import { Dialog, DialogTitle, DialogTrigger, DialogContent } from "../ui/dialog"
 
+import { CreateCommunityForm } from "../form/create-community-form"
+import { SingleFormDialog } from "./single-form-dialog"
 export async function SideNavigation() {
+
+
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.getUser()
+    const isOnline = !!data.user
+
+
     return (
 
         <nav className="font-[family-name:var(--font-ubuntu-sans)]">
             {/* Quick Entries */}
             <ul className="*:*:w-full">
 
-                {config.quickEntries.map((entry, index) => (
+                {[...config.quickEntries.offline, ...(isOnline ? config.quickEntries.online : [])].map((entry, index) => (
                     <li key={index}>
                         <NavLink label={entry.title} variant="default" icon={entry.icon.inactive}
                             href={entry.href} className="" />
@@ -20,9 +32,29 @@ export async function SideNavigation() {
                 ))}
             </ul>
 
-            {/* Topics */}
 
-            <Accordion type="single" collapsible>
+
+
+            {/* Communities for online browsing */}
+
+            {isOnline && <Accordion type="single" collapsible>
+                <AccordionItem value="communities">
+                    <AccordionTrigger className="entry-default px-2  text-gray-500">
+                        COMMUNITIES
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        <SingleFormDialog form="create-community" />
+                        {(await queryUserCommunities(data.user.id)).map((community, index) => (
+                            <NavLink key={index} label={community.name} variant="default" icon={!community.icon?<Code2/>:<img  className="icon rounded-full" src={community.icon}/>} href={`/community/${community.id}`} className="w-full" />
+                        ))}
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
+            }
+
+            {/* Topics for offline browsing */}
+
+            {!isOnline && <Accordion type="single" collapsible>
                 <AccordionItem value="topic">
                     <AccordionTrigger className="entry-default px-2  text-gray-500">TOPICS</AccordionTrigger>
                     <AccordionContent>
@@ -87,7 +119,7 @@ export async function SideNavigation() {
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
-
+            }
             {/* Resources */}
             <Accordion type="single" collapsible>
                 <AccordionItem value="resources">

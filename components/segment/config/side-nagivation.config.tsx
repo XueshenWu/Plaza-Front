@@ -1,63 +1,89 @@
 import React from "react";
-import { HouseIcon, CircleArrowOutUpRight, Laugh, Gamepad2, Clapperboard, FlaskConical, Megaphone, BookOpen, Scale } from 'lucide-react'
+import { HouseIcon, CircleArrowOutUpRight, Laugh, Gamepad2, Clapperboard, FlaskConical, Megaphone, BookOpen, Scale, Telescope, ChartColumnIncreasing, MessageCircleMore } from 'lucide-react'
 
 
-type SideNavigationConfig = {
-    quickEntries:
-    {
-        title: string,
-        icon: {
-            active: React.ReactNode,
-            inactive: React.ReactNode
-        }
-        href: string
-    }[],
-    topics: {
-        base: {
-            title: string,
-            icon: React.ReactNode,
-            sub: {
-                title: string,
-                href: string
-            }[]
-        }[],
-        more: {
-            title: string,
-            icon: React.ReactNode,
-            sub: {
-                title: string,
-                href: string
-            }[]
-        }[]
+// type SideNavigationConfig = {
+//     quickEntries:
+//     {
+//         title: string,
+//         icon: {
+//             active: React.ReactNode,
+//             inactive: React.ReactNode
+//         }
+//         href: string
+//     }[],
+//     topics: {
+//         base: {
+//             title: string,
+//             icon: React.ReactNode,
+//             sub: {
+//                 title: string,
+//                 href: string
+//             }[]
+//         }[],
+//         more: {
+//             title: string,
+//             icon: React.ReactNode,
+//             sub: {
+//                 title: string,
+//                 href: string
+//             }[]
+//         }[]
+//     },
+//     resources: {
+//         icon: React.ReactNode,
+//         title: string,
+//         href: string
+//     }[][]
+
+// }
+
+
+const config_offline = {
+    quickEntries: {
+        offline:[
+            {
+                title: "Home",
+                icon: {
+                    active: <HouseIcon />,
+                    inactive: <HouseIcon />
+                },
+                href: "/"
+            },
+            {
+                title: "Popular",
+                icon: {
+                    active: <CircleArrowOutUpRight />,
+                    inactive: <CircleArrowOutUpRight />
+                },
+                href: "/feed"
+            },
+        ],
+        online:[
+            {title:"Explore",
+                icon:{
+                    active:<Telescope />,
+                    inactive:<Telescope />
+                },
+                href:"/explore"
+
+            },{
+                title:"All",
+                icon:{
+                    active:<ChartColumnIncreasing/>,
+                    inactive:<ChartColumnIncreasing/>
+                },
+                href:"/all"
+            },{
+                title:"Chat",
+                icon:{
+                    active:<MessageCircleMore/>,
+                    inactive:<MessageCircleMore/>
+                },
+                href:"/chat"
+            }
+        ]
     },
-    resources: {
-        icon: React.ReactNode,
-        title: string,
-        href: string
-    }[][]
-
-}
-
-
-const config: SideNavigationConfig = {
-    quickEntries: [
-        {
-            title: "Home",
-            icon: {
-                active: <HouseIcon />,
-                inactive: <HouseIcon />
-            },
-            href: "/"
-        },
-        {
-            title: "Popular",
-            icon: {
-                active: <CircleArrowOutUpRight />,
-                inactive: <CircleArrowOutUpRight />
-            },
-            href: "/feed"
-        }
-    ],
     topics: {
         base: [{
             title: "Internet Cuture (Viral)",
@@ -146,7 +172,7 @@ const config: SideNavigationConfig = {
             }
         ]
     ]
-}
+} as const
 
 
-export default config;
+export default config_offline;

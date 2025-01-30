@@ -134,7 +134,7 @@ exports.Prisma.ProfilesScalarFieldEnum = {
 
 exports.Prisma.PostsScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  user_id: 'user_id',
   hashtags: 'hashtags',
   content: 'content',
   mediaType: 'mediaType',
@@ -154,25 +154,27 @@ exports.Prisma.CommunitiesScalarFieldEnum = {
   banner: 'banner',
   visibility: 'visibility',
   rules: 'rules',
-  pinned_posts: 'pinned_posts'
+  pinned_posts: 'pinned_posts',
+  topics: 'topics'
 };
 
 exports.Prisma.CommentsScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  user_id: 'user_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   upvotes: 'upvotes',
   downvotes: 'downvotes',
   content: 'content',
-  parentId: 'parentId',
+  parent_id: 'parent_id',
   comments_id: 'comments_id'
 };
 
 exports.Prisma.Community_userScalarFieldEnum = {
-  communityId: 'communityId',
-  userId: 'userId',
+  community_id: 'community_id',
+  user_id: 'user_id',
   role: 'role',
+  favorite: 'favorite',
   notificationPreference: 'notificationPreference'
 };
 
