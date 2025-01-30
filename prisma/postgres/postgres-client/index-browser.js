@@ -117,35 +117,74 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id'
-};
-
-exports.Prisma.CommunityScalarFieldEnum = {
-  id: 'id'
-};
-
-exports.Prisma.Community_UserScalarFieldEnum = {
-  communityId: 'communityId',
-  userId: 'userId',
-  role: 'role',
-  notificationPreference: 'notificationPreference'
-};
-
-exports.Prisma.CommentScalarFieldEnum = {
+exports.Prisma.ProfilesScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  blocked_users: 'blocked_users',
+  blocked_communities: 'blocked_communities',
+  avatar: 'avatar',
+  bio: 'bio',
+  display_name: 'display_name',
+  gender: 'gender',
+  location: 'location',
+  permission: 'permission',
+  saved_posts: 'saved_posts',
+  upvoted_posts: 'upvoted_posts',
+  downvoted_posts: 'downvoted_posts'
+};
+
+exports.Prisma.PostsScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  hashtags: 'hashtags',
+  content: 'content',
+  mediaType: 'mediaType',
+  mediaUrls: 'mediaUrls',
+  upvotes: 'upvotes',
+  downvotes: 'downvotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  comments_id: 'comments_id'
+};
+
+exports.Prisma.CommunitiesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  icon: 'icon',
+  banner: 'banner',
+  visibility: 'visibility',
+  rules: 'rules',
+  pinned_posts: 'pinned_posts',
+  topics: 'topics'
+};
+
+exports.Prisma.CommentsScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   upvotes: 'upvotes',
   downvotes: 'downvotes',
   content: 'content',
-  parentId: 'parentId'
+  parent_id: 'parent_id',
+  comments_id: 'comments_id'
+};
+
+exports.Prisma.Community_userScalarFieldEnum = {
+  community_id: 'community_id',
+  user_id: 'user_id',
+  role: 'role',
+  favorite: 'favorite',
+  notificationPreference: 'notificationPreference'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -157,6 +196,31 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.Permission = exports.$Enums.Permission = {
+  DEFAULT: 'DEFAULT',
+  READONLY: 'READONLY',
+  SUSPENDED: 'SUSPENDED'
+};
+
+exports.MediaType = exports.$Enums.MediaType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  EXTERNAL_LINK: 'EXTERNAL_LINK'
+};
+
+exports.Visibility = exports.$Enums.Visibility = {
+  PUBLIC: 'PUBLIC',
+  RESTRICTED: 'RESTRICTED',
+  PRIVATE: 'PRIVATE',
+  CACHED: 'CACHED'
+};
+
 exports.Role = exports.$Enums.Role = {
   OWNER: 'OWNER',
   MODERATOR: 'MODERATOR',
@@ -170,10 +234,11 @@ exports.NotificationPreference = exports.$Enums.NotificationPreference = {
 };
 
 exports.Prisma.ModelName = {
-  User: 'User',
-  Community: 'Community',
-  Community_User: 'Community_User',
-  Comment: 'Comment'
+  profiles: 'profiles',
+  posts: 'posts',
+  communities: 'communities',
+  comments: 'comments',
+  community_user: 'community_user'
 };
 
 /**

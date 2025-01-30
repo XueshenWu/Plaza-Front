@@ -165,7 +165,7 @@ export function useCreateCommunityForm() {
                             <div >Banner</div>
                             <Label htmlFor="banner" className={`flex items-center gap-x-2 justify-between cursor-pointer ${banner?.length === 1 ? labelChangeClass : labelAddClass} rounded-3xl py-3 px-3`}>
                                 <Input className="hidden" type="file" accept="image/*" id="banner" {...bannerRef} />
-                                <img src="image.svg" alt="upload" className="w-4 h-4" />
+                                <img src="/image.svg" alt="upload" className="w-4 h-4" />
                                 <div>
                                     {banner?.length === 1 ? 'Change' : 'Add'}
                                 </div>
@@ -190,7 +190,7 @@ export function useCreateCommunityForm() {
                             <div >Icon</div>
                             <Label htmlFor="icon" className={`flex  items-center justify-between gap-x-2 cursor-pointer ${icon?.length === 1 ? labelChangeClass : labelAddClass} rounded-3xl py-3 px-3`}>
                                 <Input className="hidden" type="file" accept="image/*" id="icon" {...iconRef} />
-                                <img src="image.svg" alt="upload" className="w-4 h-4" />
+                                <img src="/image.svg" alt="upload" className="w-4 h-4" />
                                 <div>
                                     {icon?.length === 1 ? 'Change' : 'Add'}
                                 </div>
@@ -229,7 +229,7 @@ export function useCreateCommunityForm() {
                                     {topic}
                                 </div>
                                 <div className={"rounded-full hover:bg-slate-400" + " " + (selectedTopics.includes(topic) ? 'block' : 'hidden')}>
-                                    <img src="cancel.svg" alt="cancel" className="w-4 h-4" />
+                                    <img src="/cancel.svg" alt="cancel" className="w-4 h-4" />
                                 </div>
 
 
@@ -258,17 +258,17 @@ export function useCreateCommunityForm() {
 
         {
             [{
-                image: 'world.svg',
+                image: '/world.svg',
                 label: 'Public',
                 description: 'Anyone can view, post, and comment to this community',
                 value: 'PUBLIC',
             }, {
-                image: 'eyes.svg',
+                image: '/eyes.svg',
                 label: "Restricted",
                 description: 'Anyone can view, but only approved users can contribute',
                 value: 'RESTRICTED',
             }, {
-                image: 'lock.svg',
+                image: '/lock.svg',
                 label: 'Private',
                 description: 'Only approved members can view and contribute',
                 value: 'PRIVATE',

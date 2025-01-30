@@ -16,22 +16,28 @@ type OauthButtonProps = {
 export function OauthButton({ provider, icon, className }: OauthButtonProps) {
     const supabase = createClient();
     return (
-        <Button onClick={() => {
+        <Button onClick={async () => {
             switch (provider) {
                 case 'github': {
-                    const res = supabase.auth.signInWithOAuth({
+                    const res = await supabase.auth.signInWithOAuth({
                         provider: 'github',
                         options: {
                             redirectTo: "http://localhost:3000/api/auth/callback/github-oauth"
                         }
                     })
+              
+    
+                  
                     break
                 }
                 case 'google': {
-                    const res = supabase.auth.signInWithOAuth({
+                    const res = await supabase.auth.signInWithOAuth({
                         provider: 'google',
-                        
+
                     })
+                  
+
+
                     break
                 }
                 default: {

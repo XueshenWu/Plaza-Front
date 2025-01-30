@@ -9,9 +9,20 @@ import { Input } from "../ui/input"
 import { DProgress } from "../ui/dprogress"
 import { CommunityPreviewer } from "../ui/community-previewer"
 import { Policies } from "../segment/policies"
+import { submitCreateCommunity } from "@/actions/server/form/create-community"
+import { readFileB64, readFileAsArrayBuffer } from "@/utils/read-file-promise"
 
 
-export function CreateCommunityForm() {
+type CreateCommunityFormProps = {
+    onCancel: () => void
+    onSuccess: () => void
+}
+
+
+export function CreateCommunityForm({
+    onCancel,
+    onSuccess
+}: CreateCommunityFormProps) {
 
     const { formObj,
         fields: { nameField, descriptionField, iconField, bannerField, topicsField, visibilityField },
@@ -117,7 +128,7 @@ export function CreateCommunityForm() {
                                 {icon[0].name}
                             </div>
                             <div className="p-2 hover:bg-slate-200 rounded-full">
-                                <img src="trash.svg" alt="delete" className="w-4 h-4  " />
+                                <img src="/trash.svg" alt="delete" className="w-4 h-4  " />
                             </div>
 
                         </div>}
@@ -131,7 +142,7 @@ export function CreateCommunityForm() {
                                 {banner[0].name}
                             </div>
                             <div className="p-2 hover:bg-slate-200 rounded-full">
-                                <img src="trash.svg" alt="delete" className="w-4 h-4  " />
+                                <img src="/trash.svg" alt="delete" className="w-4 h-4  " />
                             </div>
                         </div>}
 
@@ -159,7 +170,7 @@ export function CreateCommunityForm() {
                                     <div>
                                         {topic}
                                     </div>
-                                    <img src="cancel.svg" alt="cancel" className="w-4 h-4" />
+                                    <img src="/cancel.svg" alt="cancel" className="w-4 h-4" />
                                 </div>)}
                             </div>
 
@@ -191,10 +202,37 @@ export function CreateCommunityForm() {
             <div className="flex items-center justify-between w-full">
                 <DProgress total={4} current={step + 1} />
                 <div className="flex justify-end gap-x-4 w-full py-4">
-                    <Button className={`${step === 0 ? 'block' : 'hidden'}`} onClick={console.log} variant={"outline"}>Cancel</Button>
+                    <Button className={`${step === 0 ? 'block' : 'hidden'}`} onClick={onCancel} variant={"outline"}>Cancel</Button>
 
                     <Button onClick={prevStep} variant={"outline"} className={`${step === 0 ? 'hidden' : 'block'}`}>Back</Button>
-                    <Button className={`${step === 3 ? 'block' : 'hidden'}   bg-[#0a449b] hover:bg-[#0a2f6c] text-white hover:text-white`} onClick={formObj.handleSubmit((data) => console.log(data))} variant={"outline"}>Create</Button>
+                    <Button className={`${step === 3 ? 'block' : 'hidden'}   bg-[#0a449b] hover:bg-[#0a2f6c] text-white hover:text-white`} onClick={formObj.handleSubmit(async (data) => {
+                       
+
+                        const {
+                            name,
+                            description,
+                            icon,
+                            banner,
+                            topics,
+                            visibility
+                        } = data
+
+                        const iconData = icon?.[0]?await readFileAsArrayBuffer(icon[0]):null
+                        const bannerData = banner?.[0]?await readFileAsArrayBuffer(banner[0]):null
+                        
+
+                    
+
+                        const res = await submitCreateCommunity(name, description, visibility, iconData, bannerData, topics)
+
+                        if(res){
+                            onSuccess()
+                        }else{
+                            console.error('Error creating community')
+                        }
+
+                  
+                    })} variant={"outline"}>Create</Button>
 
                     <Button className={`${step === 3 ? 'hidden' : 'block'}   bg-[#0a449b] hover:bg-[#0a2f6c] text-white hover:text-white`} onClick={nextStep} variant={step === 3 ? 'disabled' : "outline"}>Next</Button>
                 </div>

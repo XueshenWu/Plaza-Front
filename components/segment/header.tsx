@@ -2,7 +2,8 @@
 import { Code, Code2, Ellipsis, LogIn, LogOut, Megaphone, Menu, Search, ShoppingBag } from "lucide-react"
 import { Button } from "../ui/button"
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle } from "../ui/drawer"
-import Cookies from "js-cookie"
+
+import Link from "next/link"
 
 import {
     Sheet, SheetClose,
@@ -21,6 +22,7 @@ import { SigninButton } from "../ui/signin-button"
 import useSWR from "swr"
 import { SignSwith } from "./sign-switch"
 import { useScreenMatch } from "@/hooks/useScreenMatch"
+import { revalidatePath } from "next/cache"
 
 
 export function Header({ children }: {
@@ -30,14 +32,14 @@ export function Header({ children }: {
 
     const [showSignForm, setShowSignForm] = useState(false)
 
-
+    const router = useRouter()
     const screen = useScreenMatch([
         [380, 'mobile-sm'] as const,
 
         [640, 'sm'] as const,
     ])
 
-    const { signinMode, signinCallback } = useMemo<{ signinMode: 'dialog' | 'external' |'route', signinCallback: (useDefault: () => void) => void }>(() => {
+    const { signinMode, signinCallback } = useMemo<{ signinMode: 'dialog' | 'external' | 'route', signinCallback: (useDefault: () => void) => void }>(() => {
         if (screen === 'mobile-sm') {
             return {
                 signinMode: 'external',
@@ -57,23 +59,38 @@ export function Header({ children }: {
 
 
     useEffect(() => {
-
+        const supabase = createClient();
         const effect = async () => {
-            const supabase = createClient();
 
 
-            const { data, error } = await supabase.auth.getUser()
-            if (!error && data) {
-                authenticate()
-            } else {
-                deauthenticate()
-            }
+
+            // const { data, error } = await supabase.auth.getUser()
+            // if (!error && data) {
+            //     authenticate()
+            //     router.refresh()
+
+
+            // } else {
+            //     deauthenticate()
+            //     router.refresh()
+
+
+
+            // }
 
             supabase.auth.onAuthStateChange((event, session) => {
+                console.log('auth event:', event)
                 if (event === 'SIGNED_IN') {
                     authenticate()
+                    router.refresh()
                 } else if (event === 'SIGNED_OUT') {
                     deauthenticate()
+           
+                    router.refresh()
+                    window.location.reload()
+                    // TODO: Need to find a better way
+                } else {
+
                 }
             })
 
@@ -108,13 +125,14 @@ export function Header({ children }: {
                                 title
                             </SheetTitle>
                         </SheetHeader>
-                        {/* <SideNavigation /> */}
+
                         {children}
                     </SheetContent>
 
                 </Sheet>
-
-                <Code2 className="cursor-pointer" size={40} stroke="rgb(76, 82, 84)" strokeWidth={2} />
+                <Link href={'/'}>
+                    <Code2 className="cursor-pointer" size={40} stroke="rgb(76, 82, 84)" strokeWidth={2} />
+                </Link>
             </div>
             <div className="flex items-center gap-x-2 ">
                 <SigninButton signinMode={signinMode} signinCallback={signinCallback} size={"mobile"} className="text-[11px] px-3 " />
