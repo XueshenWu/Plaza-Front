@@ -11,7 +11,7 @@ import { Hr } from "../ui/hr";
 import { useFormState } from "react-hook-form";
 
 import { OauthButton } from "../ui/oauth-button";
-import { Agreement } from "../segment/agreement";
+import { Policies } from "../segment/policies";
 
 // import { useAuthStore } from "@/storage/client/zustand/authStore";
 
@@ -40,7 +40,7 @@ export function PasswordSigninForm({ useOauth, onSignupClick, signupLink, onRese
                     Sign in
                 </h1>
 
-                <Agreement />
+                <Policies policyType={"signin"}  />
             </div>
 
 
