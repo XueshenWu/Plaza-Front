@@ -10,11 +10,6 @@ const secondaryFilterOptions = new Map<string, string[]>()
 secondaryFilterOptions.set('Best', ["Everywhere", "US", "CA", "CN", "Local"])
 secondaryFilterOptions.set('Hot', ["Today", "This-Week", "This-Month", "This-Year", "All-Time"])
 
-//TODO: 1. Implement CardView
-// 2. Acquire argument for feedContainer
-// 3. Implement DetailView
-// 4. Implement Signin/Signup
-
 
 
 export default async function Page({ searchParams }: {

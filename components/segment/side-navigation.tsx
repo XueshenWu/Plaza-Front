@@ -43,9 +43,16 @@ export async function SideNavigation() {
                         COMMUNITIES
                     </AccordionTrigger>
                     <AccordionContent>
-                        <SingleFormDialog form="create-community" />
+                        <SingleFormDialog trigger={
+                            <div className="flex items-center gap-x-2 entry-default px-6 py-3">
+                                <Plus className="w-6 h-6" />
+                                <div className="">
+                                    Create Community
+                                </div>
+                            </div>
+                        } form="create-community" />
                         {(await queryUserCommunities(data.user.id)).map((community, index) => (
-                            <NavLink key={index} label={community.name} variant="default" icon={!community.icon?<Code2/>:<img  className="icon rounded-full" src={community.icon}/>} href={`/community/${community.id}`} className="w-full" />
+                            <NavLink key={index} label={community.name} variant="default" icon={!community.icon ? <Code2 /> : <img className="icon rounded-full" src={community.icon} />} href={`/community/${community.id}`} className="w-full" />
                         ))}
                     </AccordionContent>
                 </AccordionItem>

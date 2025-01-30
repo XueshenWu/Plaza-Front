@@ -44,11 +44,9 @@ export function SingleFormDialog({
 
 
     return (<Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className="flex items-center gap-x-2 entry-default px-6 py-3 w-full ">
-            <Plus className="w-6 h-6" />
-            <div className="w-full text-left">
-                {trigger}
-            </div>
+        <DialogTrigger className=" w-full ">
+            {trigger}
+
         </DialogTrigger>
         <DialogContent className="rounded-xl w-11/12">
             <DialogTitle className="hidden"></DialogTitle>

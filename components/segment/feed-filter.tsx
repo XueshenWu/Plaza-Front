@@ -17,12 +17,13 @@ export function FeedFilter({ primary, secondary, view = 'compact' }: {
         selected: string,
         options: string[]
     },
-    view?: PreviewType
+    view?: PreviewType,
+
 }) {
 
     const router = useRouter()
     return (
-        <div className="flex flex-row items-center justify-start py-2 ">
+        <div className={`flex flex-row items-center justify-start py-2 `}>
             {/* trendings */}
             <Select value={primary.selected} onValueChange={(value) => {
                 router.push(`/feed?primary=${value}`)
@@ -72,7 +73,7 @@ export function FeedFilter({ primary, secondary, view = 'compact' }: {
             }}>
                 <SelectTrigger variant={'ghost'} size={'compact'} className="flex flex-row items-center">
 
-                    {view === 'compact' ? <img src="compact.svg" className="" /> : <img src="card.svg" className="" />}
+                    {view === 'compact' ? <img src="/compact.svg" className="" /> : <img src="/card.svg" className="" />}
 
 
                 </SelectTrigger>
@@ -84,13 +85,13 @@ export function FeedFilter({ primary, secondary, view = 'compact' }: {
 
                         <SelectItem className={`cursor-pointer  `} value={'compact'} key={0}>
                             <div className="flex flex-row items-center gap-x-2">
-                                <img src="compact.svg" className="h-5 w-5" />
+                                <img src="/compact.svg" className="h-5 w-5" />
                                 <div>compact</div>
                             </div>
                         </SelectItem>
                         <SelectItem className={`cursor-pointer `} value={'card'} key={1}>
                             <div className="flex flex-row items-center gap-x-2">
-                                <img src="card.svg" className="h-5 w-5" />
+                                <img src="/card.svg" className="h-5 w-5" />
                                 <div>card</div>
                             </div>
 

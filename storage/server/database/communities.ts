@@ -1,7 +1,11 @@
-import { pgClient } from "./prisma-client";
+// import { pgClient } from "./prisma-client";
 import type { communities } from "@/prisma/postgres/postgres-client";
+import { PrismaClient as _PgClient } from "@/prisma/postgres/postgres-client";
 
 async function __test_deleteCommunity(id: string) {
+
+
+    const pgClient = new _PgClient()
     await pgClient.$transaction(async tx => {
         await tx.community_user.deleteMany({
             where: {
@@ -22,10 +26,11 @@ async function createCommunity(
     description: string,
     visibility: "PUBLIC" | "RESTRICTED" | "PRIVATE",
     userId: string,
-    icon?: string|null,
-    banner?: string|null,
+    icon?: string | null,
+    banner?: string | null,
     topics?: string[]
 ) {
+    const pgClient = new _PgClient()
     const res = await pgClient.$transaction(async (tx) => {
 
         try {
@@ -37,7 +42,7 @@ async function createCommunity(
                     visibility,
                     icon,
                     banner,
-                   
+
                 }
             })
             await tx.community_user.create({
@@ -59,6 +64,7 @@ async function createCommunity(
 }
 
 async function queryUserCommunities(userId: string) {
+    const pgClient = new _PgClient()
     const communities_meta = await pgClient.community_user.findMany({
         where: {
             user_id: userId
@@ -77,20 +83,38 @@ async function queryUserCommunities(userId: string) {
         }
     })
 
- 
+
     return communities.map(c => {
         const meta = communities_meta.find(m => m.community_id === c.id)
         return {
             ...c,
-            favorite: meta?.favorite??false
+            favorite: meta?.favorite ?? false
         }
     }) satisfies (communities & { favorite: boolean })[]
 
 
 }
 
+
+async function queryCommunity(communityId: string) {
+    try {
+        const pgClient = new _PgClient()
+        return await pgClient.communities.findUnique({
+            where: {
+                id: communityId
+            }
+        })
+    }catch(e){
+        console.error(e)
+        return null
+    }
+   
+}
+
 export {
+    __test_deleteCommunity,
     createCommunity,
     queryUserCommunities,
-    __test_deleteCommunity
+    queryCommunity,
+
 }
