@@ -45,7 +45,7 @@ type Cursor = {
     reversed?: boolean
 }
 
-export async function getFeedPreviewByTimeCursor({ position, limit, reversed = false, userId, }: Cursor & { userId: string }) {
+export async function getFeedPreviewByTimeCursor({ position, limit, reversed = false, userId, }: Cursor & { userId: string }):Promise<FeedPreviewProps[]> {
     const db = newDrizzle()
     const posts = (await db
         .select({
@@ -96,9 +96,9 @@ export async function getFeedPreviewByTimeCursor({ position, limit, reversed = f
     const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
     const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
 
-    type ResultType = FeedPreviewProps
+ 
 
-    const resultMap = new Map<string, ResultType>()
+    const resultMap = new Map<string, FeedPreviewProps>()
 
     posts.forEach(post => {
         resultMap.set(post.postId, {
