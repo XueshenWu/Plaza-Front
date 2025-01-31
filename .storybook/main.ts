@@ -20,7 +20,9 @@ const config: StorybookConfig = {
 
   framework: {
     name: "@storybook/nextjs",
-    options: {},
+    options: {
+      
+    },
   },
 
   staticDirs: ["../public", "../msw"],
