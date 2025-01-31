@@ -1,0 +1,1 @@
+ALTER TABLE "comments" ADD COLUMN "comments_count" integer DEFAULT 0;

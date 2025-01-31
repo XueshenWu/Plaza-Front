@@ -7,26 +7,27 @@ import { MediaPreviewImage, type MediaPreview } from "../ui/media-preview"
 import { ReviewPlate, ReviewPlateProps } from "./review-plate"
 import Link from "next/link"
 import { fromNow } from "@/utils/fromNow"
+import { Code2 } from "lucide-react"
 
 export type FeedPreviewProps = {
 
     meta: {
         post: {
             updatedAt: string,
-            createddAt: string,
+            createdAt: string,
             isUserSubscribed: boolean,
             postId: string
         },
         community: {
             communityId: string,
             communityName: string,
-            communityIcon: string,
+            communityIcon?: string|null,
         },
         review: Omit<ReviewPlateProps, 'postId'>
     },
     content: {
         title: string,
-        media?: MediaPreview
+        media?: MediaPreview|null
     },
 
 }
@@ -38,7 +39,7 @@ export function FeedPreview({ meta, content }: FeedPreviewProps) {
                 <div className="flex items-center gap-x-1 flex-col mobile-sm:flex-row">
                   <div className="flex flex-row gap-2 items-center mobile-sm:gap-1">
                     <Link href={`localhost:xxxx/community/${meta.community.communityId}`} >
-                        <img className="w-8 h-8 rounded-full" src={meta.community.communityIcon} />
+                        {meta.community.communityIcon? <img className="w-8 h-8 rounded-full" src={meta.community.communityIcon} />:<Code2 className="w-8 h-8 rounded-full" />}
                     </Link>
                     <div className="flex flex-col mobile-sm:flex-row mobile-sm:gap-1">
                     <Link href={`localhost:xxxx/community/${meta.community.communityId}`} className="text-gray-700 font-semibold">

@@ -4,24 +4,29 @@ import Image from "next/image"
 import { Fragment } from "react"
 
 type VideoPreview = {
-    type: 'video',
+    type: 'VIDEO',
     preview: string,
     duration: number
 }
 
 type ImagePreview = {
-    type: 'image',
+    type: 'IMAGE',
     preview: string,
     amount: number
 }
 
 type ExternalLinkPreview = {
-    type: 'external',
+    type: 'EXTERNAL',
     preview: string,
     url: string
 }
 
-type MediaPreview = VideoPreview | ImagePreview | ExternalLinkPreview
+// type MediaPreview = VideoPreview | ImagePreview | ExternalLinkPreview
+type MediaPreview = {
+    type: 'VIDEO' | 'IMAGE' | 'EXTERNAL_LINK',
+    preview: string,
+    meta: string //duration, amount, url
+}
 
 export type { MediaPreview, VideoPreview, ImagePreview, ExternalLinkPreview }
 
@@ -31,22 +36,22 @@ type MediaPreviewProps = MediaPreview & {
 
 const snapshotIconSize = 8
 
-export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewProps) {
+export function MediaPreviewImage({ type, className, ...props }: MediaPreviewProps) {
     let content = null
-    if (type === 'image') {
+    if (type === 'IMAGE') {
         content = (
             <Fragment>
                 <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/image.svg" alt="" className=" invert" />
-                <div> {(props as ImagePreview).amount}</div>
+                <div> {props.meta}</div>
             </Fragment>
 
 
         )
-    } else if (type === 'video') {
+    } else if (type === 'VIDEO') {
         content = (
             <Fragment>
                 <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/video.svg" alt="" className=" invert" />
-                <div>{new Date((props as VideoPreview).duration * 1000).toISOString().substr(11, 8)}</div>
+                <div>{new Date(parseInt(props.meta) * 1000).toISOString().substr(11, 8)}</div>
             </Fragment>
 
         )
@@ -54,7 +59,7 @@ export  function MediaPreviewImage({ type, className,  ...props }: MediaPreviewP
         content = (
             <Fragment>
                 <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/external-link.svg" alt="" className=" invert" />
-                <div> {(props as ExternalLinkPreview).url}</div>
+                <div> {props.meta}</div>
             </Fragment>
         )
     }

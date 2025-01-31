@@ -7,7 +7,7 @@ const testDataCompact: FeedPreviewProps[] = [
         meta: {
             post: {
                 updatedAt: "1737339998",
-                publishedAt: "1737335996",
+                createdAt: "1737335996",
                 isUserSubscribed: true,
                 postId: "1232"
             },
@@ -32,7 +32,7 @@ const testDataCompact: FeedPreviewProps[] = [
         meta: {
             post: {
                 updatedAt: "1737335996",
-                publishedAt: "1737335996",
+                createdAt: "1737335996",
                 isUserSubscribed: false,
                 postId: "123"
             },
@@ -67,7 +67,7 @@ const testDataCard: FeedCardProps[] = [
 
             post: {
                 updatedAt: '1737417109',
-                publishedAt: '1737412109',
+                createdAt: '1737412109',
                 postId: '153'
             },
             source: {
@@ -111,7 +111,7 @@ const testDataCard: FeedCardProps[] = [
 
             post: {
                 updatedAt: '1737410109',
-                publishedAt: '1737412129',
+                createdAt: '1737412129',
                 postId: '1253'
             },
             source: {

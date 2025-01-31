@@ -1,23 +1,25 @@
-// import { pgClient } from "./prisma-client";
-import type { communities } from "@/prisma/postgres/postgres-client";
-import { PrismaClient as _PgClient } from "@/prisma/postgres/postgres-client";
+
+import { eq } from "drizzle-orm"
+import { newDrizzle } from "./drizzle-client"
+import * as schema from "@/drizzle/schema"
+
 
 async function __test_deleteCommunity(id: string) {
 
 
-    const pgClient = new _PgClient()
-    await pgClient.$transaction(async tx => {
-        await tx.community_user.deleteMany({
-            where: {
-                community_id: id
-            }
-        })
-        await tx.communities.delete({
-            where: {
-                id
-            }
-        })
+    const db = newDrizzle()
+
+    await db.transaction(async (tx) => {
+        await tx.delete(schema.community_user).where(
+            eq(schema.community_user.community_id, id)
+        )
+        await db.delete(schema.communities).where(
+            eq(schema.communities.id, id)
+        )
     })
+
+
+
 }
 
 
@@ -30,85 +32,60 @@ async function createCommunity(
     banner?: string | null,
     topics?: string[]
 ) {
-    const pgClient = new _PgClient()
-    const res = await pgClient.$transaction(async (tx) => {
 
-        try {
-            const community = await tx.communities.create({
-                data: {
+    const db = newDrizzle()
+    return await db.transaction(async (tx) => {
+        const [community] = await tx.insert(schema.communities).values({
+            name,
+            description,
+            visibility,
+            icon,
+            banner,
+            topics
+        }).returning()
 
-                    name,
-                    description,
-                    visibility,
-                    icon,
-                    banner,
-
-                }
-            })
-            await tx.community_user.create({
-                data: {
-                    user_id: userId,
-                    community_id: community.id,
-                    role: "OWNER"
-                }
-            })
-            return community.id
-        } catch (e) {
-            console.error(e)
-            return null
-        }
-
-
+        await tx.insert(schema.community_user).values({
+            user_id: userId,
+            community_id: community.id,
+            role: "OWNER",
+        })
+        return community.id
     })
-    return res
+
+
 }
 
 async function queryUserCommunities(userId: string) {
-    const pgClient = new _PgClient()
-    const communities_meta = await pgClient.community_user.findMany({
-        where: {
-            user_id: userId
+
+
+    const db = newDrizzle()
+    const joinedCommunities = await db.query.community_user.findMany({
+        with: {
+            communities: true
         },
-        select: {
-            community_id: true,
-            favorite: true,
-        },
+        where: (communityRecord, { eq }) => eq(communityRecord.user_id, userId)
     })
 
-    const communities = await pgClient.communities.findMany({
-        where: {
-            id: {
-                in: communities_meta.map(c => c.community_id)
-            }
-        }
-    })
+    return joinedCommunities.map(joinedCommunity => ({
+        ...joinedCommunity.communities,
+        favorite: joinedCommunity.favorite
+    }))
 
-
-    return communities.map(c => {
-        const meta = communities_meta.find(m => m.community_id === c.id)
-        return {
-            ...c,
-            favorite: meta?.favorite ?? false
-        }
-    }) satisfies (communities & { favorite: boolean })[]
 
 
 }
 
 
 async function queryCommunity(communityId: string) {
-    try {
-        const pgClient = new _PgClient()
-        return await pgClient.communities.findUnique({
-            where: {
-                id: communityId
-            }
-        })
-    }catch(e){
-        console.error(e)
-        return null
-    }
-   
+
+    const db = newDrizzle()
+    const community = await db.query.communities.findFirst({
+        where: (community, { eq }) => eq(community.id, communityId)
+    })
+
+    return community
+
+
 }
 
 export {

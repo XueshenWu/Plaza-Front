@@ -1,36 +1,31 @@
-import { pgClient } from "./prisma-client";
+import { newDrizzle } from './drizzle-client';
+import * as schema from '@/drizzle/schema';
 import { v4 } from 'uuid';
+import { eq, type InferInsertModel } from "drizzle-orm"
+
+type InsertProfileRes = typeof schema.profiles.$inferInsert
+
+
 
 async function __test_createUserProfile() {
-    try {
-        const user = await pgClient.profiles.create({
-            data: {
-                
-            }
+    const db = newDrizzle()
+
+    const [res] = await db
+        .insert(schema.profiles)
+        .values({
+            id: v4()
         })
-        return user.id
-    } catch (e) {
-        console.error(e)
-        return null
-    }
+        .returning()
+    return res.id
+
 
 }
 
 async function __test_deleteUserProfile(id: string) {
-    try {
-        const user = await pgClient.profiles.delete({
-            where: {
-                id
-            }
-        })
-        return user.id
-    } catch (e) {
-        console.error(e)
-        return null
-    }
+    await newDrizzle().delete(schema.profiles).where(eq(schema.profiles.id, id))
 }
 
 export {
-   __test_createUserProfile,
+    __test_createUserProfile,
     __test_deleteUserProfile
 }
