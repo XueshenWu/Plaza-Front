@@ -14,7 +14,7 @@ const testDataCompact: FeedPreviewProps[] = [
             community: {
                 communityId: "1231",
                 communityName: "Cake Republic",
-                communityIcon: "neon_abyss.webp"
+                communityIcon: "/neon_abyss.webp"
             },
             review: {
                 comments: 120,
@@ -39,7 +39,7 @@ const testDataCompact: FeedPreviewProps[] = [
             community: {
                 communityId: "123",
                 communityName: "Cake Republic",
-                communityIcon: "citrus.svg"
+                communityIcon: "/citrus.svg"
             },
             review: {
                 comments: 10,
@@ -52,9 +52,9 @@ const testDataCompact: FeedPreviewProps[] = [
         content: {
             title: "How to make a CHEESE cake, Here's a thorough guide to making a cake that's perfect for any occasion. Whether you're a beginner or experienced baker, these steps will help you create a delicious, moist, and beautiful cake.",
             media: {
-                type: "image",
+                type: "IMAGE",
                 preview: a2,
-                amount: 5,
+                meta: '5',
             }
         }
     }

@@ -5,6 +5,14 @@ const meta: Meta<typeof Header> = {
   component: Header,
   title: "Segment/Header",
   excludeStories: /.*Data$/,
+  parameters: {
+    nextjs: {
+        appDirectory: true,
+        router: {
+            basePath: '/feed',
+        },
+    }
+},
 
 };
 

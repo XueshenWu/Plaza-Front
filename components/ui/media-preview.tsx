@@ -41,7 +41,7 @@ export function MediaPreviewImage({ type, className, ...props }: MediaPreviewPro
     if (type === 'IMAGE') {
         content = (
             <Fragment>
-                <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/image.svg" alt="" className=" invert" />
+                <Image height={snapshotIconSize} width={snapshotIconSize} src="/preview/image.svg" alt="" className=" invert" />
                 <div> {props.meta}</div>
             </Fragment>
 

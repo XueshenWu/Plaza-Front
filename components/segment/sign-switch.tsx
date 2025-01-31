@@ -37,14 +37,17 @@ export function SignSwith({
                 return <ResetPasswordRequestForm />
         }
     }, [formType])
+
+
+
+
     return (
         <div className="flex flex-col items-center justify-start w-full h-full">
             <div className='flex flex-row-reverse justify-between w-full'>
-
                 <Button onClick={onClose} variant={'ghost'} className='bg-slate-100 hover:bg-slate-200' ><X className='icon' /></Button>
                 {formType === 'reset' && <Button onClick={() => setFormType('signin')} variant={'ghost'}><ArrowLeft className='icon' /></Button>}
 
-
+             
             </div>
             <div className='h-full w-full flex-grow '>
                 {form}

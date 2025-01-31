@@ -3,6 +3,8 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 import { FeedFilter } from "@/components/segment/feed-filter";
 import { FeedPreviewContainer } from "@/components/segment/feed-preview-container";
 import { FeedCardContainer } from "@/components/segment/feed-card-container";
+import { sampleCompact } from "@/app/feed/data";
+import { sampleCard } from "@/app/feed/data";
 
 
 const primaryFilterOptions = ['Best', 'Hot', 'New', 'Top', 'Rising']
