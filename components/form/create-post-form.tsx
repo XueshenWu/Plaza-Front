@@ -2,7 +2,7 @@
 
 import { useCreatePostForm } from "@/hooks/form/create-post";
 import { Form } from "../ui/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { ImagePreview } from "../ui/imagePreview";
@@ -30,7 +30,8 @@ export function CreatePostForm({
             mediaFieldLink
         },
         removeFile,
-        clearExtraFields
+        clearExtraFields,
+
     } = useCreatePostForm()
 
     const fileLists = formObj.watch("mediaFiles")
@@ -85,6 +86,9 @@ export function CreatePostForm({
 
                 </form>
             </Form>
+            <div>
+                
+            </div>
             <div className="flex flex-row items-center justify-end px-2 gap-x-2">
                 <Button variant={'default'}>
                     Save Draft
@@ -110,12 +114,13 @@ export function CreatePostForm({
                                 //TODO: Add error message
                                 formObj.setError("mediaLink", {
                                     type: "value",
-                                    message: "Link is required"
+                                    message: "Legal link is required",
                                 }, {
                                     shouldFocus: true
                                 })
-                                formObj.reset()
-
+                                formObj.reset({}, {
+                                    keepErrors: true,
+                                })
                             } else {
                                 createPostDto.media = {
                                     mediaType: "EXTERNAL_LINK",
@@ -130,7 +135,7 @@ export function CreatePostForm({
                         }
                         case "Media": {
                             const files = data.mediaFiles
-                            if(files.length === 0){
+                            if (files.length === 0) {
                                 //TODO: Add error message
                                 formObj.setError("mediaFiles", {
                                     type: "value",
@@ -138,21 +143,23 @@ export function CreatePostForm({
                                 }, {
                                     shouldFocus: true
                                 })
-                                formObj.reset()
-                            }else{
-                                if(files[0].type.includes('video')){
+                                formObj.reset({}, {
+                                    keepErrors: true,
+                                })
+                            } else {
+                                if (files[0].type.includes('video')) {
 
-                                }else{
-                                
+                                } else {
+
                                 }
                             }
                         }
 
                     }
 
-
-
-                    formObj.reset()
+                    formObj.reset({}, {
+                        keepErrors: true,
+                    })
                 })}>
                     Post
                 </Button>
