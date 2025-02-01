@@ -2,6 +2,7 @@
   "name": "v2",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "dotenv -e .env.local next dev  --turbopack",
     "dev:win": "dotenv -f .env.local next dev --turbopack",

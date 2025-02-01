@@ -105,7 +105,7 @@ export function CreateCommunityForm({
                         {nameField}
                         {descriptionField}
                     </div>
-                    <div className={`${step === 1 ? ' block' : 'hidden'}`}>
+                    <div className={`${step === 1 ? ' block' : 'hidden'}`}> 
 
                         <div className="space-y-6">
                             <div className="text-2xl font-semibold">
@@ -115,7 +115,7 @@ export function CreateCommunityForm({
                                 Adding visual flair will catch new members attention and help establish your community’s culture! You can update this at any time.
                             </div>
                         </div>
-                        <div className="my-6 w-full px-4 ">
+                        <div className="my-6 w-full px-4">
                             <CommunityPreviewer name={name} description={description} icon={icon} banner={banner} />
                         </div>
                         <div className="hover:bg-slate-50 cursor-pointer  px-4 py-2 rounded-md w-full ">
@@ -185,8 +185,8 @@ export function CreateCommunityForm({
                             <div className="text-2xl font-semibold">
                                 What kind of community is this?
                             </div>
-                            <div className="text-sm text-gray-600">
-                                Decide who can view and contribute in your community. Only public communities show up in search. Important: Once set, you will need to submit a request to change your community type.
+                            <div className="text-[12px] leading-tight text-gray-600 mt-4">
+                                Decide who can view and contribute in your community. Only public communities show up in search. <strong>Important:</strong> Once set, you will need to submit a request to change your community type.
                             </div>
                         </div>
 

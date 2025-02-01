@@ -139,7 +139,7 @@ export function useCreateCommunityForm() {
                            autoHeight
                             maxLength={255}
                             {...field}
-                            placeholder="Community Name"
+                            placeholder="Community Description"
 
                             autoComplete="off"
                         />
@@ -260,28 +260,31 @@ export function useCreateCommunityForm() {
         {
             [{
                 image: '/world.svg',
+                imageSelected: '/world-selected.svg',
                 label: 'Public',
                 description: 'Anyone can view, post, and comment to this community',
                 value: 'PUBLIC',
             }, {
                 image: '/eyes.svg',
+                imageSelected: '/eyes-selected.svg',
                 label: "Restricted",
                 description: 'Anyone can view, but only approved users can contribute',
                 value: 'RESTRICTED',
             }, {
                 image: '/lock.svg',
+                imageSelected: '/lock-selected.svg',
                 label: 'Private',
                 description: 'Only approved members can view and contribute',
                 value: 'PRIVATE',
             }
-            ].map(({ image, label, description, value }) => (
+            ].map(({ image, imageSelected, label, description, value }) => (
                 <Label
                     key={value}
                     htmlFor={value}
 
                     className={`rounded-sm transition-colors duration-100 select-none cursor-pointer flex items-center justify-between gap-x-2 px-4 py-3 ${visibility === value && 'bg-slate-200'}`} >
                     <div className="flex items-center justify-start gap-x-4">
-                        <img src={image} alt={label} className={`w-6 h-6 ${visibility === value && ' stroke-white'}`} />
+                        <img src={visibility === value? imageSelected : image} alt={label} className={`w-6 h-6 ${visibility === value && ' stroke-white'}`} />
                         <div>
                             <div>{label}</div>
                             <p className="text-xs text-gray-500">
