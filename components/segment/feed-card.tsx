@@ -25,14 +25,14 @@ export type FeedCardProps = {
         source: {
             author: {
                 id: string,
-                name: string,
-                icon: string,
+                displayName?: string|null,
+                avatar?: string|null,
                 isUserFollowing: boolean,
             },
             community: {
                 id: string,
                 name: string,
-                icon: string,
+                icon?: string|null,
                 isUserSubscribing: boolean,
             }
 
@@ -44,25 +44,26 @@ export type FeedCardProps = {
         body?: string[],
         media?: MediaDisplayProps
     },
-    mode: 'preview' | 'full'
-
+    
 }
 
 
-export function FeedCard({ meta, content, mode }: FeedCardProps) {
+export function FeedCard({ meta, content, mode }: FeedCardProps &{
+    mode: 'preview' | 'full'
+}) {
     return (
         <div className="py-2  flex flex-col items-start  border-b border-slate-300 text-xs w-full">
             <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center justtiy-start  gap-x-2">
                     <Link href={`localhost:xxxx/community/${meta.source.community.id}`} >
-                        <img className="w-8 h-8 rounded-full" src={meta.source.community.icon} />
+                        <img className="w-8 h-8 rounded-full" src={meta.source.community.icon??undefined} />
                     </Link>
                     <div>
                         <Link href={`localhost:xxxx/community/${meta.source.community.id}`} className="text-gray-700 font-semibold">
                             r/{meta.source.community.name}
                         </Link>
                         {mode === 'full' && <div>
-                            {meta.source.author.name}
+                            {meta.source.author.displayName??meta.source.author.id.substring(-5)}
                         </div>}
                     </div>
 

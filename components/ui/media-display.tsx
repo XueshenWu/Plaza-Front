@@ -10,7 +10,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 export type MediaDisplayProps = {
-    type: 'image' | 'video' | "external-link",
+    type: 'IMAGE' | 'VIDEO' | "EXTERNAL_LINK",
     urls: string[]
 }
 export function MediaDisplay({ type, urls }: MediaDisplayProps) {
@@ -18,7 +18,7 @@ export function MediaDisplay({ type, urls }: MediaDisplayProps) {
 
     let content = null
 
-    if (type === 'image') {
+    if (type === 'IMAGE') {
         content = (<Carousel className="p-2 ">
 
             <CarouselContent className=" " >
@@ -41,7 +41,7 @@ export function MediaDisplay({ type, urls }: MediaDisplayProps) {
             </CarouselContent>
 
         </Carousel>)
-    } else if (type === 'video') {
+    } else if (type === 'VIDEO') {
         content = (<video controls className="rounded-xl my-2">
             <source src={urls[0]} type="video/mp4" />
             Your browser does not support the video tag.

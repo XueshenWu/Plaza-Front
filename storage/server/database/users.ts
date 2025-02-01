@@ -3,7 +3,6 @@ import * as schema from '@/drizzle/schema';
 import { v4 } from 'uuid';
 import { eq, type InferInsertModel } from "drizzle-orm"
 
-type InsertProfileRes = typeof schema.profiles.$inferInsert
 
 
 

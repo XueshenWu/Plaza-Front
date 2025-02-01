@@ -1,10 +1,11 @@
 import { expect, test, describe, it, beforeAll, assertType } from 'vitest'
 import { __test_createUserProfile, __test_deleteUserProfile } from '@/storage/server/database/users'
-import { __test_deleteCommunity, createCommunity, queryUserCommunities, } from '@/storage/server/database/communities'
+import { __test_deleteCommunity, createCommunity, queryUserCommunities, queryCommunity } from '@/storage/server/database/communities'
 import { newDrizzle } from '@/storage/server/database/drizzle-client'
 import { v4 } from 'uuid'
 import * as schema from '@/drizzle/schema'
-import { and } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
+
 
 test('createCommunity', async () => {
 
@@ -33,6 +34,11 @@ test('createCommunity', async () => {
     })
 
     expect(communityUserRecord).toBeTruthy()
+
+    await db.delete(schema.community_user).where(eq(schema.community_user.id, communityUserRecord!.user_id))
+    await db.delete(schema.communities).where(eq(schema.communities.id, communityRecord!.id))
+    await db.delete(schema.profiles).where(eq(schema.profiles.id, user.id))
+    
 
 })
 
@@ -110,4 +116,30 @@ test('queryUserCommunities', async () => {
     expect(communityIds).toContain(communityRecord1.id)
     expect(communityIds).toContain(communityRecord2.id)
 
+    await db.delete(schema.community_user).where(eq(schema.community_user.id, communityUserRecords[0].id))
+    await db.delete(schema.community_user).where(eq(schema.community_user.id, communityUserRecords[1].id))
+
+    await db.delete(schema.communities).where(eq(schema.communities.id, communityRecord1.id))
+    await db.delete(schema.communities).where(eq(schema.communities.id, communityRecord2.id))
+
+    await db.delete(schema.profiles).where(eq(schema.profiles.id, user.id))
 });
+
+test('queryCommunity', async () => {
+    const db = newDrizzle()
+
+    const [communityRecord] = await db.insert(schema.communities).values({
+        name: `CommunityName-${Math.random().toFixed(5)}`,
+        description: "Test Description",
+        visibility: "PUBLIC"
+    }).returning() 
+
+    const community = await queryCommunity(communityRecord.id)
+
+    expect(community).toBeTruthy()
+    expect(community!.id).toBe(communityRecord.id)
+    expect(community!.name).toBe(communityRecord.name)
+    
+    await db.delete(schema.communities).where(eq(schema.communities.id, communityRecord.id))
+
+})
