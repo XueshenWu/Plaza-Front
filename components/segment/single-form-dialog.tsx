@@ -48,9 +48,9 @@ export function SingleFormDialog({
             {trigger}
 
         </DialogTrigger>
-        <DialogContent className="rounded-xl w-11/12">
+        <DialogContent className="rounded-xl w-[96%]">
             <DialogTitle className="hidden"></DialogTitle>
-            <div className="rounded-xl px-4">
+            <div className="rounded-xl mobile-lg:px-3">
                 {formComponent}
             </div>
 
