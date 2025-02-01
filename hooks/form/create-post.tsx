@@ -54,9 +54,10 @@ export function useCreatePostForm() {
             title: "",
             content: "",
             mediaFiles: [],
-            mediaLink: ""
-        }
+            mediaLink: "",
+        },
     })
+
 
     function clearExtraFields(formType:"Text" | "Link" | "Media") {
         if(formType === "Text"){
@@ -174,7 +175,6 @@ export function useCreatePostForm() {
         </FormItem>)} />)
 
 
-
     return {
         formObj: form,
         formFields: {
@@ -184,7 +184,7 @@ export function useCreatePostForm() {
             mediaFieldLink
         },
         removeFile,
-        clearExtraFields
+        clearExtraFields,
     }
 
 }

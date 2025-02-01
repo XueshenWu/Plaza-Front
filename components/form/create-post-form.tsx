@@ -2,7 +2,7 @@
 
 import { useCreatePostForm } from "@/hooks/form/create-post";
 import { Form } from "../ui/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { ImagePreview } from "../ui/imagePreview";
@@ -33,7 +33,8 @@ export function CreatePostForm({
             mediaFieldLink
         },
         removeFile,
-        clearExtraFields
+        clearExtraFields,
+
     } = useCreatePostForm()
 
     const fileLists = formObj.watch("mediaFiles")
@@ -88,6 +89,9 @@ export function CreatePostForm({
 
                 </form>
             </Form>
+            <div>
+                
+            </div>
             <div className="flex flex-row items-center justify-end px-2 gap-x-2">
                 <Button variant={'default'}>
                     Save Draft
@@ -115,12 +119,14 @@ export function CreatePostForm({
                                 //TODO: Add error message
                                 formObj.setError("mediaLink", {
                                     type: "value",
-                                    message: "Link is required"
+                                    message: "Legal link is required",
                                 }, {
                                     shouldFocus: true
                                 })
                                 console.log("Link is required")
-                                formObj.reset()
+                                formObj.reset({}, {
+                                    keepErrors: true
+                                })
                                 return
 
                             } else {
@@ -146,7 +152,9 @@ export function CreatePostForm({
                                 }, {
                                     shouldFocus: true
                                 })
-                                formObj.reset()
+                                 formObj.reset({}, {
+                                    keepErrors: true
+                                })
                                 console.log("Media is required")
                                 return
                             } else {
@@ -176,7 +184,9 @@ export function CreatePostForm({
                                         }, {
                                             shouldFocus: true
                                         })
-                                        formObj.reset()
+                                         formObj.reset({}, {
+                                    keepErrors: true
+                                })
                                         console.log("Only Images are allowed")
                             
                                         return
@@ -210,7 +220,9 @@ export function CreatePostForm({
                         alert("Failed to create post")
                     }
 
-                    formObj.reset()
+                     formObj.reset({}, {
+                                    keepErrors: true
+                                })
                 })}>
                     Post
                 </Button>
