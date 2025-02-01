@@ -80,7 +80,7 @@ async function queryCommunity(communityId: string) {
 
     const db = newDrizzle()
     const community = await db.query.communities.findFirst({
-        where: (community, { eq }) => eq(community.id, communityId)
+        where: eq(schema.communities.id, communityId)
     })
 
     return community

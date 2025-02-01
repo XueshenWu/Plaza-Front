@@ -1,7 +1,8 @@
-import { asc, desc, eq, isNull, lte, or } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, lte, or } from "drizzle-orm";
 import { newDrizzle } from "./drizzle-client";
 import * as schema from "@/drizzle/schema";
 import { FeedPreviewProps } from "@/components/segment/feed-preview";
+import { queryCommunity, queryUserCommunities } from "./communities";
 
 
 function parseMediaJsonb(media: unknown) {
@@ -16,6 +17,19 @@ function parseMediaJsonb(media: unknown) {
 }
 
 
+export async function queryUserReviews(userId: string) {
+    const db = newDrizzle()
+    const res = await db.query.profiles.findFirst({
+        where: eq(schema.profiles.id, userId),
+        columns: {
+            upvoted_posts: true,
+            downvoted_posts: true
+        }
+    })
+    return res
+}
+
+
 export async function queryPostById(id: string) {
     const db = newDrizzle()
     const res = await db.query.posts.findFirst({
@@ -24,20 +38,7 @@ export async function queryPostById(id: string) {
     return res
 }
 
-type getFeedsParams = {
-    filter: {
-        communityId?: string,
-        primary?: string,
-        secondary?: string
-    },
-    cursor: {
-        position: Date,
-        limit: number,
-        reversed?: boolean
-    },
-    type: "preview" | "full",
-    userId: string
-}
+
 
 type Cursor = {
     position: Date,
@@ -45,7 +46,7 @@ type Cursor = {
     reversed?: boolean
 }
 
-export async function getFeedPreviewByTimeCursor({ position, limit, reversed = false, userId, }: Cursor & { userId: string }):Promise<FeedPreviewProps[]> {
+export async function getFeedsPreviewByTime({ position, limit, reversed = false, userId, }: Cursor & { userId: string }): Promise<FeedPreviewProps[]> {
     const db = newDrizzle()
     const posts = (await db
         .select({
@@ -76,27 +77,19 @@ export async function getFeedPreviewByTimeCursor({ position, limit, reversed = f
 
 
 
-    const userSubscribedCommunity = await db
-        .select()
-        .from(schema.community_user)
-        .where(eq(schema.community_user.user_id, userId))
-
-
-
-    const userReviewedPosts = await db.query.profiles.findFirst({
-        where: eq(schema.profiles.id, userId),
-        columns: {
-            upvoted_posts: true,
-            downvoted_posts: true
-        }
+    const userSubscribedCommunity = await db.query.community_user.findMany({
+        where: eq(schema.community_user.user_id, userId),
     })
 
 
-    const subscriptionSet = new Set(userSubscribedCommunity.map(sub => sub.community_id))
+    const userReviewedPosts = await queryUserReviews(userId)
+
+
+    const subscriptionSet = userSubscribedCommunity ? new Set(userSubscribedCommunity.map(sub => sub.community_id)) : new Set()
     const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
     const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
 
- 
+
 
     const resultMap = new Map<string, FeedPreviewProps>()
 
@@ -141,23 +134,118 @@ export async function getFeedPreviewByTimeCursor({ position, limit, reversed = f
 }
 
 
-export async function getFeedsFromCommunity({ filter, cursor, type, userId }: getFeedsParams) {
+export async function getFeedsPreviewFromCommunityByTime({ position, limit, reversed = false, userId, communityId }: Cursor & { userId: string, communityId: string }): Promise<FeedPreviewProps[]> {
     const db = newDrizzle()
-    const { communityId, primary, secondary } = filter
-    const { position, limit } = cursor
 
-    if (communityId) {
-
+    const community = await queryCommunity(communityId)
+    if (!community) {
+        throw new Error("Community not found")
     }
 
-    // const feeds = db
-    //     .select()
-    //     .from(schema.community_user)
-    //     .leftJoin(,
-    //         eq(schema.posts.community_id, schema.community_user.community_id)
-    //     )
+    const posts = (await db
+        .select(
+            {
+                updatedAt: schema.posts.updatedAt,
+                createdAt: schema.posts.createdAt,
+                postId: schema.posts.id,
+
+                communityId: schema.communities.id,
+                communityName: schema.communities.name,
+                communityIcon: schema.communities.icon,
+
+                upvotes: schema.posts.upvotes,
+                downvotes: schema.posts.downvotes,
+                comments: schema.posts.comments_count,
+
+                title: schema.posts.title,
+                media: schema.posts.media,
+            }
+        )
+        .from(schema.posts)
+        .where(and(lte(schema.posts.createdAt, position), eq(schema.posts.community_id, communityId)))
+        .limit(limit)
+        .orderBy(reversed ? asc(schema.posts.createdAt) : desc(schema.posts.createdAt))
+    ).map(post => ({
+        ...post,
+        media: post.media ? parseMediaJsonb(post.media) : null,
+    }))
+
+    const userReviewedPosts = await queryUserReviews(userId)
+
+    const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
+    const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
+
+
+    return posts.map(post => ({
+        meta: {
+            post: {
+                updatedAt: post.updatedAt.toLocaleDateString(),
+                createdAt: post.createdAt?.toLocaleDateString(),
+                postId: post.postId,
+                isUserSubscribed: true
+            },
+            community: {
+                communityId: community.id,
+                communityName: community.name,
+                communityIcon: community.icon
+
+            },
+            review: {
+                comments: post.comments,
+                upvotes: post.upvotes,
+                downvotes: post.downvotes,
+                userReviewed: upvotedSet.has(post.postId) ? "up" : downvotedSet.has(post.postId) ? "down" : "none"
+            }
+        },
+        content: {
+            title: post.title,
+            media: post.media ? {
+                type: post.media.mediaType,
+                preview: post.media.mediaPreview.link,
+                meta: post.media.mediaPreview.meta
+            } : null
+        }
+    }))
+}
 
 
 
+export async function createPost(
+    authorId: string,
+    communityId: string,
+    title: string,
+    content: string[],
+    media?: {
+        mediaType: "VIDEO" | "IMAGE" | "EXTERNAL_LINK",
+        mediaUrl: string[],
+        mediaPreview: {
+            link: string,
+            meta: string
+        }
+    },
+): Promise<boolean> {
+    const db = newDrizzle()
 
+    const [res] = await db.insert(schema.posts).values({
+        author_id: authorId,
+        community_id: communityId,
+        title,
+        content,
+        updatedAt: new Date(),
+        media: media ? {
+            mediaType: media.mediaType,
+            mediaUrl: media.mediaUrl,
+            mediaPreview: {
+                link: media.mediaPreview.link,
+                meta: media.mediaPreview.meta
+            }
+        } : undefined
+    }).returning()
+
+    if (!res || res.author_id !== authorId || res.community_id !== communityId) {
+        console.log("Failed to create post")
+        return false
+    }
+
+    return true
 }

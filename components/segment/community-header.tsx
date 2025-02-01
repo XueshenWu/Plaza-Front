@@ -5,6 +5,7 @@ import { Code2, Plus } from "lucide-react"
 import { notFound, ReadonlyURLSearchParams } from "next/navigation"
 import { SingleFormDialog } from "./single-form-dialog"
 import { FeedFilter } from "./feed-filter"
+import Link from "next/link"
 
 
 type CommunityHeaderProps = {
@@ -52,12 +53,17 @@ export async function CommunityHeader({ communityId }: CommunityHeaderProps) {
                 </div>
                 <div className="flex items-center justify-start">
                     <div>
-                        <SingleFormDialog form="create-post" trigger={
+                        {/* <SingleFormDialog form="create-post" trigger={
                             <div className="border-[#333d42]  text-xs font-semibold  flex items-center  gap-x-2 px-3 py-2 border rounded-3xl">
                                 <Plus className="h-4 w-4" />
                                 <div>Create Post</div>
                             </div>
-                        } />
+                        } /> */}
+                        <Link href={`/community/${communityId}/submit`}>
+                        <div className="border-[#333d42]  text-xs font-semibold  flex items-center  gap-x-2 px-3 py-2 border rounded-3xl">
+                                <Plus className="h-4 w-4" />
+                                <div>Create Post</div>
+                            </div></Link>
                     </div>
                 </div>
 

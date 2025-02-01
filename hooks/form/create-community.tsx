@@ -93,6 +93,7 @@ export function useCreateCommunityForm() {
             icon: undefined,
             topics: [],
             visibility: "PUBLIC",
+          
         },
     });
     const visibility = form.watch('visibility')
