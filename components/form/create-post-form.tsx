@@ -6,8 +6,10 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { ImagePreview } from "../ui/imagePreview";
+import type { CreatePostDto } from "@/actions/server/form/create-post";
 
 
+const linkRegex = /https?:\/\/[^\s]+/g
 
 type CreatePostFormProps = {
     userId: string,
@@ -87,37 +89,69 @@ export function CreatePostForm({
                 <Button variant={'default'}>
                     Save Draft
                 </Button>
-                <Button onClick={formObj.handleSubmit((data)=>{
+                <Button onClick={formObj.handleSubmit((data) => {
 
-
-                
-                  switch(formType){
-                    case "Text":
-                        {console.log(data)
-                        break;
+                    const createPostDto: CreatePostDto = {
+                        title: data.title,
+                        communityId: communityId,
+                        authorId: userId,
+                        content: []
                     }
-                    case "Link":{
-                        const link = data.mediaLink
-                        if(!link){
-                            formObj.setError("mediaLink",{
-                                type: "value",
-                                message: "Link is required"
-                            }, {
-                                shouldFocus: true
-                            })
-                            formObj.reset()
-                            
-                        }else{
-                            console.log(data)
+
+                    switch (formType) {
+                        case "Text":
+                            {
+                                createPostDto.content = data.content?.split("\n") ?? []
+                                break;
+                            }
+                        case "Link": {
+                            const link = data.mediaLink
+                            if (!link || !link.match(linkRegex)) {
+                                //TODO: Add error message
+                                formObj.setError("mediaLink", {
+                                    type: "value",
+                                    message: "Link is required"
+                                }, {
+                                    shouldFocus: true
+                                })
+                                formObj.reset()
+
+                            } else {
+                                createPostDto.media = {
+                                    mediaType: "EXTERNAL_LINK",
+                                    mediaUrl: [link],
+                                    mediaPreview: {
+                                        link: link,
+                                        meta: link
+                                    }
+                                }
+                            }
+                            break
                         }
-                        break
+                        case "Media": {
+                            const files = data.mediaFiles
+                            if(files.length === 0){
+                                //TODO: Add error message
+                                formObj.setError("mediaFiles", {
+                                    type: "value",
+                                    message: "Media is required"
+                                }, {
+                                    shouldFocus: true
+                                })
+                                formObj.reset()
+                            }else{
+                                if(files[0].type.includes('video')){
+
+                                }else{
+                                
+                                }
+                            }
+                        }
+
                     }
-                    case "Media":
-
-                  }
 
 
-     
+
                     formObj.reset()
                 })}>
                     Post
