@@ -1,7 +1,7 @@
 'use client'
 
 
-export async function readFileB64(file: File): Promise<string> {
+export async function readFileAsBase64(file: File): Promise<string> {
 
 
 

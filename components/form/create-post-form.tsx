@@ -6,19 +6,22 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { ImagePreview } from "../ui/imagePreview";
-import type { CreatePostDto } from "@/actions/server/form/create-post";
+import { submitCreatePost, type CreatePostDto } from "@/actions/server/form/create-post";
+import { readFileAsArrayBuffer, readFileAsBase64 } from "@/utils/read-file-promise";
+import { imageToThumbnail } from "@/utils/compress-file";
+import { videoToThumbnail } from "@/utils/videoclip";
 
 
-const linkRegex = /https?:\/\/[^\s]+/g
+const linkRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
 
 type CreatePostFormProps = {
-    userId: string,
+
     communityId: string,
 
 }
 
 export function CreatePostForm({
-    userId,
+
     communityId,
 }: CreatePostFormProps) {
 
@@ -89,12 +92,11 @@ export function CreatePostForm({
                 <Button variant={'default'}>
                     Save Draft
                 </Button>
-                <Button onClick={formObj.handleSubmit((data) => {
+                <Button onClick={formObj.handleSubmit(async (data) => {
 
                     const createPostDto: CreatePostDto = {
                         title: data.title,
                         communityId: communityId,
-                        authorId: userId,
                         content: []
                     }
 
@@ -106,7 +108,10 @@ export function CreatePostForm({
                             }
                         case "Link": {
                             const link = data.mediaLink
-                            if (!link || !link.match(linkRegex)) {
+
+                            
+
+                            if (!link || !linkRegex.test(link)) {
                                 //TODO: Add error message
                                 formObj.setError("mediaLink", {
                                     type: "value",
@@ -114,14 +119,17 @@ export function CreatePostForm({
                                 }, {
                                     shouldFocus: true
                                 })
+                                console.log("Link is required")
                                 formObj.reset()
+                                return
 
                             } else {
+                               
                                 createPostDto.media = {
                                     mediaType: "EXTERNAL_LINK",
-                                    mediaUrl: [link],
+                                    payload: [],
                                     mediaPreview: {
-                                        link: link,
+                                        src: link,
                                         meta: link
                                     }
                                 }
@@ -130,7 +138,7 @@ export function CreatePostForm({
                         }
                         case "Media": {
                             const files = data.mediaFiles
-                            if(files.length === 0){
+                            if (files.length === 0) {
                                 //TODO: Add error message
                                 formObj.setError("mediaFiles", {
                                     type: "value",
@@ -139,18 +147,68 @@ export function CreatePostForm({
                                     shouldFocus: true
                                 })
                                 formObj.reset()
-                            }else{
-                                if(files[0].type.includes('video')){
+                                console.log("Media is required")
+                                return
+                            } else {
+                                if (files[0].type.includes('video')) {
+                                    const [thumbnail, duration] = await videoToThumbnail(files[0], 0)
+                                    const data = await readFileAsArrayBuffer(files[0])
+                                    createPostDto.media = {
+                                        mediaType: "VIDEO",
+                                        payload: [
+                                            {
+                                                mimeType: files[0].type,
+                                                data
+                                            }
+                                        ],
+                                        mediaPreview: {
+                                            src: thumbnail,
+                                            meta: `${duration}`
+                                        }
+                                    }
 
-                                }else{
-                                
+                                } else {
+
+                                    if (files.some(file => !file.type.includes('image'))) {
+                                        formObj.setError("mediaFiles", {
+                                            type: "value",
+                                            message: "Only Images are allowed"
+                                        }, {
+                                            shouldFocus: true
+                                        })
+                                        formObj.reset()
+                                        console.log("Only Images are allowed")
+                            
+                                        return
+                                    }
+
+                                    const payload = await Promise.all(files.map(async (file) => ({
+                                        mimeType: file.type,
+                                        data: await readFileAsArrayBuffer(file)
+                                    })))
+
+                                    const thumbnail = await imageToThumbnail(files[0]).then(file => readFileAsBase64(file))
+
+                                    createPostDto.media = {
+                                        mediaType: "IMAGE",
+                                        payload,
+                                        mediaPreview: {
+                                            src: thumbnail,
+                                            meta: `${files.length}`
+                                        }
+                                    }
                                 }
                             }
                         }
 
                     }
-
-
+                    console.log(createPostDto)
+                    const res =  await submitCreatePost(createPostDto)
+                    if(res){
+                        alert("Post Created")
+                    }else{
+                        alert("Failed to create post")
+                    }
 
                     formObj.reset()
                 })}>

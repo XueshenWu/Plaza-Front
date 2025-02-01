@@ -1,10 +1,10 @@
 import imageCompression from "browser-image-compression";
 
 
-export async function compress(file: File): Promise<File> {
+export async function imageToThumbnail(file: File): Promise<File> {
     const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 480,
         useWebWorker: true
     }
 

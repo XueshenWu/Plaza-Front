@@ -10,7 +10,7 @@ function parseMediaJsonb(media: unknown) {
         mediaType: | "VIDEO" | "IMAGE" | "EXTERNAL_LINK",
         mediaUrl: string[],
         mediaPreview: {
-            link: string,
+            src: string,
             meta: string
         }
     }
@@ -118,7 +118,7 @@ export async function getFeedsPreviewByTime({ position, limit, reversed = false,
                 title: post.title,
                 media: post.media ? {
                     type: post.media.mediaType,
-                    preview: post.media.mediaPreview.link,
+                    preview: post.media.mediaPreview.src,
                     meta: post.media.mediaPreview.meta
                 } : null
             }
@@ -201,7 +201,7 @@ export async function getFeedsPreviewFromCommunityByTime({ position, limit, reve
             title: post.title,
             media: post.media ? {
                 type: post.media.mediaType,
-                preview: post.media.mediaPreview.link,
+                preview: post.media.mediaPreview.src,
                 meta: post.media.mediaPreview.meta
             } : null
         }
@@ -222,7 +222,7 @@ export async function createPost(
         mediaType: "VIDEO" | "IMAGE" | "EXTERNAL_LINK",
         mediaUrl: string[],
         mediaPreview: {
-            link: string,
+            src: string,
             meta: string
         }
     },
@@ -239,7 +239,7 @@ export async function createPost(
             mediaType: media.mediaType,
             mediaUrl: media.mediaUrl,
             mediaPreview: {
-                link: media.mediaPreview.link,
+                src: media.mediaPreview.src,
                 meta: media.mediaPreview.meta
             }
         } : undefined

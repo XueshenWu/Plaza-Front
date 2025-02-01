@@ -7,12 +7,7 @@ export default async function Page({ params }: {
     }>,
 }) {
 
-    const supabase = await createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) {
-        console.error(error)
-        return <div>Failed to load user</div>
-    }
+  
     const communityId = (await params).communityId
 
 
@@ -27,7 +22,7 @@ export default async function Page({ params }: {
                 </div>
             </div>
             <div className="">
-                <CreatePostForm userId={user.id} communityId={communityId} />
+                <CreatePostForm  communityId={communityId} />
 
             </div>
 
