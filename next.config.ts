@@ -12,15 +12,21 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname:'upload.wikimedia.org',
+
         
+      },
+      {
+        protocol: 'https',
+        hostname:'example.com',
+      },{
+        protocol: 'https',
+        hostname:'stackoverflow.com',
+      },{
+        protocol: 'https',
+        hostname:'umyivohnmwgdwsfwtfzz.supabase.co',
       }
     ]
   },
-  experimental:{
-    serverActions:{
-      bodySizeLimit: '10mb'
-    }
-  }
 };
 
 export default nextConfig;

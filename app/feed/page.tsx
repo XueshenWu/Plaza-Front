@@ -1,6 +1,6 @@
 import { FeedPreviewContainer } from "@/components/segment/feed-preview-container"
-import { sampleCard, sampleCompact } from "./data"
-import { FeedCard } from "@/components/segment/feed-card"
+
+import { getFeeds } from "@/actions/server/getFeed"
 import { Fragment } from "react"
 import { FeedFilter, PreviewType } from "@/components/segment/feed-filter"
 import { FeedCardContainer } from "@/components/segment/feed-card-container"
@@ -46,12 +46,20 @@ export default async function Page({ searchParams }: {
         view = 'compact'
     }
 
- 
+
 
     return (
         <Fragment>
             <FeedFilter base="/feed" primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
-            {view === 'compact' ? <FeedPreviewContainer initialFeeds={sampleCompact(5)} /> : <FeedCardContainer initialFeeds={sampleCard(5)} />}
+            {view === 'compact' ? <FeedPreviewContainer initialFeeds={
+                await getFeeds({
+                    type: 'Preview',
+                })
+            } /> : <FeedCardContainer initialFeeds={
+                await getFeeds({
+                    type: 'Full',
+                })
+            } />}
         </Fragment>
 
     )

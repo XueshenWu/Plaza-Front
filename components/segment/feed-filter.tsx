@@ -26,7 +26,7 @@ export function FeedFilter({ primary, secondary, view = 'compact', base='' }: {
         <div className={`flex flex-row items-center justify-start py-2  `}>
             {/* trendings */}
             <Select value={primary.selected} onValueChange={(value) => {
-                router.push(`${base}?primary=${value}`)
+                router.push(`${base}?primary=${value}&viewType=${view}`)
             }} >
                 <SelectTrigger variant={'ghost'} size={'compact'} className=" ">
                     {primary.selected}
@@ -49,7 +49,7 @@ export function FeedFilter({ primary, secondary, view = 'compact', base='' }: {
             {secondary && <Select
 
                 onValueChange={(value) => {
-                    router.push(`${base}?primary=${primary.selected}&secondary=${value.replace(" ", "-")}`)
+                    router.push(`${base}?primary=${primary.selected}&secondary=${value.replace(" ", "-")}&viewType=${view}`)
                 }}
                 value={secondary.selected.replace("-", " ")}>
                 <SelectTrigger variant={'ghost'} size={'compact'} className=" ">

@@ -35,7 +35,7 @@ const Comment = ({ previewType, postId, comments }: {
 
     if (previewType === 'card') {
         return <Link href={`posts/${postId}`} className="bg-slate-200 hover:bg-slate-300 py-2 transition-colors rounded-3xl px-3  flex flex-row items-center justify-center gap-x-1">
-            <img src="comment.svg" />
+            <img src="/comment.svg" />
             <div className="text-[10px] text-gray-700">
                 {parsedComments}
             </div>
@@ -66,7 +66,7 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                 <DrawerTrigger className="*:text-[10px]" >
 
                     <div className={previewType === 'card' ? "flex bg-slate-200 hover:bg-slate-300 transition-colors rounded-3xl px-3 py-2 cursor-pointer" : "text-xs text-gray-700 cursor-pointer"}>
-                        {previewType === 'card' ? <img src="award.svg" /> : "Award"}
+                        {previewType === 'card' ? <img src="/award.svg" /> : "Award"}
                     </div>
 
                 </DrawerTrigger>
@@ -75,7 +75,7 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                 </DrawerContent>
             </Drawer>
             {previewType === 'card' ? <div className="bg-slate-200 hover:bg-slate-300 transition-colors rounded-3xl  px-3 py-2 cursor-pointer">
-                <img src="forward.svg" onClick={() => {
+                <img src="/forward.svg" onClick={() => {
                     copy("localhost:xxxx/post/" + postId).then(() => {
                         alert("Copied!")
                     })
@@ -92,7 +92,7 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                     </DrawerHeader>
                     <div className="*:cursor-pointer flex flex-col gap-y-2 items-start justify-start py-6 border-t-2 border-gray-300 px-8">
                         <div className="flex items-center justify-center gap-x-6">
-                            <img src="report.svg" />
+                            <img src="/report.svg" />
                             Report
                         </div>
                         <div className="flex items-center justify-center gap-x-6"
@@ -103,7 +103,7 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                                 })
                             }}
                         >
-                            <img src="share.svg" />
+                            <img src="/share.svg" />
                             Share
                         </div>
                     </div>

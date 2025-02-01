@@ -25,6 +25,7 @@ export function MediaDisplay({ type, urls }: MediaDisplayProps) {
                 {urls.map((url, i) => (
                     <CarouselItem key={i} className=" grid place-content-center bg-white ">
                         <div className="relative max-w-[358px] ">
+                            {/* TODO: Should add preview */}
                             <Image src={url} alt="" className="rounded-xl object-cover "
 
                                 sizes="100vw"
@@ -42,7 +43,7 @@ export function MediaDisplay({ type, urls }: MediaDisplayProps) {
 
         </Carousel>)
     } else if (type === 'VIDEO') {
-        content = (<video controls className="rounded-xl my-2">
+        content = (<video controls className="rounded-xl my-2 w-full h-full">
             <source src={urls[0]} type="video/mp4" />
             Your browser does not support the video tag.
         </video>)

@@ -50,7 +50,7 @@ export function MediaPreviewImage({ type, className, ...props }: MediaPreviewPro
     } else if (type === 'VIDEO') {
         content = (
             <Fragment>
-                <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/video.svg" alt="" className=" invert" />
+                <Image height={snapshotIconSize} width={snapshotIconSize} src="/preview/video.svg" alt="" className=" invert" />
                 <div>{new Date(parseInt(props.meta) * 1000).toISOString().substr(11, 8)}</div>
             </Fragment>
 
@@ -58,22 +58,22 @@ export function MediaPreviewImage({ type, className, ...props }: MediaPreviewPro
     } else {
         content = (
             <Fragment>
-                <Image height={snapshotIconSize} width={snapshotIconSize} src="preview/external-link.svg" alt="" className=" invert" />
+                <Image height={snapshotIconSize} width={snapshotIconSize} src="/preview/external-link.svg" alt="" className=" invert" />
                 <div> {props.meta}</div>
             </Fragment>
         )
     }
 
     return (
-        <div className={className + " rounded-xl relative cursor-pointer min-w-14 w-[84px] mobile-sm:w-[112px] mobile-lg:w-[148px]"}>
+        <div className={className + " rounded-xl relative cursor-pointer min-w-14 w-[84px]  mobile-sm:w-[112px] mobile-lg:w-[148px]"}>
             {/* <Image width={size?.width} height={size?.height} fill={size === undefined ? true : undefined} src={props.preview} alt="" className="rounded-xl " /> */}
-
+        {/* TODO: maybe need to resize it */}
             <Image src={props.preview} alt="" className="rounded-xl object-cover "
 
                 sizes="100vw"
                 style={{
                     width: '100%',
-                    height: 'auto',
+                    maxHeight:"24vh"
                 }}
                 width={500}
                 height={300}

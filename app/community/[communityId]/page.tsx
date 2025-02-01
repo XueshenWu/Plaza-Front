@@ -3,9 +3,9 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 import { FeedFilter } from "@/components/segment/feed-filter";
 import { FeedPreviewContainer } from "@/components/segment/feed-preview-container";
 import { FeedCardContainer } from "@/components/segment/feed-card-container";
-import { sampleCompact } from "@/app/feed/data";
-import { sampleCard } from "@/app/feed/data";
-
+// import { sampleCompact } from "@/app/feed/data";
+// import { sampleCard } from "@/app/feed/data";
+import { getFeeds } from "@/actions/server/getFeed";
 
 const primaryFilterOptions = ['Best', 'Hot', 'New', 'Top', 'Rising']
 const secondaryFilterOptions = new Map<string, string[]>()
@@ -54,13 +54,35 @@ export default async function Page({ params, searchParams }: {
         view = 'compact'
     }
 
+    const fileter = {
+        communityId
+    }
+
 
     return <div className="w-full">
         <CommunityHeader communityId={communityId} />
 
         <div className="px-4">
             <FeedFilter base={`/community/${communityId}`} primary={primaryArg} secondary={secondaryArg} view={view as 'compact' | 'card'} />
-              {view === 'compact' ? <FeedPreviewContainer initialFeeds={sampleCompact(5)} /> : <FeedCardContainer initialFeeds={sampleCard(5)} />}
+            {view === 'compact' ? <FeedPreviewContainer 
+            filter={fileter}
+            initialFeeds={
+                await getFeeds({
+                    type: "Preview",
+                    filter: {
+                        communityId
+                    }
+                })
+            } /> : <FeedCardContainer 
+            filter={fileter}
+            initialFeeds={
+                await getFeeds({
+                    type: "Full",
+                    filter: {
+                        communityId
+                    }
+                })
+            } />}
         </div>
 
 
