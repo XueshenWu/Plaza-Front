@@ -317,18 +317,18 @@ export type QueryReviewStatusParams = {
     userId?: string,
     postId: string
 }
-type QueryReviewStatusRes = {
+
+
+export async function queryPostReviewStatus({ userId, postId }: QueryReviewStatusParams): Promise<{
     upvotes: number,
     downvotes: number,
     comments_count: number,
     userReviewed: "up" | "down" | "none"
-} | null;
-
-export async function queryPostReviewStatus({ userId, postId }: QueryReviewStatusParams): Promise<QueryReviewStatusRes> {
+} | null> {
     const db = newDrizzle();
     return await db.transaction(async (tx) => {
         const res = await tx.query.posts.findFirst({
-            where: eq(schema.posts.id, "postId"),
+            where: eq(schema.posts.id, postId),
             columns: {
                 upvotes: true,
                 downvotes: true,

@@ -543,7 +543,7 @@ describe('should work fine with concurrent requests', async () => {
             where: eq(schema.posts.id, postId)
         })
 
-        console.log(postRecordAfterConcurrent)
+ 
         expect(postRecordAfterConcurrent).toBeTruthy()
         expect(postRecordAfterConcurrent!.upvotes).toBe(1)
         expect(postRecordAfterConcurrent!.downvotes).toBe(1)
@@ -556,7 +556,7 @@ describe('should work fine with concurrent requests', async () => {
 
 })
 
-//TODO: add anonymous user invoke
+
 test('query review status', async () => {
 
 
@@ -615,11 +615,27 @@ test('query review status', async () => {
         userId,
         postId
     })
+    expect(res).toBeTruthy()
 
+    expect(res!.userReviewed).toBe('up')
+    expect(res!.upvotes).toBe(1)
+    expect(res!.downvotes).toBe(0)
 
+    const anonRes = await queryPostReviewStatus({
+        postId
+    })
+    expect(anonRes).toBeTruthy()
+    expect(anonRes!.userReviewed).toBe('none')
+    expect(anonRes!.upvotes).toBe(1)
+    expect(anonRes!.downvotes).toBe(0)
 
+    await db.delete(schema.posts).where(eq(schema.posts.id, postId))
+    await db.delete(schema.profiles).where(eq(schema.profiles.id, userId))
+    await db.delete(schema.profiles).where(eq(schema.profiles.id, authorId))
+    await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
+    await db.delete(schema.community_user).where(eq(schema.community_user.user_id, authorId))
 
-
+    
 })
 
 
