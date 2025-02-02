@@ -40,6 +40,81 @@ export async function queryPostById(id: string) {
 }
 
 
+type QueryPostDetailParams = {
+    postId: string,
+    userId?: string
+}
+
+//FIXME: Update User is Following field in db
+
+export async function queryPostDetailById({ postId, userId }: QueryPostDetailParams): Promise<FeedCardProps | null> {
+
+
+    const db = newDrizzle()
+    const post = await db.query.posts.findFirst({
+        where: eq(schema.posts.id, postId),
+        with: {
+            communities: true,
+            profiles: true
+        }
+    })
+
+    if (!post) {
+        return null
+    }
+
+
+    const userSubscribedCommunity = userId ? await queryUserCommunities(userId) : undefined
+    const userReviewedPosts = userId ? await queryUserReviews(userId) : undefined
+
+    const subscriptionSet = userSubscribedCommunity ? new Set(userSubscribedCommunity.map(sub => sub.id)) : new Set()
+    const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
+    const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
+
+
+    const _media = post.media ? parseMediaJsonb(post.media) : null
+
+    const res: FeedCardProps = {
+        meta: {
+            post: {
+                updatedAt: post.updatedAt,
+                createdAt: post.createdAt,
+                postId: post.id
+            },
+            source: {
+                author: {
+                    id: post.profiles.id,
+                    displayName: post.profiles.display_name,
+                    avatar: post.profiles.avatar,
+                    isUserFollowing: false
+                },
+                community: {
+                    id: post.communities.id,
+                    name: post.communities.name,
+                    icon: post.communities.icon,
+                    isUserSubscribing: subscriptionSet.has(post.communities.id)
+                }
+            },
+            review: {
+                comments: post.comments_count,
+                upvotes: post.upvotes,
+                downvotes: post.downvotes,
+                userReviewed: upvotedSet.has(post.id) ? "up" : downvotedSet.has(post.id) ? "down" : "none"
+            }
+        },
+        content: {
+            title: post.title,
+            body: post.content ?? [],
+            media: _media ? {
+                type: _media.mediaType,
+                urls: _media.mediaUrl
+            } : undefined
+        }
+    }
+    return res
+}
+
+
 
 type Cursor = {
     position: Date,
@@ -119,10 +194,10 @@ export async function getFeedsByTime2({ position, limit, reversed = false, userI
                     downvotes: post.downvotes,
                     userReviewed: upvotedSet.has(post.id) ? "up" : downvotedSet.has(post.id) ? "down" : "none"
                 },
-                author:{
+                author: {
                     authorId: post.profiles.id,
-                    displayName: post.profiles.display_name??undefined,
-                    avatar: post.profiles.avatar??undefined
+                    displayName: post.profiles.display_name ?? undefined,
+                    avatar: post.profiles.avatar ?? undefined
                 }
             },
             content: {
@@ -236,6 +311,219 @@ export async function createPost(
 
     return true
 }
+
+
+export type QueryReviewStatusParams = {
+    userId?: string,
+    postId: string
+}
+type QueryReviewStatusRes = {
+    upvotes: number,
+    downvotes: number,
+    comments_count: number,
+    userReviewed: "up" | "down" | "none"
+} | null;
+
+export async function queryPostReviewStatus({ userId, postId }: QueryReviewStatusParams): Promise<QueryReviewStatusRes> {
+    const db = newDrizzle();
+    const res = await db.query.posts.findFirst({
+        where: eq(schema.posts.id, "postId"),
+        columns: {
+            upvotes: true,
+            downvotes: true,
+            comments_count: true
+        }
+    })
+    if (!res) {
+        return null
+    }
+
+    if (!userId) {
+        return {
+            upvotes: res.upvotes,
+            downvotes: res.downvotes,
+            comments_count: res.comments_count,
+            userReviewed: "none"
+        }
+    } else {
+        const userReviewedPosts = await queryUserReviews(userId)
+        const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
+        const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
+
+        return {
+            upvotes: res.upvotes,
+            downvotes: res.downvotes,
+            comments_count: res.comments_count,
+            userReviewed: upvotedSet.has(postId) ? "up" : downvotedSet.has(postId) ? "down" : "none"
+        }
+    }
+
+
+}
+
+
+
+
+export async function reducePostReview({ userId, postId, action }: { userId: string, postId: string, action: "up" | "down" }): Promise<{
+    reviewState: "up" | "down" | "none",
+    upvotes: number,
+    downvotes: number
+    commentsCount: number
+}> {
+    const db = newDrizzle()
+    return await db.transaction(async (tx) => {
+
+        const [post] = await tx.select()
+            .from(schema.posts)
+            .where(eq(schema.posts.id, postId))
+            .for('update')
+
+
+
+        if (!post) {
+            return {
+                reviewState: "none",
+                upvotes: 0,
+                downvotes: 0,
+                commentsCount: 0
+            }
+        }
+
+        const [userReviewedPosts] = await tx
+            .select({
+                upvoted_posts: schema.profiles.upvoted_posts,
+                downvoted_posts: schema.profiles.downvoted_posts,
+            })
+            .from(schema.profiles)
+            .where(eq(schema.profiles.id, userId))
+            .for('update')
+
+        const userUpvotedPosts = userReviewedPosts?.upvoted_posts ?? []
+        const userDownvotedPosts = userReviewedPosts?.downvoted_posts ?? []
+        const upvotedIndex = userUpvotedPosts.indexOf(postId)
+        const downvotedIndex = userDownvotedPosts.indexOf(postId)
+
+        if (upvotedIndex !== -1 && downvotedIndex !== -1) {
+            throw new Error("User review data inconsistent")
+        }
+
+        const userPrevReviewStatus = upvotedIndex !== -1 ? "up" : downvotedIndex !== -1 ? "down" : "none"
+
+
+        if (action === 'up') {
+            switch (userPrevReviewStatus) {
+                case "up": {
+                    userUpvotedPosts.splice(upvotedIndex, 1)
+                    await tx.update(schema.profiles).set({
+                        upvoted_posts: userUpvotedPosts
+                    }).where(eq(schema.profiles.id, userId))
+                    await tx.update(schema.posts).set({
+                        upvotes: post.upvotes - 1
+                    }).where(eq(schema.posts.id, postId))
+                    return {
+                        reviewState: "none",
+                        upvotes: post.upvotes - 1,
+                        downvotes: post.downvotes,
+                        commentsCount: post.comments_count
+                    }
+                }
+                case 'down': {
+                    userDownvotedPosts.splice(downvotedIndex, 1)
+                    userUpvotedPosts.push(postId)
+                    await tx.update(schema.profiles).set({
+                        upvoted_posts: userUpvotedPosts,
+                        downvoted_posts: userDownvotedPosts
+                    }).where(eq(schema.profiles.id, userId))
+                    await tx.update(schema.posts).set({
+                        upvotes: post.upvotes + 1,
+                        downvotes: post.downvotes - 1
+                    }).where(eq(schema.posts.id, postId))
+                    return {
+                        reviewState: "up",
+                        upvotes: post.upvotes + 1,
+                        downvotes: post.downvotes - 1,
+                        commentsCount: post.comments_count
+                    }
+                }
+                case 'none': {
+                    userUpvotedPosts.push(postId)
+                    await tx.update(schema.profiles).set({
+                        upvoted_posts: userUpvotedPosts
+                    }).where(eq(schema.profiles.id, userId))
+                    await tx.update(schema.posts).set({
+                        upvotes: post.upvotes + 1
+                    }).where(eq(schema.posts.id, postId))
+                    return {
+                        reviewState: "up",
+                        upvotes: post.upvotes + 1,
+                        downvotes: post.downvotes,
+                        commentsCount: post.comments_count
+                    }
+                }
+            }
+        } else {
+            switch (userPrevReviewStatus) {
+                case "up": {
+                    userUpvotedPosts.splice(upvotedIndex, 1)
+                    userDownvotedPosts.push(postId)
+                    await tx.update(schema.profiles).set({
+                        upvoted_posts: userUpvotedPosts,
+                        downvoted_posts: userDownvotedPosts
+                    }).where(eq(schema.profiles.id, userId))
+                    await tx.update(schema.posts).set({
+                        upvotes: post.upvotes - 1,
+                        downvotes: post.downvotes + 1
+                    }).where(eq(schema.posts.id, postId))
+                    return {
+                        reviewState: "down",
+                        upvotes: post.upvotes - 1,
+                        downvotes: post.downvotes + 1,
+                        commentsCount: post.comments_count
+                    }
+                }
+                case 'down': {
+                    userDownvotedPosts.splice(downvotedIndex, 1)
+                    await tx.update(schema.profiles).set({
+                        downvoted_posts: userDownvotedPosts
+                    }).where(eq(schema.profiles.id, userId))
+                    await tx.update(schema.posts).set({
+                        downvotes: post.downvotes - 1
+                    }).where(eq(schema.posts.id, postId))
+                    return {
+                        reviewState: "none",
+                        upvotes: post.upvotes,
+                        downvotes: post.downvotes - 1,
+                        commentsCount: post.comments_count
+                    }
+                }
+                case 'none': {
+                    userDownvotedPosts.push(postId)
+                    await tx.update(schema.profiles).set({
+                        downvoted_posts: userDownvotedPosts
+                    }).where(eq(schema.profiles.id, userId))
+                    await tx.update(schema.posts).set({
+                        downvotes: post.downvotes + 1
+                    }).where(eq(schema.posts.id, postId))
+                    return {
+                        reviewState: "down",
+                        upvotes: post.upvotes,
+                        downvotes: post.downvotes + 1,
+                        commentsCount: post.comments_count
+                    }
+                }
+            }
+        }
+
+
+    }, {
+        isolationLevel: 'read committed',
+        deferrable: true,
+        accessMode: 'read write'
+    })
+
+
+}
+
 
 
 // async function getFeedsPreviewFromCommunityByTime({ position, limit, reversed = false, userId, communityId }: Cursor & { userId: string, communityId: string }): Promise<FeedPreviewProps[]> {

@@ -24,6 +24,8 @@ async function __test_deleteUserProfile(id: string) {
     await newDrizzle().delete(schema.profiles).where(eq(schema.profiles.id, id))
 }
 
+
+
 export {
     __test_createUserProfile,
     __test_deleteUserProfile

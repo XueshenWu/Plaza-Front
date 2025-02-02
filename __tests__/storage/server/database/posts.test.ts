@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, it, test, expect } from "vitest";
-import { createPost, getFeedsByTime2 } from "@/storage/server/database/posts";
+import { createPost, getFeedsByTime2, reducePostReview } from "@/storage/server/database/posts";
 import { newDrizzle } from "@/storage/server/database/drizzle-client";
 import { v4 } from "uuid";
 import * as schema from "@/drizzle/schema";
-import { describe } from "node:test";
+import { beforeEach, describe } from "node:test";
 import { eq } from "drizzle-orm";
 
 
@@ -227,10 +227,331 @@ describe("getFeed", async () => {
 
         expect(res).toHaveLength(1)
     })
+})
 
 
+describe('review post', async () => {
+    let userId: string;
+    let postId: string;
+    let db: ReturnType<typeof newDrizzle>
+
+    beforeAll(async () => {
+        db = newDrizzle();
 
 
+        const [_userRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        userId = _userRecord.id
+
+
+        const [_authorRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        const authorId = _authorRecord.id
+
+        const [_communityRecord] = await db.insert(schema.communities).values({
+            id: v4(),
+            name: `Community ${Math.random().toFixed(5)}`,
+            description: "Test Community Description",
+        }).returning()
+
+        const communityId = _communityRecord.id
+
+        const [_community_userRecord] = await db.insert(schema.community_user).values({
+            user_id: authorId,
+            community_id: communityId
+        }).returning()
+
+        const [_postRecord] = await db.insert(schema.posts).values({
+            author_id: authorId,
+            community_id: communityId,
+            title: `Test Post`,
+            content: ["Test Content"],
+            media: {
+                mediaType: "IMAGE",
+                mediaUrl: ["https://example.com/image.jpg"],
+                mediaPreview: {
+                    src: "https://example.com/image.jpg",
+                    meta: "Test Image"
+                }
+            },
+            updatedAt: new Date()
+        }).returning()
+
+        postId = _postRecord.id
+
+    })
+
+
+    beforeEach(async () => {
+        await db.update(schema.posts).set({
+            upvotes: 0,
+            downvotes: 0
+        }).where(eq(schema.posts.id, postId))
+
+        await db.update(schema.profiles).set({
+            upvoted_posts: [],
+            downvoted_posts: []
+        }).where(eq(schema.profiles.id, userId))
+    })
+
+
+    it('should upvote a post', async () => {
+
+        const res = await reducePostReview({
+            userId,
+            postId,
+            action: 'up'
+        })
+        expect(res.reviewState).toBe('up')
+        expect(res.upvotes).toBe(1)
+        expect(res.downvotes).toBe(0)
+
+        const postRecordAfter = await db.query.posts.findFirst({
+            where: eq(schema.posts.id, postId)
+        })
+
+        expect(postRecordAfter).toBeTruthy()
+        expect(postRecordAfter!.upvotes).toBe(1)
+
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, userId)
+        })
+
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.upvoted_posts).toContain(postId)
+
+    })
+
+    it('should downvote a post', async () => {
+        const res = await reducePostReview({
+            userId,
+            postId,
+            action: 'down'
+        })
+        expect(res.reviewState).toBe('down')
+        expect(res.upvotes).toBe(0)
+        expect(res.downvotes).toBe(1)
+
+        const postRecordAfter = await db.query.posts.findFirst({
+            where: eq(schema.posts.id, postId)
+        })
+
+        expect(postRecordAfter).toBeTruthy()
+        expect(postRecordAfter!.downvotes).toBe(1)
+
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, userId)
+        })
+
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.downvoted_posts).toContain(postId)
+    })
+
+    it('should cancel action of a post', async () => {
+
+
+        const action = Math.random() > 0.5 ? 'up' : 'down'
+
+        await reducePostReview({
+            userId,
+            postId,
+            action: action
+        })
+
+        const res = await reducePostReview({
+            userId,
+            postId,
+            action: action
+        })
+        expect(res.reviewState).toBe('none')
+        expect(res.upvotes).toBe(0)
+        expect(res.downvotes).toBe(0)
+
+        const postRecordAfter = await db.query.posts.findFirst({
+            where: eq(schema.posts.id, postId)
+        })
+
+        expect(postRecordAfter).toBeTruthy()
+        expect(postRecordAfter!.upvotes).toBe(0)
+        expect(postRecordAfter!.downvotes).toBe(0)
+
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, userId)
+        })
+
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.upvoted_posts).not.toContain(postId)
+        expect(userPostReview!.downvoted_posts).not.toContain(postId)
+    })
+
+    it('should convert upvote to downvote', async () => {
+        await reducePostReview({
+            userId,
+            postId,
+            action: 'up'
+        })
+
+        const res = await reducePostReview({
+            userId,
+            postId,
+            action: 'down'
+        })
+        expect(res.reviewState).toBe('down')
+        expect(res.upvotes).toBe(0)
+        expect(res.downvotes).toBe(1)
+
+        const postRecordAfter = await db.query.posts.findFirst({
+            where: eq(schema.posts.id, postId)
+        })
+
+        expect(postRecordAfter).toBeTruthy()
+        expect(postRecordAfter!.upvotes).toBe(0)
+        expect(postRecordAfter!.downvotes).toBe(1)
+
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, userId)
+        })
+
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.upvoted_posts).not.toContain(postId)
+        expect(userPostReview!.downvoted_posts).toContain(postId)
+    })
+
+})
+
+
+describe('should work fine with concurrent requests', async () => {
+
+
+    let concurrentUserId1: string;
+    let concurrentUserId2: string;
+    let concurrentUserId3: string;
+    let postId: string;
+    let db: ReturnType<typeof newDrizzle>
+
+
+    beforeAll(async () => {
+        db = newDrizzle()
+        const [_authorRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        const authorId = _authorRecord.id
+
+        const [_communityRecord] = await db.insert(schema.communities).values({
+            id: v4(),
+            name: `Community ${Math.random().toFixed(5)}`,
+            description: "Test Community Description",
+        }).returning()
+
+        const communityId = _communityRecord.id
+
+        const [_community_userRecord] = await db.insert(schema.community_user).values({
+            user_id: authorId,
+            community_id: communityId
+        }).returning()
+
+        const [_postRecord] = await db.insert(schema.posts).values({
+            author_id: authorId,
+            community_id: communityId,
+            title: `Test Post`,
+            content: ["Test Content"],
+            media: {
+                mediaType: "IMAGE",
+                mediaUrl: ["https://example.com/image.jpg"],
+                mediaPreview: {
+                    src: "https://example.com/image.jpg",
+                    meta: "Test Image"
+                }
+            },
+            updatedAt: new Date()
+        }).returning()
+
+        postId = _postRecord.id
+
+        const concurrentUserRecords = await db.insert(schema.profiles).values([
+            { id: v4() },
+            { id: v4() },
+            { id: v4() }
+        ]).returning({
+            id: schema.profiles.id
+        })
+        concurrentUserId1 = concurrentUserRecords[0].id
+        concurrentUserId2 = concurrentUserRecords[1].id
+        concurrentUserId3 = concurrentUserRecords[2].id
+    })
+
+
+    it.concurrent("click upvote a post 3 times", async () => {
+        const res = await Promise.all(Array(3).fill(0).map(async () => {
+            return await reducePostReview({
+                userId: concurrentUserId1,
+                postId,
+                action: 'up'
+            })
+        }))
+
+        // effect : 1 upvote
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, concurrentUserId1)
+        })
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.upvoted_posts).toContain(postId)
+        expect(userPostReview!.downvoted_posts).not.toContain(postId)
+
+
+    });
+
+    it.concurrent("click downvote a post 5 times", async () => {
+        await Promise.all(Array(5).fill(0).map(async () => {
+            return await reducePostReview({
+                userId: concurrentUserId2,
+                postId,
+                action: 'down'
+            })
+        }))
+        // effect : 1 downvote
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, concurrentUserId2)
+        })
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.downvoted_posts).toContain(postId)
+    })
+
+    it.concurrent("click upvote 8 times", async () => {
+        await Promise.all(Array(8).fill(0).map(async () => {
+            return reducePostReview({
+                userId: concurrentUserId3,
+                postId,
+                action: 'up'
+            })
+
+        }))
+
+        const userPostReview = await db.query.profiles.findFirst({
+            where: eq(schema.profiles.id, concurrentUserId3)
+        })
+        expect(userPostReview).toBeTruthy()
+        expect(userPostReview!.upvoted_posts).not.toContain(postId)
+        expect(userPostReview!.downvoted_posts).not.toContain(postId)
+
+    })
+
+    afterAll(async () => {
+        const postRecordAfterConcurrent = await db.query.posts.findFirst({
+            where: eq(schema.posts.id, postId)
+        })
+
+        console.log(postRecordAfterConcurrent)
+        expect(postRecordAfterConcurrent).toBeTruthy()
+        expect(postRecordAfterConcurrent!.upvotes).toBe(1)
+        expect(postRecordAfterConcurrent!.downvotes).toBe(1)
+
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId1))
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId2))
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId3))
+    })
 
 
 })

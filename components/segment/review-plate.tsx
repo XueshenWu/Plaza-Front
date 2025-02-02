@@ -98,7 +98,7 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                         <div className="flex items-center justify-center gap-x-6"
 
                             onClick={() => {
-                                copy("localhost:xxxx/post/" + postId).then(() => {
+                                copy("/post/" + postId).then(() => {
                                     alert("Copied!")
                                 })
                             }}

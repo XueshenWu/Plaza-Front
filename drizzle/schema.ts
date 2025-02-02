@@ -22,7 +22,7 @@ export const profiles = pgTable('profiles', {
     saved_posts: uuid().array().default([]),
     upvoted_posts: uuid().array().default([]),
     downvoted_posts: uuid().array().default([]),
-})
+}).enableRLS()
 
 export const posts = pgTable('posts', {
     id: uuid().primaryKey().defaultRandom(),
@@ -44,7 +44,7 @@ export const posts = pgTable('posts', {
     comments_count: integer().notNull().default(0),
 }, table=>({
     timeIndex:index('timeIndex').on(table.createdAt),
-}))
+})).enableRLS()
 
 export const communities = pgTable('communities', {
     id: uuid().primaryKey().defaultRandom(),
@@ -56,7 +56,7 @@ export const communities = pgTable('communities', {
     rules: jsonb().default({}),
     pinned_posts: uuid().array().default([]),
     topics: text().array().default([]),
-})
+}).enableRLS()
 
 export const comments = pgTable('comments', {
     id: uuid().primaryKey().defaultRandom(),
@@ -70,7 +70,7 @@ export const comments = pgTable('comments', {
     updatedAt: timestamp(),
     children_comments: uuid().array().default([]),
    
-})
+}).enableRLS()
 
 
 
@@ -82,7 +82,7 @@ export const community_user = pgTable('community_user', {
     notification_preference: Enum_NotificationPreference().default("OFF"),
     credit: integer().default(0),
     favorite: boolean().default(false),
-});
+}).enableRLS();
 
 export const communityRelations = relations(community_user, ({ one }) => ({
     communities: one(communities, {
