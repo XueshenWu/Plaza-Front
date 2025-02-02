@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, it, test, expect } from "vitest";
-import { createPost, getFeedsByTime2, reducePostReview } from "@/storage/server/database/posts";
+import { createPost, getFeedsByTime2, queryPostReviewStatus, reducePostReview } from "@/storage/server/database/posts";
 import { newDrizzle } from "@/storage/server/database/drizzle-client";
 import { v4 } from "uuid";
 import * as schema from "@/drizzle/schema";
@@ -229,7 +229,7 @@ describe("getFeed", async () => {
     })
 })
 
-
+// TODO:add anonymous user invoke
 describe('review post', async () => {
     let userId: string;
     let postId: string;
@@ -552,6 +552,72 @@ describe('should work fine with concurrent requests', async () => {
         await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId2))
         await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId3))
     })
+
+
+})
+
+//TODO: add anonymous user invoke
+test('query review status', async () => {
+
+
+    const db = newDrizzle();
+
+
+    const [_userRecord] = await db.insert(schema.profiles).values({
+        id: v4()
+    }).returning()
+    const userId = _userRecord.id
+
+
+    const [_authorRecord] = await db.insert(schema.profiles).values({
+        id: v4()
+    }).returning()
+    const authorId = _authorRecord.id
+
+    const [_communityRecord] = await db.insert(schema.communities).values({
+        id: v4(),
+        name: `Community ${Math.random().toFixed(5)}`,
+        description: "Test Community Description",
+    }).returning()
+
+    const communityId = _communityRecord.id
+
+    const [_community_userRecord] = await db.insert(schema.community_user).values({
+        user_id: authorId,
+        community_id: communityId
+    }).returning()
+
+    const [_postRecord] = await db.insert(schema.posts).values({
+        author_id: authorId,
+        community_id: communityId,
+        title: `Test Post`,
+        content: ["Test Content"],
+        media: {
+            mediaType: "IMAGE",
+            mediaUrl: ["https://example.com/image.jpg"],
+            mediaPreview: {
+                src: "https://example.com/image.jpg",
+                meta: "Test Image"
+            }
+        },
+        updatedAt: new Date()
+    }).returning()
+
+    const postId = _postRecord.id
+
+    await reducePostReview({
+        userId,
+        postId,
+        action: 'up'
+    })
+
+    const res = await queryPostReviewStatus({
+        userId,
+        postId
+    })
+
+
+
 
 
 })

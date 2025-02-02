@@ -4,7 +4,7 @@ import { ArrowBigDown, ArrowBigUp } from "lucide-react"
 import { useMemo, useState, useOptimistic, use, useTransition } from "react"
 
 
-export type ReviewUpdateAction = 'Upvote' | "Downvote" | "CancelUpvote" | "CancelDownvote" | 'SwitchToUpvote' | "SwitchToDownvote"
+export type ReviewUpdateAction = 'up' | 'down'
 
 export type UserReviewState = "up" | "down" | 'none'
 
@@ -26,7 +26,7 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
 
 
     const { upvotes, downvotes, userReviewed } = data
-  
+
 
 
 
@@ -37,23 +37,26 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
         { upvotes, downvotes, userReviewed },
         (state, action) => {
             switch (action) {
-                case 'Upvote': {
-                    return { userReviewed: "up", upvotes: state.upvotes + 1, downvotes: state.downvotes }
+                case 'up': {
+                    if (state.userReviewed === 'up') {
+                        return { ...state, upvotes: state.upvotes - 1, userReviewed: 'none' }
+
+                    } else if (state.userReviewed === 'down') {
+                        return { ...state, upvotes: state.upvotes + 1, downvotes: state.downvotes - 1, userReviewed: 'up' }
+
+                    }
+                    return { ...state, upvotes: state.upvotes + 1, userReviewed: 'up' }
+
                 }
-                case 'Downvote': {
-                    return { userReviewed: "down", upvotes: state.upvotes, downvotes: state.downvotes + 1 }
-                }
-                case 'CancelUpvote': {
-                    return { userReviewed: 'none', upvotes: state.upvotes - 1, downvotes: state.downvotes }
-                }
-                case 'CancelDownvote': {
-                    return { userReviewed: 'none', upvotes: state.upvotes, downvotes: state.downvotes - 1 }
-                }
-                case 'SwitchToUpvote': {
-                    return { userReviewed: "up", upvotes: state.upvotes + 1, downvotes: state.downvotes - 1 }
-                }
-                case 'SwitchToDownvote': {
-                    return { userReviewed: "down", upvotes: state.upvotes - 1, downvotes: state.downvotes + 1 }
+                case 'down': {
+                    if (state.userReviewed === 'down') {
+                        return { ...state, downvotes: state.downvotes - 1, userReviewed: 'none' }
+
+                    } else if (state.userReviewed === 'up') {
+                        return { ...state, upvotes: state.upvotes - 1, downvotes: state.downvotes + 1, userReviewed: 'down' }
+
+                    }
+                    return { ...state, downvotes: state.downvotes + 1, userReviewed: 'down' }
                 }
             }
         })
@@ -124,33 +127,17 @@ export function ReviewButton({ data, update }: ReviewButtonProps) {
 
     const handleUpvote = () => {
 
-        if (isPending) return
+        if (isPending) return;
 
-        if (optReviewData.userReviewed === "up") {
-            updateOptimistically('CancelUpvote')
-
-
-        } else if (optReviewData.userReviewed === "down") {
-            updateOptimistically('SwitchToUpvote')
-        }
-        else {
-            updateOptimistically('Upvote')
-        }
+        updateOptimistically('up')
     }
 
     const handleDownvote = () => {
 
-        if (isPending) return
+        if (isPending) return;
 
-        if (optReviewData.userReviewed === "down") {
-            updateOptimistically('CancelDownvote')
+        updateOptimistically('down')
 
-        } else if (optReviewData.userReviewed === "up") {
-            updateOptimistically('SwitchToDownvote')
-        }
-        else {
-            updateOptimistically('Downvote')
-        }
     }
 
 

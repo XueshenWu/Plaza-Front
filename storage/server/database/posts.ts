@@ -326,39 +326,45 @@ type QueryReviewStatusRes = {
 
 export async function queryPostReviewStatus({ userId, postId }: QueryReviewStatusParams): Promise<QueryReviewStatusRes> {
     const db = newDrizzle();
-    const res = await db.query.posts.findFirst({
-        where: eq(schema.posts.id, "postId"),
-        columns: {
-            upvotes: true,
-            downvotes: true,
-            comments_count: true
+    return await db.transaction(async (tx) => {
+        const res = await tx.query.posts.findFirst({
+            where: eq(schema.posts.id, "postId"),
+            columns: {
+                upvotes: true,
+                downvotes: true,
+                comments_count: true
+            }
+        })
+        if (!res) {
+            return null
+        }
+
+        if (!userId) {
+            return {
+                upvotes: res.upvotes,
+                downvotes: res.downvotes,
+                comments_count: res.comments_count,
+                userReviewed: "none"
+            }
+        } else {
+            const userReviewedPosts = await tx.query.profiles.findFirst({
+                where: eq(schema.profiles.id, userId),
+                columns: {
+                    upvoted_posts: true,
+                    downvoted_posts: true
+                }
+            })
+            const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
+            const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
+
+            return {
+                upvotes: res.upvotes,
+                downvotes: res.downvotes,
+                comments_count: res.comments_count,
+                userReviewed: upvotedSet.has(postId) ? "up" : downvotedSet.has(postId) ? "down" : "none"
+            }
         }
     })
-    if (!res) {
-        return null
-    }
-
-    if (!userId) {
-        return {
-            upvotes: res.upvotes,
-            downvotes: res.downvotes,
-            comments_count: res.comments_count,
-            userReviewed: "none"
-        }
-    } else {
-        const userReviewedPosts = await queryUserReviews(userId)
-        const upvotedSet = userReviewedPosts?.upvoted_posts ? new Set(userReviewedPosts.upvoted_posts) : new Set()
-        const downvotedSet = userReviewedPosts?.downvoted_posts ? new Set(userReviewedPosts.downvoted_posts) : new Set()
-
-        return {
-            upvotes: res.upvotes,
-            downvotes: res.downvotes,
-            comments_count: res.comments_count,
-            userReviewed: upvotedSet.has(postId) ? "up" : downvotedSet.has(postId) ? "down" : "none"
-        }
-    }
-
-
 }
 
 
