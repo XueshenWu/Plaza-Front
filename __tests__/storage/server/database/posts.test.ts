@@ -359,20 +359,22 @@ describe('review post', async () => {
             postId,
             action: 'up'
         })
-        console.log('res1', res1)
-        // expect(res1.reviewState).toBe('up')
-        // expect(res1.upvotes).toBe(1)
-        // expect(res1.downvotes).toBe(0)
+   
+        
+        expect(res1.reviewState).toBe('up')
+        expect(res1.upvotes).toBe(1)
+        expect(res1.downvotes).toBe(0)
 
         const res2 = await reducePostReview({
             userId,
             postId,
             action:'up'
         })
-        console.log('res2', res2)
-        // expect(res2.reviewState).toBe('none')
-        // expect(res2.upvotes).toBe(0)
-        // expect(res2.downvotes).toBe(0)
+  
+
+        expect(res2.reviewState).toBe('none')
+        expect(res2.upvotes).toBe(0)
+        expect(res2.downvotes).toBe(0)
 
         const postRecordAfter = await db.query.posts.findFirst({
             where: eq(schema.posts.id, postId)

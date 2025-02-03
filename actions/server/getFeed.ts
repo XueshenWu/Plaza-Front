@@ -39,6 +39,7 @@ export async function getFeeds({ filter = {}, cursor = {
 
     const userId = user?.id
 
+    console.log("userId", userId)
 
     if (type === "Preview") {
         return getFeedsByTime2({
