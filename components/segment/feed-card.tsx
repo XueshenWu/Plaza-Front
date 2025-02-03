@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer';
 import { Code, Ellipsis, Menu } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { CommentInput } from './comment-input';
 
 export type FeedCardProps = {
     meta: {
@@ -60,7 +61,7 @@ export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardPr
 
 
     return (
-        <div className="py-2  flex flex-col items-start  border-b border-slate-300 text-xs w-full">
+        <div className="pt-2 pb-4  flex flex-col items-start  border-b border-slate-300 text-xs w-full">
             <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center justtiy-start  gap-x-2">
                     <Link href={showLink} >
@@ -71,7 +72,7 @@ export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardPr
                             {showName}
                         </Link>
                         {mode === 'full' && <div>
-                            {meta.source.author.displayName ?? meta.source.author.id.substring(0,8)}
+                            {meta.source.author.displayName ?? meta.source.author.id.substring(0, 8)}
                         </div>}
                     </div>
 
@@ -149,7 +150,11 @@ export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardPr
 
 
             </div>
-            <ReviewPlate {...meta.review} previewType="card" postId={meta.post.postId} />
+            <div className='space-y-2 w-full'>
+                <ReviewPlate {...meta.review} previewType="card" postId={meta.post.postId} />
+                {mode === 'full' && <CommentInput postId={meta.post.postId} />}
+            </div>
+
         </div>
     )
 }

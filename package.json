@@ -40,12 +40,14 @@
     "@types/lodash": "^4.17.14",
     "@types/react-infinite-scroller": "^1.2.5",
     "@types/uuid": "^10.0.0",
+    "babel-loader": "^9.2.1",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.1",
     "embla-carousel-react": "^8.5.2",
+    "html-webpack-plugin": "^5.6.3",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.473.0",
@@ -104,10 +106,12 @@
     "prisma": "^6.2.1",
     "storybook": "8.6.0-alpha.0",
     "tailwindcss": "^3.4.1",
+    "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.2"
+    "vitest": "^3.0.2",
+    "webpack-cli": "^6.0.1"
   },
   "eslintConfig": {
     "extends": [

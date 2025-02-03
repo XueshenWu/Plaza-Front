@@ -10,7 +10,7 @@ import { DProgress } from "../ui/dprogress"
 import { CommunityPreviewer } from "../ui/community-previewer"
 import { Policies } from "../segment/policies"
 import { submitCreateCommunity } from "@/actions/server/form/create-community"
-import { readFileB64, readFileAsArrayBuffer } from "@/utils/read-file-promise"
+import {  readFileAsArrayBuffer } from "@/utils/read-file-promise"
 
 
 type CreateCommunityFormProps = {
