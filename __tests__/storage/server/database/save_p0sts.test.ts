@@ -5,7 +5,8 @@ import { v4 } from "uuid";
 import * as schema from "@/drizzle/schema";
 import { beforeEach, describe } from "node:test";
 import { eq } from "drizzle-orm";
-import { useClearVotesPreset, useConcurrentRequestsPreset, useFeedPreset, usePostPreset, useReviewPostPreset } from "./preset-utils/preset";
+
+
 
 
 describe('createPost', async () => {
@@ -13,16 +14,26 @@ describe('createPost', async () => {
 
     let userId: string;
     let communityId: string;
-    let clean: () => Promise<void>;
     let db: ReturnType<typeof newDrizzle>
 
     beforeAll(async () => {
         db = newDrizzle()
+        const [_userRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        userId = _userRecord.id
 
-        const res = await usePostPreset()
-        userId = res.userId
-        communityId = res.communityId
-        clean = res.clean
+        const [_communityRecord] = await db.insert(schema.communities).values({
+            id: v4(),
+            name: `Community ${Math.random().toFixed(5)}`,
+            description: "Test Community Description",
+        }).returning()
+        communityId = _communityRecord.id
+
+        const [_community_userRecord] = await db.insert(schema.community_user).values({
+            user_id: userId,
+            community_id: communityId
+        }).returning()
 
 
     })
@@ -69,7 +80,10 @@ describe('createPost', async () => {
 
 
     afterAll(async () => {
-        await clean()
+        const db = newDrizzle()
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, userId))
+        await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
+
     })
 
 
@@ -78,26 +92,66 @@ describe('createPost', async () => {
 
 describe("getFeed", async () => {
 
-    const numberOfAuthors = 3; // 3 authors
-    const numberOfCommunities = 2; // 2 communities
-
-    let authors = new Array<string>(numberOfAuthors);
-    let communities = new Array<string>(numberOfCommunities);
+    const authors = new Array<string>(3); // 3 authors
+    const communities = new Array<string>(2); // 2 communities
 
     let userId: string;
     let db: ReturnType<typeof newDrizzle>;
-    let clean: () => Promise<void>;
 
     beforeAll(async () => {
 
         db = newDrizzle()
 
-        const res = await useFeedPreset(numberOfAuthors, numberOfCommunities)
+        const [_userRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        userId = _userRecord.id
 
-        userId = res.userId
-        authors = res.authors
-        communities = res.communities
-        clean = res.clean
+        for (let i = 0; i < 2; i++) {
+            const [_communityRecord] = await db.insert(schema.communities).values({
+                id: v4(),
+                name: `Community ${Math.random().toFixed(5)}`,
+                description: "Test Community Description",
+            }).returning()
+            communities[i] = _communityRecord.id
+        }
+
+        for (let i = 0; i < 3; i++) {
+            const [_userRecord] = await db.insert(schema.profiles).values({
+                id: v4()
+            }).returning()
+            authors[i] = _userRecord.id
+        }
+
+        // subscribe user to communities
+        for (let i = 0; i < 2; i++) {
+            const [_community_userRecord] = await db.insert(schema.community_user).values({
+                user_id: userId,
+                community_id: communities[i]
+            }).returning()
+        }
+
+        // each author creates a post in each community
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 2; j++) {
+                await db.insert(schema.posts).values({
+                    author_id: authors[i],
+                    community_id: communities[j],
+                    title: `Test Post ${i}-${j}`,
+                    content: ["Test Content"],
+                    media: {
+                        mediaType: "IMAGE",
+                        mediaUrl: ["https://example.com/image.jpg"],
+                        mediaPreview: {
+                            src: "https://example.com/image.jpg",
+                            meta: "Test Image"
+                        }
+                    },
+                    updatedAt: new Date()
+                })
+
+            }
+        }
 
     })
 
@@ -173,10 +227,6 @@ describe("getFeed", async () => {
 
         expect(res).toHaveLength(1)
     })
-
-    afterAll(async () => {
-        await clean()
-    })
 })
 
 
@@ -184,21 +234,66 @@ describe('review post', async () => {
     let userId: string;
     let postId: string;
     let db: ReturnType<typeof newDrizzle>
-    let clean: () => Promise<void>
 
     beforeAll(async () => {
         db = newDrizzle();
 
-        const res = await useReviewPostPreset()
-        userId = res.userId
-        postId = res.postId
-        clean = res.clean
+        
+        const [_userRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        userId = _userRecord.id
+
+
+        const [_authorRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        const authorId = _authorRecord.id
+
+        const [_communityRecord] = await db.insert(schema.communities).values({
+            id: v4(),
+            name: `Community ${Math.random().toFixed(5)}`,
+            description: "Test Community Description",
+        }).returning()
+
+        const communityId = _communityRecord.id
+
+        const [_community_userRecord] = await db.insert(schema.community_user).values({
+            user_id: authorId,
+            community_id: communityId
+        }).returning()
+
+        const [_postRecord] = await db.insert(schema.posts).values({
+            author_id: authorId,
+            community_id: communityId,
+            title: `Test Post`,
+            content: ["Test Content"],
+            media: {
+                mediaType: "IMAGE",
+                mediaUrl: ["https://example.com/image.jpg"],
+                mediaPreview: {
+                    src: "https://example.com/image.jpg",
+                    meta: "Test Image"
+                }
+            },
+            updatedAt: new Date()
+        }).returning()
+
+        postId = _postRecord.id
 
     })
 
 
     beforeEach(async () => {
-        useClearVotesPreset(userId, postId)
+        await db.update(schema.posts).set({
+            upvotes: 0,
+            downvotes: 0
+        }).where(eq(schema.posts.id, postId))
+
+        await db.update(schema.profiles).set({
+            upvoted_posts: [],
+            downvoted_posts: []
+        }).where(eq(schema.profiles.id, userId))
     })
 
 
@@ -256,6 +351,9 @@ describe('review post', async () => {
 
     it('should cancel action of a post', async () => {
 
+
+ 
+
         const res1 = await reducePostReview({
             userId,
             postId,
@@ -269,7 +367,7 @@ describe('review post', async () => {
         const res2 = await reducePostReview({
             userId,
             postId,
-            action: 'up'
+            action:'up'
         })
         // console.log('res2', res2)
         expect(res2.reviewState).toBe('none')
@@ -326,10 +424,6 @@ describe('review post', async () => {
         expect(userPostReview!.downvoted_posts).toContain(postId)
     })
 
-    afterAll(async () => {
-        await clean()
-    })
-
 })
 
 
@@ -341,19 +435,56 @@ describe('should work fine with concurrent requests', async () => {
     let concurrentUserId3: string;
     let postId: string;
     let db: ReturnType<typeof newDrizzle>
-    let clean: () => Promise<void>
 
 
     beforeAll(async () => {
         db = newDrizzle()
+        const [_authorRecord] = await db.insert(schema.profiles).values({
+            id: v4()
+        }).returning()
+        const authorId = _authorRecord.id
 
-        const res = await useConcurrentRequestsPreset()
-        postId = res.postId
-        concurrentUserId1 = res.concurrentUserId1
-        concurrentUserId2 = res.concurrentUserId2
-        concurrentUserId3 = res.concurrentUserId3
-        clean = res.clean
+        const [_communityRecord] = await db.insert(schema.communities).values({
+            id: v4(),
+            name: `Community ${Math.random().toFixed(5)}`,
+            description: "Test Community Description",
+        }).returning()
 
+        const communityId = _communityRecord.id
+
+        const [_community_userRecord] = await db.insert(schema.community_user).values({
+            user_id: authorId,
+            community_id: communityId
+        }).returning()
+
+        const [_postRecord] = await db.insert(schema.posts).values({
+            author_id: authorId,
+            community_id: communityId,
+            title: `Test Post`,
+            content: ["Test Content"],
+            media: {
+                mediaType: "IMAGE",
+                mediaUrl: ["https://example.com/image.jpg"],
+                mediaPreview: {
+                    src: "https://example.com/image.jpg",
+                    meta: "Test Image"
+                }
+            },
+            updatedAt: new Date()
+        }).returning()
+
+        postId = _postRecord.id
+
+        const concurrentUserRecords = await db.insert(schema.profiles).values([
+            { id: v4() },
+            { id: v4() },
+            { id: v4() }
+        ]).returning({
+            id: schema.profiles.id
+        })
+        concurrentUserId1 = concurrentUserRecords[0].id
+        concurrentUserId2 = concurrentUserRecords[1].id
+        concurrentUserId3 = concurrentUserRecords[2].id
     })
 
 
@@ -417,18 +548,20 @@ describe('should work fine with concurrent requests', async () => {
             where: eq(schema.posts.id, postId)
         })
 
-
+ 
         expect(postRecordAfterConcurrent).toBeTruthy()
         expect(postRecordAfterConcurrent!.upvotes).toBe(1)
         expect(postRecordAfterConcurrent!.downvotes).toBe(1)
 
-        await clean()
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId1))
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId2))
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId3))
     })
 
 
 })
 
-// TODO: modify this?
+
 test('query review status', async () => {
 
 
@@ -507,7 +640,7 @@ test('query review status', async () => {
     await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
     await db.delete(schema.community_user).where(eq(schema.community_user.user_id, authorId))
 
-
+    
 })
 
 
