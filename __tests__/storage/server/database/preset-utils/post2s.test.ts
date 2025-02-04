@@ -1,11 +1,12 @@
-import { afterAll, beforeAll, it, test, expect } from "vitest";
+import { afterAll, beforeAll, it, test, expect, afterEach } from "vitest";
 import { createPost, getFeedsByTime2, queryPostReviewStatus, reducePostReview } from "@/storage/server/database/posts";
 import { newDrizzle } from "@/storage/server/database/drizzle-client";
 import { v4 } from "uuid";
 import * as schema from "@/drizzle/schema";
 import { beforeEach, describe } from "node:test";
 import { eq } from "drizzle-orm";
-import { useClearVotesPreset, useConcurrentRequestsPreset, useFeedPreset, usePostPreset, useReviewPostPreset } from "./preset-utils/preset";
+import { useConcurrentRequestsPreset, useFeedPreset, usePostPreset, useReviewPostPreset } from "./preset";
+import { A } from "vitest/dist/chunks/environment.d8YfPkTm.js";
 
 
 describe('createPost', async () => {
@@ -14,6 +15,7 @@ describe('createPost', async () => {
     let userId: string;
     let communityId: string;
     let release: () => Promise<void>;
+    let reset: () => Promise<void>;
     let db: ReturnType<typeof newDrizzle>
 
     beforeAll(async () => {
@@ -23,7 +25,7 @@ describe('createPost', async () => {
         userId = res.userId
         communityId = res.communityId
         release = res.release
-
+        reset = res.reset
     })
 
     it('should create a post with plain content', async () => {
@@ -62,15 +64,17 @@ describe('createPost', async () => {
         const res = await createPost(newUserId, communityId, "Test Post", ["Test Content"])
         expect(res).toBeFalsy()
 
-        // await db.delete(schema.profiles).where(eq(schema.profiles.id, newUserId))
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, newUserId))
 
     })
 
+    afterEach(async () => {
+        await reset()
+    })
 
     afterAll(async () => {
         await release()
     })
-
 
 })
 
@@ -85,19 +89,17 @@ describe("getFeed", async () => {
 
     let userId: string;
     let db: ReturnType<typeof newDrizzle>;
-    let clean: () => Promise<void>;
+    let release: () => Promise<void>;
 
     beforeAll(async () => {
 
         db = newDrizzle()
-
         const res = await useFeedPreset(numberOfAuthors, numberOfCommunities)
 
         userId = res.userId
         authors = res.authors
         communities = res.communities
-        clean = res.clean
-
+        release = res.release
     })
 
 
@@ -174,7 +176,7 @@ describe("getFeed", async () => {
     })
 
     afterAll(async () => {
-        await clean()
+        await release()
     })
 })
 
@@ -183,7 +185,8 @@ describe('review post', async () => {
     let userId: string;
     let postId: string;
     let db: ReturnType<typeof newDrizzle>
-    let clean: () => Promise<void>
+    let release: () => Promise<void>
+    let reset: () => Promise<void>
 
     beforeAll(async () => {
         db = newDrizzle();
@@ -191,13 +194,9 @@ describe('review post', async () => {
         const res = await useReviewPostPreset()
         userId = res.userId
         postId = res.postId
-        clean = res.clean
+        release = res.release
+        reset = res.reset
 
-    })
-
-
-    beforeEach(async () => {
-        useClearVotesPreset(userId, postId)
     })
 
 
@@ -325,8 +324,12 @@ describe('review post', async () => {
         expect(userPostReview!.downvoted_posts).toContain(postId)
     })
 
+    afterEach(async () => {
+        reset()
+    })
+
     afterAll(async () => {
-        await clean()
+        await release()
     })
 
 })
@@ -335,31 +338,27 @@ describe('review post', async () => {
 describe('should work fine with concurrent requests', async () => {
 
 
-    let concurrentUserId1: string;
-    let concurrentUserId2: string;
-    let concurrentUserId3: string;
+    let numberOfConcurrentUsers = 3;
     let postId: string;
+    let concurrentUserId = new Array<string>(numberOfConcurrentUsers);
     let db: ReturnType<typeof newDrizzle>
-    let clean: () => Promise<void>
+    let release: () => Promise<void>
 
 
     beforeAll(async () => {
         db = newDrizzle()
 
-        const res = await useConcurrentRequestsPreset()
+        const res = await useConcurrentRequestsPreset(numberOfConcurrentUsers)
         postId = res.postId
-        concurrentUserId1 = res.concurrentUserId1
-        concurrentUserId2 = res.concurrentUserId2
-        concurrentUserId3 = res.concurrentUserId3
-        clean = res.clean
-
+        concurrentUserId = res.concurrentUserId
+        release = res.release
     })
 
 
     it.concurrent("click upvote a post 3 times", async () => {
         const res = await Promise.all(Array(3).fill(0).map(async () => {
             return await reducePostReview({
-                userId: concurrentUserId1,
+                userId: concurrentUserId[0],
                 postId,
                 action: 'up'
             })
@@ -367,7 +366,7 @@ describe('should work fine with concurrent requests', async () => {
 
         // effect : 1 upvote
         const userPostReview = await db.query.profiles.findFirst({
-            where: eq(schema.profiles.id, concurrentUserId1)
+            where: eq(schema.profiles.id, concurrentUserId[0])
         })
         expect(userPostReview).toBeTruthy()
         expect(userPostReview!.upvoted_posts).toContain(postId)
@@ -379,14 +378,14 @@ describe('should work fine with concurrent requests', async () => {
     it.concurrent("click downvote a post 5 times", async () => {
         await Promise.all(Array(5).fill(0).map(async () => {
             return await reducePostReview({
-                userId: concurrentUserId2,
+                userId: concurrentUserId[1],
                 postId,
                 action: 'down'
             })
         }))
         // effect : 1 downvote
         const userPostReview = await db.query.profiles.findFirst({
-            where: eq(schema.profiles.id, concurrentUserId2)
+            where: eq(schema.profiles.id, concurrentUserId[1])
         })
         expect(userPostReview).toBeTruthy()
         expect(userPostReview!.downvoted_posts).toContain(postId)
@@ -395,7 +394,7 @@ describe('should work fine with concurrent requests', async () => {
     it.concurrent("click upvote 8 times", async () => {
         await Promise.all(Array(8).fill(0).map(async () => {
             return reducePostReview({
-                userId: concurrentUserId3,
+                userId: concurrentUserId[2],
                 postId,
                 action: 'up'
             })
@@ -403,7 +402,7 @@ describe('should work fine with concurrent requests', async () => {
         }))
 
         const userPostReview = await db.query.profiles.findFirst({
-            where: eq(schema.profiles.id, concurrentUserId3)
+            where: eq(schema.profiles.id, concurrentUserId[2])
         })
         expect(userPostReview).toBeTruthy()
         expect(userPostReview!.upvoted_posts).not.toContain(postId)
@@ -421,7 +420,7 @@ describe('should work fine with concurrent requests', async () => {
         expect(postRecordAfterConcurrent!.upvotes).toBe(1)
         expect(postRecordAfterConcurrent!.downvotes).toBe(1)
 
-        await clean()
+        await release()
     })
 
 
