@@ -71,7 +71,7 @@ export function CommentInput({ target }: CommentPlateProps) {
 
             } catch (e) {
 
-                setCommentValue('')
+                
                 alert((e as ZodError).errors[0].message)
             }
 
@@ -98,7 +98,10 @@ export function CommentInput({ target }: CommentPlateProps) {
                 <div className="w-full flex items-center justify-end gap-x-2">
                     <Button variant={'default'} className="text-sm"
 
-                        onClick={() => setIsInputOpen(false)}
+                        onClick={() => {
+                            setCommentValue('')
+                            setIsInputOpen(false)
+                        }}
 
                     >Cancel</Button>
                     <Button
