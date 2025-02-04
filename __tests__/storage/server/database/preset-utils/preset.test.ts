@@ -12,26 +12,21 @@ describe("preset method for post method", async () => {
     const res = await usePostPreset()
     let userId = res.userId
     let communityId = res.communityId
-    let reset = res.reset
     let release = res.release
 
-    it("should create a user", async () => {
+    it("should create a user, community and relation", async () => {
         const authorRecordAfter = await db.query.profiles.findFirst({
             where: eq(schema.profiles.id, userId)
         })
 
         expect(authorRecordAfter).toBeTruthy()
-    })
 
-    it("should create a community", async () => {
         const communityRecordAfter = await db.query.communities.findFirst({
             where: eq(schema.communities.id, communityId)
         })
 
         expect(communityRecordAfter).toBeTruthy()
-    })
 
-    it("should create the relation", async () => {
         const cuRecordAfter = await db.query.community_user.findFirst({
             where: and(eq(schema.community_user.user_id, userId), eq(schema.community_user.community_id, communityId))
         })
@@ -39,23 +34,7 @@ describe("preset method for post method", async () => {
         expect(cuRecordAfter).toBeTruthy()
     })
 
-    it("should reset the post", async () => {
-        const posetRecordAfter = await db.query.posts.findFirst({
-            where: and(eq(schema.posts.author_id, userId), eq(schema.posts.community_id, communityId))
-        })
-
-        expect(posetRecordAfter).toBeTruthy()
-
-        await reset()
-
-        const postRecordAfter = await db.query.posts.findFirst({
-            where: eq(schema.posts.author_id, userId)
-        })
-
-        expect(postRecordAfter).toBeFalsy()
-    })
-
-    it("should release all post", async () => {
+    it("should release all resources", async () => {
 
         await release()
 
@@ -77,8 +56,6 @@ describe("preset method for post method", async () => {
 
         expect(cuRecordAfter).toBeFalsy()
     })
-
-
 });
 
 describe("preset for get feed method", async () => {
@@ -93,15 +70,13 @@ describe("preset for get feed method", async () => {
     communities = res.communities
     let release = res.release
 
-    it("should create a user", async () => {
+    it("should create a user, several communities, authors, relation and posts", async () => {
         const userRecordAfter = await db.query.profiles.findFirst({
             where: eq(schema.profiles.id, userId)
         })
 
         expect(userRecordAfter).toBeTruthy()
-    })
 
-    it("should create several communities", async () => {
         for (let i = 0; i < numberOfCommunities; i++) {
             const communityRecordAfter = await db.query.communities.findFirst({
                 where: eq(schema.communities.id, communities[i])
@@ -109,9 +84,7 @@ describe("preset for get feed method", async () => {
 
             expect(communityRecordAfter).toBeTruthy()
         }
-    })
 
-    it("should create several authors", async () => {
         for (let i = 0; i < numberOfAuthors; i++) {
             const authorRecordAfter = await db.query.profiles.findFirst({
                 where: eq(schema.profiles.id, authors[i])
@@ -119,9 +92,15 @@ describe("preset for get feed method", async () => {
 
             expect(authorRecordAfter).toBeTruthy()
         }
-    })
 
-    it("should create the relation and post", async () => {
+        for (let i = 0;i<numberOfCommunities;i++){
+            const cuRecordAfter = await db.query.community_user.findFirst({
+                where: and(eq(schema.community_user.user_id, userId), eq(schema.community_user.community_id, communities[i]))
+            })
+
+            expect(cuRecordAfter).toBeTruthy()
+        }
+
         for (let i = 0; i < numberOfAuthors; i++) {
             for (let j = 0; j < numberOfCommunities; j++) {
                 const cuRecordAfter = await db.query.community_user.findFirst({
@@ -129,6 +108,8 @@ describe("preset for get feed method", async () => {
                 })
 
                 expect(cuRecordAfter).toBeTruthy()
+
+
 
                 const postRecordAfter = await db.query.posts.findFirst({
                     where: eq(schema.posts.author_id, authors[i])
@@ -140,7 +121,7 @@ describe("preset for get feed method", async () => {
 
     })
 
-    it("should release all post", async () => {
+    it("should release all resources", async () => {
 
         await release()
 
@@ -186,7 +167,7 @@ describe("preset for review post method", async () => {
     let release = res.release
     let reset = res.reset
 
-    it("should create user and author", async () => {
+    it("should create user, author, community, relation", async () => {
         const authorRecordAfter = await db.query.profiles.findFirst({
             where: eq(schema.profiles.id, authorId)
         })
@@ -198,17 +179,13 @@ describe("preset for review post method", async () => {
         })
 
         expect(userRecordAfter).toBeTruthy()
-    })
 
-    it("should create a community", async () => {
         const communityRecordAfter = await db.query.communities.findFirst({
             where: eq(schema.communities.id, communityId)
         })
 
         expect(communityRecordAfter).toBeTruthy()
-    })
 
-    it("should create the relation", async () => {
         const cuRecordAfter = await db.query.community_user.findFirst({
             where: and(eq(schema.community_user.user_id, authorId), eq(schema.community_user.community_id, communityId))
         })
@@ -216,15 +193,13 @@ describe("preset for review post method", async () => {
         expect(cuRecordAfter).toBeTruthy()
     })
 
-    it("should create a post", async () => {
+    it("should create and reset a post", async () => {
         const posetRecordAfter = await db.query.posts.findFirst({
             where: eq(schema.posts.id, postId)
         })
 
         expect(posetRecordAfter).toBeTruthy()
-    })
 
-    it("should reset the post", async () => {
         await reset()
 
         const postRecordAfter = await db.query.posts.findFirst({
@@ -235,7 +210,7 @@ describe("preset for review post method", async () => {
         expect(postRecordAfter?.downvotes).toBe(0)
     })
 
-    it("should release the post", async () => {
+    it("should release the resources", async () => {
 
         await release()
 
@@ -269,7 +244,6 @@ describe("preset for review post method", async () => {
 
         expect(communityRecordAfter).toBeFalsy()
 
-
     })
 
 })
@@ -284,7 +258,7 @@ describe("preset for concurrent request", async () => {
     let communityId = res.communityId
     let release = res.release
 
-    it("should create all users", async () => {
+    it("should create all users, community, relations and post", async () => {
         for (let i = 0; i < numberOfConcurrentUsers; i++) {
             const userRecordAfter = await db.query.profiles.findFirst({
                 where: eq(schema.profiles.id, concurrentUserId[i])
@@ -298,9 +272,13 @@ describe("preset for concurrent request", async () => {
         })
 
         expect(authorRecordAfter).toBeTruthy()
-    })
 
-    it("should create the relation to community", async () => {
+        const communityRecordAfter = await db.query.communities.findFirst({
+            where: eq(schema.communities.id, communityId)
+        })
+
+        expect(communityRecordAfter).toBeTruthy()
+
         for (let i = 0; i < numberOfConcurrentUsers; i++) {
             const cuRecordAfter = await db.query.community_user.findFirst({
                 where: and(eq(schema.community_user.user_id, concurrentUserId[i]), eq(schema.community_user.community_id, communityId))
@@ -315,11 +293,6 @@ describe("preset for concurrent request", async () => {
         
         expect(cuRecordAfter).toBeTruthy()
 
-    })
-
-    
-    it("should create a post", async () => {
-
         const postRecordAfter = await db.query.posts.findFirst({
             where: and(eq(schema.posts.id, postId), eq(schema.posts.author_id, authorId), eq(schema.posts.community_id, communityId))
         })
@@ -327,7 +300,7 @@ describe("preset for concurrent request", async () => {
         expect(postRecordAfter).toBeTruthy()
     })
 
-    it("should release all users", async () => {
+    it("should release all users and posts", async () => {
 
         await release()
 

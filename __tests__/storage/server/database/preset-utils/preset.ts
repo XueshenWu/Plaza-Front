@@ -28,10 +28,6 @@ export async function usePostPreset() {
         community_id: communityId
     }).returning()
 
-    const reset = async () => {
-        await db.delete(schema.posts).where(eq(schema.posts.author_id, userId))
-    }
-
     const release = async () => {
         await db.delete(schema.community_user).where(and(
             eq(schema.community_user.user_id, userId), eq(schema.community_user.community_id, communityId)
@@ -44,7 +40,6 @@ export async function usePostPreset() {
     return {
         userId,
         communityId,
-        reset,
         release
     }
 }
@@ -85,34 +80,30 @@ export async function useFeedPreset(numberOfAuthors: number, numberOfCommunities
         }).returning()
     }
 
-    // each author creates a post in each community
+    // each author join and creates a post in each community
     for (let i = 0; i < numberOfAuthors; i++) {
         for (let j = 0; j < numberOfCommunities; j++) {
-            // await db.insert(schema.posts).values({
-            //     author_id: authors[i],
-            //     community_id: communities[j],
-            //     title: `Test Post ${i}-${j}`,
-            //     content: ["Test Content"],
-            //     media: {
-            //         mediaType: "IMAGE",
-            //         mediaUrl: ["https://example.com/image.jpg"],
-            //         mediaPreview: {
-            //             src: "https://example.com/image.jpg",
-            //             meta: "Test Image"
-            //         }
-            //     },
-            //     updatedAt: new Date()
-            // })
-            await createPost(authors[i], communities[j], `Test Post ${i}-${j}`, ["Test Content"],
-                {
+
+            const [cu_Record] = await db.insert(schema.community_user).values({
+                user_id: authors[i],
+                community_id: communities[j]
+            }).returning()
+
+            await db.insert(schema.posts).values({
+                author_id: authors[i],
+                community_id: communities[j],
+                title: `Test Post ${i}-${j}`,
+                content: ["Test Content"],
+                media: {
                     mediaType: "IMAGE",
                     mediaUrl: ["https://example.com/image.jpg"],
                     mediaPreview: {
                         src: "https://example.com/image.jpg",
                         meta: "Test Image"
                     }
-                })
-
+                },
+                updatedAt: new Date()
+            })
         }
     }
 
@@ -125,6 +116,10 @@ export async function useFeedPreset(numberOfAuthors: number, numberOfCommunities
         }
         for (let i = 0; i < numberOfAuthors; i++) {
             for (let j = 0; j < numberOfCommunities; j++) {
+                await db.delete(schema.community_user).where(and(
+                    eq(schema.community_user.community_id, communities[j]), eq(schema.community_user.user_id, authors[i])
+                ))
+                
                 await db.delete(schema.posts).where(and(
                     eq(schema.posts.author_id, authors[i]), eq(schema.posts.community_id, communities[j])
                 ))
