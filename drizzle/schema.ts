@@ -36,7 +36,6 @@ export const posts = pgTable('posts', {
     downvotes: integer().notNull().default(0),
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp().notNull(),
-    children_comments: uuid().array().default([]),
     comments_count: integer().notNull().default(0),
 }, table=>({
     timeIndex:index('timeIndex').on(table.createdAt),

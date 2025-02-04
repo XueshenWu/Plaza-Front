@@ -625,6 +625,10 @@ export async function addComment({ userId, content, target: { id, type } }: {
 
             return comment.id
         }
+    }, {
+        isolationLevel: 'read committed',
+        deferrable: true,
+        accessMode: 'read write'
     })
 
 
