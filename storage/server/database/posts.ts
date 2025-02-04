@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, isNull, lte, or } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, lte, or, sql } from "drizzle-orm";
 import { newDrizzle } from "./drizzle-client";
 import * as schema from "@/drizzle/schema";
 import { FeedPreviewProps } from "@/components/segment/feed-preview";
@@ -40,6 +40,12 @@ export async function queryPostById(id: string) {
 }
 
 
+
+
+
+
+
+
 type QueryPostDetailParams = {
     postId: string,
     userId?: string
@@ -62,6 +68,7 @@ export async function queryPostDetailById({ postId, userId }: QueryPostDetailPar
     if (!post) {
         return null
     }
+
 
 
     const userSubscribedCommunity = userId ? await queryUserCommunities(userId) : undefined
@@ -521,6 +528,103 @@ export async function reducePostReview({ userId, postId, action }: { userId: str
         }
 
 
+    }, {
+        isolationLevel: 'read committed',
+        deferrable: true,
+        accessMode: 'read write'
+    })
+
+
+}
+
+
+
+
+export async function addComment({ userId, content, target: { id, type } }: {
+    userId: string,
+    content: string,
+    target: {
+        id: string,
+        type: 'Post' | "Comment"
+    }
+}): Promise<string | null> {
+    const db = newDrizzle()
+
+    return await db.transaction(async (tx) => {
+        if (type === 'Post') {
+            const [post] = await tx
+                .select()
+                .from(schema.posts)
+                .where(eq(schema.posts.id, id))
+                .for('update')
+
+            if (!post) {
+                return null
+            }
+
+            const [comment] = await tx.insert(schema.comments).values({
+                author_id: userId,
+                root_id: id,
+                content,
+                createdAt: new Date()
+            }).returning({
+                id: schema.comments.id
+            })
+
+            await tx.update(schema.posts)
+                .set({
+                    comments_count: post.comments_count + 1
+                })
+                .where(eq(schema.posts.id, id))
+
+            return comment.id;
+
+        } else {
+            const [parentComment] = await tx
+                .select()
+                .from(schema.comments)
+                .where(eq(schema.comments.id, id))
+                .for('update')
+
+            const [post] = await tx
+                .select()
+                .from(schema.posts)
+                .where(eq(schema.posts.id, parentComment.root_id))
+                .for('update')
+
+            if (!parentComment || !post) {
+                return null
+            }
+
+            const [comment] = await tx.insert(schema.comments).values({
+                author_id: userId,
+                root_id: parentComment.root_id,
+                parent_id: id,
+                content,
+                createdAt: new Date()
+            }).returning({
+                id: schema.comments.id
+            })
+
+            if (!comment) {
+                return null
+            }
+
+            await tx.update(schema.posts)
+                .set({
+                    comments_count: post.comments_count + 1
+                })
+                .where(eq(schema.posts.id, parentComment.root_id))
+
+
+            await tx.update(schema.comments)
+                .set({
+                    children_comments: [...parentComment.children_comments ?? [], comment.id]
+                })
+                .where(eq(schema.comments.id, id))
+
+            return comment.id
+        }
     }, {
         isolationLevel: 'read committed',
         deferrable: true,

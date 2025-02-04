@@ -4,7 +4,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTrigger } from "../ui/drawer
 import { ReviewButton, type ReviewButtonData, type ReviewUpdateAction } from "../ui/review-button"
 import { useCopyToClipboard } from 'usehooks-ts'
 import { Ellipsis } from "lucide-react"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import useSWR from "swr"
 
 export type ReviewPlateProps =
     ReviewButtonData & {
@@ -51,16 +52,52 @@ const Comment = ({ previewType, postId, comments }: {
 
 export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...reviewButtonDataSync }: ReviewPlateProps) => {
     const [copiedText, copy] = useCopyToClipboard()
-    const reviewButtonData = reviewButtonDataSync
 
+    const [reviewData, setReviewData] = useState<ReviewButtonData>(reviewButtonDataSync)
+    // const { data, mutate } = useSWR<{
+    //     upvotes: number,
+    //     downvotes: number,
+    //     comments_count: number,
+    //     userReviewed: "up" | "down" | "none"
+    // } | null>(`/api/posts/queryReview`, async (url: string) => {
+    //     const res = await fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             postId
+    //         })
+    //     })
+    //     return res.json()
+    // })
     const updateReview = async (action: ReviewUpdateAction) => {
+        const res = await fetch(`/api/posts/reduceReview`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                postId,
+                action
+            })
+        })
+        const data = await res.json().then((resp) => {
+            const data = resp.data
+            return {
+                upvotes: data.upvotes,
+                downvotes: data.downvotes,
+                userReviewed: data.reviewState
+            }
+        })
+        setReviewData(data)
 
     }
 
     return (
         <div className="flex flex-row items-center justify-start gap-x-3 text-xs w-full">
-          
-            <ReviewButton data={reviewButtonData} update={updateReview} />
+
+            <ReviewButton data={reviewData} update={updateReview} />
             <Comment previewType={previewType} postId={postId} comments={comments} />
             <Drawer>
                 <DrawerTrigger className="*:text-[10px]" >
