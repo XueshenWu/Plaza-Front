@@ -2,6 +2,8 @@ import { newDrizzle } from "@/storage/server/database/drizzle-client";
 import * as schema from "@/drizzle/schema";
 import { v4 } from "uuid";
 import { and, eq } from "drizzle-orm";
+import { a } from "vitest/dist/chunks/suite.BJU7kdY9.js";
+import { createPost } from "@/storage/server/database/posts";
 
 
 export async function usePostPreset() {
@@ -26,27 +28,27 @@ export async function usePostPreset() {
         community_id: communityId
     }).returning()
 
-    const clean = async () => {
-        await db.delete(schema.profiles).where(eq(schema.profiles.id, userId))
-        await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
+    const release = async () => {
         await db.delete(schema.community_user).where(and(
             eq(schema.community_user.user_id, userId), eq(schema.community_user.community_id, communityId)
         ))
+        await db.delete(schema.profiles).where(eq(schema.profiles.id, userId))
+        await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
     }
 
 
     return {
         userId,
         communityId,
-        clean
+        release
     }
 }
 
 export async function useFeedPreset(numberOfAuthors: number, numberOfCommunities: number) {
 
     const db = newDrizzle()
-    const authors = new Array<string>(numberOfAuthors); 
-    const communities = new Array<string>(numberOfCommunities); 
+    const authors = new Array<string>(numberOfAuthors);
+    const communities = new Array<string>(numberOfCommunities);
     let userId: string;
 
     const [_userRecord] = await db.insert(schema.profiles).values({
@@ -78,9 +80,15 @@ export async function useFeedPreset(numberOfAuthors: number, numberOfCommunities
         }).returning()
     }
 
-    // each author creates a post in each community
+    // each author join and creates a post in each community
     for (let i = 0; i < numberOfAuthors; i++) {
         for (let j = 0; j < numberOfCommunities; j++) {
+
+            const [cu_Record] = await db.insert(schema.community_user).values({
+                user_id: authors[i],
+                community_id: communities[j]
+            }).returning()
+
             await db.insert(schema.posts).values({
                 author_id: authors[i],
                 community_id: communities[j],
@@ -96,24 +104,27 @@ export async function useFeedPreset(numberOfAuthors: number, numberOfCommunities
                 },
                 updatedAt: new Date()
             })
-
         }
     }
 
-    const clean = async () => {
-        for (let i = 0; i < numberOfAuthors; i++) {
-            for (let j = 0; j < numberOfCommunities; j++) {
-                await db.delete(schema.posts).where(and(
-                    eq(schema.posts.author_id, authors[i]), eq(schema.posts.community_id, communities[j])
-                ))
-            }
-            await db.delete(schema.profiles).where(eq(schema.profiles.id, authors[i]))
-        }
+    const release = async () => {
 
         for (let i = 0; i < numberOfCommunities; i++) {
             await db.delete(schema.community_user).where(and(
                 eq(schema.community_user.community_id, communities[i]), eq(schema.community_user.user_id, userId)))
             await db.delete(schema.communities).where(eq(schema.communities.id, communities[i]))
+        }
+        for (let i = 0; i < numberOfAuthors; i++) {
+            for (let j = 0; j < numberOfCommunities; j++) {
+                await db.delete(schema.community_user).where(and(
+                    eq(schema.community_user.community_id, communities[j]), eq(schema.community_user.user_id, authors[i])
+                ))
+                
+                await db.delete(schema.posts).where(and(
+                    eq(schema.posts.author_id, authors[i]), eq(schema.posts.community_id, communities[j])
+                ))
+            }
+            await db.delete(schema.profiles).where(eq(schema.profiles.id, authors[i]))
         }
 
         await db.delete(schema.profiles).where(eq(schema.profiles.id, userId))
@@ -123,7 +134,7 @@ export async function useFeedPreset(numberOfAuthors: number, numberOfCommunities
         userId,
         authors,
         communities,
-        clean
+        release,
     }
 
 }
@@ -160,62 +171,61 @@ export async function useReviewPostPreset() {
         community_id: communityId
     }).returning()
 
-    const [_postRecord] = await db.insert(schema.posts).values({
-        author_id: authorId,
-        community_id: communityId,
-        title: `Test Post`,
-        content: ["Test Content"],
-        media: {
-            mediaType: "IMAGE",
-            mediaUrl: ["https://example.com/image.jpg"],
-            mediaPreview: {
-                src: "https://example.com/image.jpg",
-                meta: "Test Image"
-            }
-        },
-        updatedAt: new Date()
-    }).returning()
+    const [_postRecord] =
+        await db.insert(schema.posts).values({
+            author_id: authorId,
+            community_id: communityId,
+            title: `Test Post`,
+            content: ["Test Content"],
+            media: {
+                mediaType: "IMAGE",
+                mediaUrl: ["https://example.com/image.jpg"],
+                mediaPreview: {
+                    src: "https://example.com/image.jpg",
+                    meta: "Test Image"
+                }
+            },
+            updatedAt: new Date()}).returning()
 
     postId = _postRecord.id
 
-    const clean = async () => {
+    const reset = async () => {
+        await db.update(schema.posts).set({
+            upvotes: 0,
+            downvotes: 0
+        }).where(eq(schema.posts.id, postId))
+
+        await db.update(schema.profiles).set({
+            upvoted_posts: [],
+            downvoted_posts: []
+        }).where(eq(schema.profiles.id, userId))
+    }
+
+    const release = async () => {
         await db.delete(schema.posts).where(eq(schema.posts.id, postId))
-        await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
         await db.delete(schema.community_user).where(and(
             eq(schema.community_user.user_id, authorId), eq(schema.community_user.community_id, communityId)
         ))
+        await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
         await db.delete(schema.profiles).where(eq(schema.profiles.id, userId))
         await db.delete(schema.profiles).where(eq(schema.profiles.id, authorId))
     }
-
 
     return {
         userId,
         postId,
         authorId,
         communityId,
-        clean
+        reset,
+        release
     }
 }
 
-export async function useClearVotesPreset(userId: string, postId: string) {
-    const db = newDrizzle()
-
-    await db.update(schema.posts).set({
-        upvotes: 0,
-        downvotes: 0
-    }).where(eq(schema.posts.id, postId))
-
-    await db.update(schema.profiles).set({
-        upvoted_posts: [],
-        downvoted_posts: []
-    }).where(eq(schema.profiles.id, userId))
-
-}
-
-export async function useConcurrentRequestsPreset() {
+export async function useConcurrentRequestsPreset(numberOfConcurrentUsers: number) {
 
     const db = newDrizzle()
+
+    const concurrentUserId = new Array<string>(numberOfConcurrentUsers)
 
     const [_authorRecord] = await db.insert(schema.profiles).values({
         id: v4()
@@ -253,19 +263,21 @@ export async function useConcurrentRequestsPreset() {
 
     const postId = _postRecord.id
 
-    const concurrentUserRecords = await db.insert(schema.profiles).values([
-        { id: v4() },
-        { id: v4() },
-        { id: v4() }
-    ]).returning({
-        id: schema.profiles.id
-    })
-    const concurrentUserId1 = concurrentUserRecords[0].id
-    const concurrentUserId2 = concurrentUserRecords[1].id
-    const concurrentUserId3 = concurrentUserRecords[2].id
+    for (let i = 0; i < numberOfConcurrentUsers; i++) {
+        const [concurrentUserRecord] = await db.insert(schema.profiles).values(
+            { id: v4() }
+        ).returning({
+            id: schema.profiles.id
+        })
+        concurrentUserId[i] = concurrentUserRecord.id
+        await db.insert(schema.community_user).values({
+            user_id: concurrentUserId[i],
+            community_id: communityId
+        }).returning()
+    }
 
-    const clean = async () => {
-        
+    const release = async () => {
+
         await db.delete(schema.community_user).where(and(
             eq(schema.community_user.user_id, authorId), eq(schema.community_user.community_id, communityId)
         ))
@@ -273,18 +285,20 @@ export async function useConcurrentRequestsPreset() {
         await db.delete(schema.communities).where(eq(schema.communities.id, communityId))
         await db.delete(schema.profiles).where(eq(schema.profiles.id, authorId))
 
-
-        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId1))
-        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId2))
-        await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId3))
+        for (let i = 0; i < numberOfConcurrentUsers; i++) {
+            await db.delete(schema.community_user).where(and(
+                eq(schema.community_user.user_id, concurrentUserId[i]), eq(schema.community_user.community_id, communityId)
+            ))
+            await db.delete(schema.profiles).where(eq(schema.profiles.id, concurrentUserId[i]))
+        }
     }
 
     return {
         postId,
-        concurrentUserId1,
-        concurrentUserId2,
-        concurrentUserId3,
-        clean
+        authorId,
+        concurrentUserId,
+        communityId,
+        release
     }
 
 }
