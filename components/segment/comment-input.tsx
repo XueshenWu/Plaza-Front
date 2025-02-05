@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { submitComment } from "@/actions/server/form/add-comment";
 import { Form, FormField } from "../ui/form";
 
+//FIXME: Need to add media support
 
 type CommentPlateProps = {
     target: {

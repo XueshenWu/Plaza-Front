@@ -5,21 +5,23 @@ import { ReviewButton, type ReviewButtonData, type ReviewUpdateAction } from "..
 import { useCopyToClipboard } from 'usehooks-ts'
 import { Ellipsis } from "lucide-react"
 import { useMemo, useState } from "react"
-import useSWR from "swr"
 
 export type ReviewPlateProps =
     ReviewButtonData & {
         comments: number,
-        postId: string,
-        previewType?: 'compact' | 'card'
+        targetId: string,
     }
 
 
 
-const Comment = ({ previewType, postId, comments }: {
-    previewType: 'compact' | 'card',
-    postId: string,
-    comments: number
+const Comment = ({ targetId, comments, mode }: {
+    targetId: string,
+    comments: number,
+    mode: {
+        content: 'Post' | 'Comment',
+        display: 'Card' | 'Compact'
+    }
+
 }) => {
 
     const parsedComments = useMemo(() => {
@@ -34,15 +36,25 @@ const Comment = ({ previewType, postId, comments }: {
     }, [comments])
 
 
-    if (previewType === 'card') {
-        return <Link href={`posts/${postId}`} className="bg-slate-200 hover:bg-slate-300 py-2 transition-colors rounded-3xl px-3  flex flex-row items-center justify-center gap-x-1">
-            <img src="/comment.svg" />
-            <div className="text-[10px] text-gray-700">
-                {parsedComments}
-            </div>
-        </Link>
+    if (mode.display === 'Card') {
+        if (mode.content === "Post") {
+            return <Link href={`/posts/${targetId}`} className="bg-slate-200 hover:bg-slate-300 py-2 transition-colors rounded-3xl px-3  flex flex-row items-center justify-center gap-x-1">
+                <img src="/comment.svg" />
+                <div className="text-[10px] text-gray-700">
+                    {parsedComments}
+                </div>
+            </Link>
+        } else {
+            //FIXME: Fix this as reply button
+            return <Link href={`/comments/${targetId}`} className="bg-slate-200 hover:bg-slate-300 py-2 transition-colors rounded-3xl px-3  flex flex-row items-center justify-center gap-x-1">
+                <img src="/comment.svg" />
+                <div className="text-[10px] text-gray-700">
+                    {parsedComments}
+                </div>
+            </Link>
+        }
     } else {
-        return <Link href={`posts/${postId}`} className="text-[10px] text-gray-700">
+        return <Link href={`/posts/${targetId}`} className="text-[10px] text-gray-700">
             {parsedComments} comments
         </Link>
     }
@@ -50,35 +62,29 @@ const Comment = ({ previewType, postId, comments }: {
 
 
 
-export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...reviewButtonDataSync }: ReviewPlateProps) => {
+export const ReviewPlate = ({ comments, targetId, mode, ...reviewButtonDataSync }: ReviewPlateProps & {
+    mode: {
+        content: 'Post' | 'Comment',
+        display: 'Card' | 'Compact'
+    }
+}) => {
     const [copiedText, copy] = useCopyToClipboard()
 
+
+    const apiPath = useMemo(() => {
+        return mode.content === 'Post' ? `/api/posts/${targetId}/reduceReview` : `/api/comments/${targetId}/ReduceReview`
+    }, [mode, targetId])
+
     const [reviewData, setReviewData] = useState<ReviewButtonData>(reviewButtonDataSync)
-    // const { data, mutate } = useSWR<{
-    //     upvotes: number,
-    //     downvotes: number,
-    //     comments_count: number,
-    //     userReviewed: "up" | "down" | "none"
-    // } | null>(`/api/posts/queryReview`, async (url: string) => {
-    //     const res = await fetch(url, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             postId
-    //         })
-    //     })
-    //     return res.json()
-    // })
+
     const updateReview = async (action: ReviewUpdateAction) => {
-        const res = await fetch(`/api/posts/reduceReview`, {
+        const res = await fetch(apiPath, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                postId,
+                targetId,
                 action
             })
         })
@@ -98,12 +104,12 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
         <div className="flex flex-row items-center justify-start gap-x-3 text-xs w-full">
 
             <ReviewButton data={reviewData} update={updateReview} />
-            <Comment previewType={previewType} postId={postId} comments={comments} />
+            <Comment mode={mode} targetId={targetId} comments={comments} />
             <Drawer>
                 <DrawerTrigger className="*:text-[10px]" >
 
-                    <div className={previewType === 'card' ? "flex bg-slate-200 hover:bg-slate-300 transition-colors rounded-3xl px-3 py-2 cursor-pointer" : "text-xs text-gray-700 cursor-pointer"}>
-                        {previewType === 'card' ? <img src="/award.svg" /> : "Award"}
+                    <div className={mode.display === 'Card' ? "flex bg-slate-200 hover:bg-slate-300 transition-colors rounded-3xl px-3 py-2 cursor-pointer" : "text-xs text-gray-700 cursor-pointer"}>
+                        {mode.display === 'Card' ? <img src="/award.svg" /> : "Award"}
                     </div>
 
                 </DrawerTrigger>
@@ -111,9 +117,9 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                     Building...
                 </DrawerContent>
             </Drawer>
-            {previewType === 'card' ? <div className="bg-slate-200 hover:bg-slate-300 transition-colors rounded-3xl  px-3 py-2 cursor-pointer">
+            {mode.display === 'Card' ? <div className="bg-slate-200 hover:bg-slate-300 transition-colors rounded-3xl  px-3 py-2 cursor-pointer">
                 <img src="/forward.svg" onClick={() => {
-                    copy("localhost:xxxx/post/" + postId).then(() => {
+                    copy("localhost:xxxx/post/" + targetId).then(() => {
                         alert("Copied!")
                     })
 
@@ -135,7 +141,7 @@ export const ReviewPlate = ({ comments, postId, previewType = 'compact', ...revi
                         <div className="flex items-center justify-center gap-x-6"
 
                             onClick={() => {
-                                copy("/post/" + postId).then(() => {
+                                copy("/post/" + targetId).then(() => {
                                     alert("Copied!")
                                 })
                             }}

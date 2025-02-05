@@ -151,7 +151,10 @@ export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardPr
 
             </div>
             <div className='space-y-2 w-full'>
-                <ReviewPlate {...meta.review} previewType="card" postId={meta.post.postId} />
+                <ReviewPlate {...meta.review} mode={{
+                    display:'Card',
+                    content:'Comment'
+                }} targetId={meta.post.postId} />
                 {mode === 'full' && <CommentInput 
                 target={{id: meta.post.postId, type: 'Post'}}
                 

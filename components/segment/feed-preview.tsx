@@ -1,6 +1,7 @@
 'use client'
 
-//TODO: Add external link to story
+
+//TODO: Preview Title Style: Link and hover effect
 
 import { Button } from "../ui/button"
 import { MediaPreviewImage, type MediaPreview } from "../ui/media-preview"
@@ -43,7 +44,7 @@ export function FeedPreview({ meta, content, show = 'community' }: FeedPreviewPr
 
     const showLink = show === 'author' ? `/user/${meta.author.authorId}` : `/community/${meta.community.communityId}`
     const showIcon = show === 'author' ? meta.author.avatar : meta.community.communityIcon
-    const showName = show === 'author' ? `u/${meta.author.displayName??`${meta.author.authorId.substring(0,6)}`}` : `r/${meta.community.communityName}`
+    const showName = show === 'author' ? `u/${meta.author.displayName ?? `${meta.author.authorId.substring(0, 6)}`}` : `r/${meta.community.communityName}`
 
 
     return (
@@ -76,13 +77,18 @@ export function FeedPreview({ meta, content, show = 'community' }: FeedPreviewPr
             </div>
             <div className="flex flex-row gap-2 items-center justify-between w-full p-1">
                 <div className="flex-grow w-full cursor-pointer py-4 text-2xl font-semibold">
-                    {content.title}
+                    <Link href={`/post/${meta.post.postId}`} >
+                        {content.title}
+                    </Link>
                 </div>
-                <div>
-                    {content.media && <MediaPreviewImage  {...content.media} />}
-                </div>
+
+                {content.media && <MediaPreviewImage  {...content.media} />}
+
             </div>
-            <ReviewPlate {...meta.review} previewType="compact" postId={meta.post.postId} />
+            <ReviewPlate {...meta.review} mode={{
+                display: 'Compact',
+                content: 'Post'
+            }} targetId={meta.post.postId} />
         </div>
     )
 }
