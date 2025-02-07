@@ -15,7 +15,8 @@ type CommentPlateProps = {
     target: {
         id: string,
         type: 'Post' | 'Comment'
-    }
+    },
+    onCancel?: () => void
 }
 
 
@@ -27,7 +28,7 @@ const schema = z.object({
 
 
 
-export function CommentInput({ target }: CommentPlateProps) {
+export function CommentInput({ target, onCancel }: CommentPlateProps) {
 
 
     const [commentValue, setCommentValue] = useState<string>('')
@@ -36,7 +37,7 @@ export function CommentInput({ target }: CommentPlateProps) {
 
 
 
-    if (!isInputOpen) {
+    if (!isInputOpen && target.type !== 'Comment') {
 
 
         return (
@@ -58,6 +59,7 @@ export function CommentInput({ target }: CommentPlateProps) {
     return (
         <form onSubmit={async (e) => {
             e.preventDefault()
+         
             try {
                 const comment = schema.parse({ content: commentValue })
                 const res = submitComment({ target, content: comment.content })
@@ -99,7 +101,10 @@ export function CommentInput({ target }: CommentPlateProps) {
                 <div className="w-full flex items-center justify-end gap-x-2">
                     <Button variant={'default'} className="text-sm"
 
-                        onClick={() => {
+                        onClick={(e) => {
+                            
+                            e.preventDefault()
+                            onCancel?.call(null)
                             setCommentValue('')
                             setIsInputOpen(false)
                         }}
