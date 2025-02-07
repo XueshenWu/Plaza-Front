@@ -40,7 +40,7 @@ export function Header({ children }: {
     ])
 
     const { signinMode, signinCallback } = useMemo<{ signinMode: 'dialog' | 'external' | 'route', signinCallback: (useDefault: () => void) => void }>(() => {
-        if (screen === 'mobile-sm') {
+        if (screen === 'mobile-sm' || screen === undefined) {
             return {
                 signinMode: 'external',
                 signinCallback: (useDefault) => {

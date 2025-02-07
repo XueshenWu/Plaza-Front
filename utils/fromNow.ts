@@ -1,5 +1,10 @@
 export const fromNow = (date:Date|string) => {
 
+
+    if(!date){
+        return 'time unknown';
+    }
+
     if(typeof date === 'string') {
         date = new Date(date);
     }

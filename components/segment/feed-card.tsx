@@ -1,18 +1,20 @@
 'use client'
 
 
-import React from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import { MediaDisplay, type MediaDisplayProps } from '../ui/media-display';
 import type { ReviewPlateProps } from './review-plate';
 import { ReviewPlate } from './review-plate';
 import { Button } from '../ui/button';
 import { fromNow } from '@/utils/fromNow';
+import _ from 'lodash';
 
 import Link from 'next/link';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer';
 import { Code, Ellipsis, Menu } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CommentInput } from './comment-input';
+import { CommentNode, CommentNodeProps } from './comment-node';
 
 export type FeedCardProps = {
     meta: {
@@ -47,6 +49,7 @@ export type FeedCardProps = {
 
 }
 
+const PRE_LOAD_COUNT = 5;
 
 export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardProps & {
     mode: 'preview' | 'full',
@@ -57,7 +60,39 @@ export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardPr
     const showIcon = show === 'author' ? meta.source.author.avatar : meta.source.community.icon
     const showName = show === 'author' ? `u/${meta.source.author.displayName ?? meta.source.author.id.substring(0, 5)}` : `r/${meta.source.community.name}`
 
-    const router = useRouter()
+    const [commentOffset, setCommentOffset] = useState(0);
+    const [isPending, startTransition] = useTransition()
+    const [childrenComments, setChildrenComments] = useState<CommentNodeProps[]>([])
+    const [hasMore, setHasMore] = useState(true)
+
+    useEffect(() => {
+
+        if (!hasMore) {
+            return
+        }
+
+
+        fetch('/api/comments/queryCommentNodesByPost', {
+            method: 'POST',
+            body: JSON.stringify({
+                postId: meta.post.postId,
+                offset: commentOffset,
+                limit: PRE_LOAD_COUNT
+            })
+        })
+            .then(resp => resp.json())
+            .then(json => {
+                if (json.data.length < PRE_LOAD_COUNT) {
+                    setHasMore(false)
+               
+                }
+
+                setChildrenComments(pre => _.merge(json.data, [...pre]))
+            })
+    }, [commentOffset])
+
+
+    const router = useRouter();
 
 
     return (
@@ -152,14 +187,24 @@ export function FeedCard({ meta, content, mode, show = 'community' }: FeedCardPr
             </div>
             <div className='space-y-2 w-full'>
                 <ReviewPlate {...meta.review} mode={{
-                    display:'Card',
-                    content:'Comment'
+                    display: mode === 'preview' ? 'Card' : 'Page',
+                    content: 'Post'
                 }} targetId={meta.post.postId} />
-                {mode === 'full' && <CommentInput 
-                target={{id: meta.post.postId, type: 'Post'}}
-                
+                {mode === 'full' && <CommentInput
+                    target={{ id: meta.post.postId, type: 'Post' }}
                 />}
             </div>
+            <div>
+                {childrenComments.map((comment, index) => (<CommentNode
+                    key={index}
+                    {...comment}
+                    recursiveCountdown={3}
+                />))}
+                {hasMore && <div onClick={() => setCommentOffset(pre => pre + PRE_LOAD_COUNT)}>
+                    Load more
+                </div>}
+            </div>
+
 
         </div>
     )
