@@ -1,3 +1,4 @@
+
 import { FeedCard } from "@/components/segment/feed-card";
 import { queryPostDetailById } from "@/storage/server/database/posts";
 import { createClient } from "@/storage/supabase/supabase-svr";
@@ -7,6 +8,7 @@ import { notFound } from "next/navigation";
 export default async function Page({ params }: {
     params: Promise<{ commentId: string }>
 }) {
+
     const { commentId } = await params;
 
     const supabase = await createClient()
@@ -30,4 +32,14 @@ export default async function Page({ params }: {
             show="community"
         />
     </div>)
+
+
+
+    const { commentId } = await params
+
+
+    return <div>
+        <h1 className="text-3xl">{commentId}</h1>
+    </div>
+
 }
