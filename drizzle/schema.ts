@@ -7,7 +7,7 @@ export const Enum_MediaType = pgEnum("MediaType", ["IMAGE", "VIDEO", "EXTERNAL_L
 export const Enum_Visiblity = pgEnum("Visiblity", ["PUBLIC", "RESTRICTED", "PRIVATE", "CACHED"])
 export const Enum_Role = pgEnum("Role", ["OWNER", "MODERATOR", "MEMBER"])
 export const Enum_NotificationPreference = pgEnum("NotificationPreference", ["OFF", "LOW", "FREQUENT"])
-
+export const Enum_Review = pgEnum("Review", ['UP', "DOWN", "NONE"])
 
 export const profiles = pgTable('profiles', {
     id: uuid().primaryKey(),
@@ -37,8 +37,8 @@ export const posts = pgTable('posts', {
     createdAt: timestamp().notNull().defaultNow(),
     updatedAt: timestamp().notNull(),
     comments_count: integer().notNull().default(0),
-}, table=>({
-    timeIndex:index('timeIndex').on(table.createdAt),
+}, table => ({
+    timeIndex: index('timeIndex').on(table.createdAt),
 })).enableRLS()
 
 export const communities = pgTable('communities', {
@@ -58,15 +58,22 @@ export const comments = pgTable('comments', {
     author_id: uuid().notNull(),
     parent_id: uuid(),
     root_id: uuid().notNull(),
-    content: text(),
-    upvotes: integer().default(0),
-    downvotes: integer().default(0),
+    content: text().notNull(),
+    upvotes: integer().notNull().default(0),
+    downvotes: integer().notNull().default(0),
     createdAt: timestamp().defaultNow(),
-    updatedAt: timestamp(),
-    children_comments: uuid().array().default([]),
-   
+    updatedAt: timestamp().notNull(),
+    children_comments: uuid().array().notNull().default([]),
+
 }).enableRLS()
 
+
+export const comment_reviews = pgTable('comment_reviews', {
+    id: uuid().primaryKey().defaultRandom(),
+    comment_id: uuid().notNull(),
+    user_id: uuid().notNull(),
+    review: Enum_Review().notNull().default("NONE"),
+}).enableRLS()
 
 
 export const community_user = pgTable('community_user', {
@@ -78,6 +85,9 @@ export const community_user = pgTable('community_user', {
     credit: integer().default(0),
     favorite: boolean().default(false),
 }).enableRLS();
+
+
+
 
 export const communityRelations = relations(community_user, ({ one }) => ({
     communities: one(communities, {
@@ -97,3 +107,18 @@ export const postRelations = relations(posts, ({ one }) => ({
     })
 }))
 
+export const commentRelations = relations(comments, ({ one, many }) => ({
+    profiles: one(profiles, {
+        fields: [comments.author_id],
+        references: [profiles.id]
+    }),
+    posts: one(posts, {
+        fields: [comments.root_id],
+        references: [posts.id]
+    }),
+}))
+
+
+// export const commentReviewRelations = relations(comment_reviews, ({ one, many }) => ({
+   
+// }))

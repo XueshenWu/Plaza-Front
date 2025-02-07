@@ -1,14 +1,17 @@
 'use client'
 
 
-import { use, useState } from "react"
+import { use, useEffect, useState, useTransition } from "react"
 import { ReviewPlateProps } from "./review-plate"
 import { Code } from "lucide-react"
+import { fromNow } from "@/utils/fromNow"
+import { useRouter } from "next/navigation"
 
 export type CommentNodeProps = {
+    id: string,
     author: {
         authorId: string,
-        displayName?: string,
+        displayName?: string | null,
         avatar?: string | null,
     },
     content: string,
@@ -23,26 +26,84 @@ export type CommentNodeProps = {
 const PRE_LOAD_COUNT = 2;
 
 
-export function CommentNode({ author, content, updatedAt, reviews, recursiveCountdown }: CommentNodeProps & {
+export function CommentNode({ id, author, content, updatedAt, reviews, recursiveCountdown }: CommentNodeProps & {
     recursiveCountdown: number
 }) {
     const [isExpanded, setIsExpanded] = useState(false)
 
+    const [isPending, startTransition] = useTransition()
+
     const [childrenComments, setChildrenComments] = useState<CommentNodeProps[]>([])
 
-    if (recursiveCountdown === 0) {
-        return
+    const router = useRouter();
+
+
+    useEffect(() => {
+        if (recursiveCountdown > 0) {
+            fetch('/api/comments/queryCommentNodes', {
+                method: 'POST',
+                body: JSON.stringify({
+                    commentIds: reviews.commentChildren.slice(0, PRE_LOAD_COUNT),
+                })
+            })
+                .then(resp => resp.json())
+                .then(json => setChildrenComments(json.data))
+        } else {
+            setChildrenComments([])
+        }
+    }, [recursiveCountdown])
+
+
+
+
+
+
+
+    const handleLoadAll = () => {
+
+        if (isPending) {
+            return
+        }
+
+
+        if (recursiveCountdown <= 0) {
+
+            router.push(`/comments/${id}`)
+            return
+        }
+
+
+
+        startTransition(async () => {
+            const resp = await fetch('/api/comments/queryCommentNodes', {
+                method: 'POST',
+                body: JSON.stringify({
+                    commentIds: reviews.commentChildren,
+                })
+            })
+
+            const json = await resp.json()
+            setChildrenComments(json.data)
+        })
     }
 
 
-    if (!isExpanded) {
-        return (<div>
 
+
+
+    if (!isExpanded) {
+        return (<div className="flex">
+            <div className=""
+
+                onClick={() => setIsExpanded(true)}
+            >
+                +
+            </div>
+            <div>
+                {author.displayName ?? author.authorId.substring(0, 5)} &bull; {fromNow(updatedAt)}
+            </div>
         </div>)
     } else {
-
-
-
 
         return (<div
             className="flex flex-col items-start"
@@ -72,8 +133,11 @@ export function CommentNode({ author, content, updatedAt, reviews, recursiveCoun
                         {...comment}
                         recursiveCountdown={recursiveCountdown - 1}
                     />))}
-                    {childrenComments.length < reviews.commentChildren.length && <div>
-                        Load more
+                    {childrenComments.length < reviews.commentChildren.length && <div
+
+                        onClick={handleLoadAll}
+                    >
+                        Load {reviews.commentChildren.length - childrenComments.length} more comments
                     </div>}
                 </div>
             </div>
