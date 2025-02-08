@@ -1,4 +1,4 @@
-import { queryCommentNodesByPostId } from "@/storage/server/database/comment";
+import { queryCommentNodesByPostId } from "@/storage/server/database/comments";
 
 export async function POST(request: Request) {
 

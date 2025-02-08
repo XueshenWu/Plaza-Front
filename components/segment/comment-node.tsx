@@ -122,11 +122,13 @@ export function CommentNode({ id, author, content, updatedAt, reviews, recursive
 
 
             {/* layer2: content,  subs  & threads */}
-            <div className="flex flex-row px-2 mx-2">
+            {/* <div className="flex flex-row px-2 mx-2"> */}
+            <div className="flex flex-row gap-x-2">
 
                 {/* threads */}
-                <div className={`min-w-8 ${childrenComments.length > 0 ? 'border-l rounded-bl-xl' : ''}`}>
-
+                {/* <div className={`min-w-8 ${childrenComments.length > 0 ? 'border-l rounded-bl-xl' : ''}`}> */}
+                <div className="min-w-6 flex justify-center">
+                {childrenComments.length > 0 && <div className="h-full w-px bg-gray-200"></div>}
                 </div>
                 <div>
                     <div>
